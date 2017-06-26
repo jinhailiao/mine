@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7C2B077F-3CF5-467A-9C00-BE9C8118C17C}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</IntDir>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\source\engine\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)mine.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)mine.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\source\engine\base\haialgo.cpp" />
+    <ClCompile Include="..\..\source\engine\base\haifile.cpp" />
+    <ClCompile Include="..\..\source\engine\base\haitime.cpp" />
+    <ClCompile Include="..\..\source\engine\base\hstrings.cpp" />
+    <ClCompile Include="..\..\source\engine\base\htrace.cpp" />
+    <ClCompile Include="..\..\source\engine\base\htraceset.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguiapp.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguibase.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguibmp.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguicart.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguictrl.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguidc.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguidlog.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguifont.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguipen.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguiwnd.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\source\engine\base\haialgo.h" />
+    <ClInclude Include="..\..\source\engine\base\haibase.h" />
+    <ClInclude Include="..\..\source\engine\base\haifile.h" />
+    <ClInclude Include="..\..\source\engine\base\haitime.h" />
+    <ClInclude Include="..\..\source\engine\base\hconfig.h" />
+    <ClInclude Include="..\..\source\engine\base\hstrings.h" />
+    <ClInclude Include="..\..\source\engine\base\htrace.h" />
+    <ClInclude Include="..\..\source\engine\base\htraceset.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguiapp.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguibase.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguibmp.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguicart.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguictrl.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguidc.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguidlog.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguievt.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguifont.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguiobj.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguipen.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguiwnd.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lua\lua.vcxproj">
+      <Project>{e4cffa9d-6b53-4472-ad22-3f0566da4b77}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
