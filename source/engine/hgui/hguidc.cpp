@@ -28,8 +28,6 @@ C_HGUIDC::C_HGUIDC(C_WNDBASE *pWnd):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_DC)
 	}
 	m_pWnd  = pWnd;
 	m_pBMP  = &HGUI_LcdScrn;
-	m_pBMP->SetBmpData(HGui_LcdBuffer());
-	m_pBMP->SetBmpInfo(HGui_LcdWidth(), HGui_LcdHeight(), HGui_LcdBpp());
 	SelectObject(GetStockGuiObj(HGUI_OBJ_BPEN));
 	SelectObject(GetStockGuiObj(HGUI_OBJ_F12x12));
 }
@@ -225,6 +223,21 @@ bool C_HGUIDC::FlushScreen(void)
 		if (m_pWnd->InvalidRect() == false)
 			m_pWnd->UpdateWnd();
 	}
+	return true;
+}
+
+bool C_HGUIDC::BitBlt(S_SHORT xDst, S_SHORT yDst, S_SHORT w, S_SHORT h, C_HGUIDC *pdcSrc, S_SHORT xSrc, S_SHORT ySrc, S_DWORD dwRop)
+{
+	return true;
+}
+
+bool C_HGUIDC::CreateCompatibleDC(C_HGUIDC *pDC)
+{
+	return true;
+}
+
+bool C_HGUIDC::DeleteObject(void)
+{
 	return true;
 }
 

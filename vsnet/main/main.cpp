@@ -24,6 +24,9 @@ BITMAPINFO bmpBitmapInfo;
 char rgbUserBuffer[DEVICE_LCD_WIDTH*(DEVICE_LCD_BPP/8)*DEVICE_LCD_HEIGHT];
 extern char *HGui_fb;
 
+extern int InitEngine(void);
+extern int RunEngine(void);
+
 // 此代码模块中包含的函数的前向声明:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
 BOOL				InitInstance(HINSTANCE, int);
@@ -77,6 +80,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 //		}
 //	}
 
+	InitEngine();
 	while (1)
     {
         if (! PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -94,6 +98,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 //            {
 //                Sleep(0);
 //            }
+			RunEngine();
             continue;
         }
 

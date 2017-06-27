@@ -18,31 +18,50 @@
 class C_HGUIBMP:public C_HGUIOBJ
 {
 public:
-	C_HGUIBMP(S_WORD w, S_WORD h, S_WORD bpp, void *pBuff);
+	C_HGUIBMP(void);
+	C_HGUIBMP(S_WORD w, S_WORD h, S_WORD bpp);
 	virtual ~C_HGUIBMP();
 
 	void SetBmpInfo(S_WORD w, S_WORD h, S_WORD bpp);
-	void SetBmpData(void *pBuff);
+	void *SetBmpData(void *pBuffer);
+	S_WORD GetWidth(void);
+	S_WORD GetHeight(void);
 	void *GetBmpData(void);
+	bool DeleteObject(void);
 
-	virtual int SetPixel(S_WORD x, S_WORD y, S_DWORD color)=0;
-	virtual S_DWORD GetPixel(S_WORD x, S_WORD y)=0;
-	virtual int FlipPixel(S_WORD x, S_WORD y)=0;
-	virtual int FlipHLine(S_WORD x, S_WORD y, S_WORD w)=0;
-	virtual int FillHLine(S_WORD x, S_WORD y, S_WORD w, S_DWORD color)=0;
+	virtual int SetPixel(S_WORD x, S_WORD y, S_DWORD color);
+	virtual S_DWORD GetPixel(S_WORD x, S_WORD y);
+	virtual int FlipPixel(S_WORD x, S_WORD y);
+	virtual int FlipHLine(S_WORD x, S_WORD y, S_WORD w);
+	virtual int FillHLine(S_WORD x, S_WORD y, S_WORD w, S_DWORD color);
+
+	bool LoadBitmap(const string &strPath);
+
+protected:
+	void *SetBmpDataWithAutorelease(void *pBuffer);
+	int SetPixel_1(S_WORD x, S_WORD y, S_DWORD color);
+	S_DWORD GetPixel_1(S_WORD x, S_WORD y);
+	int FlipPixel_1(S_WORD x, S_WORD y);
+	int FlipHLine_1(S_WORD x, S_WORD y, S_WORD w);
+	int FillHLine_1(S_WORD x, S_WORD y, S_WORD w, S_DWORD color);
 
 protected:
 	S_WORD m_Width;
 	S_WORD m_Height;
 	S_WORD m_BPP;
-	void *m_pBuff;
+	C_HGUIBUFFER m_HGuiBuffer;
 };
 
 class C_HGUISCRN:public C_HGUIBMP
 {
 public:
+	static int InitScreenBitmap(void);
+
+public:
 	C_HGUISCRN(void);
 	virtual ~C_HGUISCRN();
+
+	bool BufferNotRelease(void);
 
 	virtual int SetPixel(S_WORD x, S_WORD y, S_DWORD color);
 	virtual S_DWORD GetPixel(S_WORD x, S_WORD y);

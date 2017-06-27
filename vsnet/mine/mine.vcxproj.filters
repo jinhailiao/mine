@@ -19,6 +19,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx</Extensions>
     </Filter>
+    <Filter Include="源文件\main">
+      <UniqueIdentifier>{f03e884a-fff0-47d6-b650-37e18a4d3d8e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\engine\base\haialgo.cpp">
@@ -68,6 +71,12 @@
     </ClCompile>
     <ClCompile Include="..\..\source\engine\hgui\hguiwnd.cpp">
       <Filter>源文件\hgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\main\mainrun.cpp">
+      <Filter>源文件\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\main\demoapp.cpp">
+      <Filter>源文件\main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,6 +139,9 @@
     </ClInclude>
     <ClInclude Include="..\..\source\engine\hgui\hguiwnd.h">
       <Filter>源文件\hgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\main\demoapp.h">
+      <Filter>源文件\main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

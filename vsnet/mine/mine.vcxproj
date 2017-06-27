@@ -49,7 +49,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\source\engine\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\source\engine\base;..\..\source\engine\hgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -94,6 +94,8 @@
     <ClCompile Include="..\..\source\engine\hgui\hguifont.cpp" />
     <ClCompile Include="..\..\source\engine\hgui\hguipen.cpp" />
     <ClCompile Include="..\..\source\engine\hgui\hguiwnd.cpp" />
+    <ClCompile Include="..\..\source\main\demoapp.cpp" />
+    <ClCompile Include="..\..\source\main\mainrun.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\engine\base\haialgo.h" />
@@ -116,6 +118,7 @@
     <ClInclude Include="..\..\source\engine\hgui\hguiobj.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguipen.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguiwnd.h" />
+    <ClInclude Include="..\..\source\main\demoapp.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />

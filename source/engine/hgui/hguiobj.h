@@ -27,6 +27,7 @@ public:
 	OBJ_T_BMP,
 	OBJ_T_CTRL,
 	OBJ_T_CARET,
+	OBJ_T_BUFFER,
 
 	OBJ_T_MAX
 	};
@@ -43,6 +44,16 @@ public:
 protected:
 	OBJ_T m_ObjT;
 	int m_cntReference; // -1表示用户自己管理对象，0-*表示引用计数，为0系统会在适当时候自己释放
+};
+
+class C_HGUIBUFFER:public C_HGUIOBJ
+{
+public:
+	C_HGUIBUFFER(void):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_BUFFER){m_pBuffer=NULL;}
+	void BufferNotRelease(void){m_cntReference = 100000000;}// 防止被系统删除
+
+public:
+	void *m_pBuffer;
 };
 
 #endif //__HGUI_OBJ_H__

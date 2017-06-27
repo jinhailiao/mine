@@ -59,6 +59,10 @@ public:
 	bool FlushScreenEn(bool enable);
 	bool FlushScreen(void);
 
+	bool BitBlt(S_SHORT xDst, S_SHORT yDst, S_SHORT w, S_SHORT h, C_HGUIDC *pdcSrc, S_SHORT xSrc, S_SHORT ySrc, S_DWORD dwRop);
+	bool CreateCompatibleDC(C_HGUIDC *pDC);
+	bool DeleteObject(void);
+
 protected:
 	int ClientToScreen(S_RECT &rRect);
 
