@@ -93,6 +93,7 @@
     <ClCompile Include="..\..\source\engine\hgui\hguidlog.cpp" />
     <ClCompile Include="..\..\source\engine\hgui\hguifont.cpp" />
     <ClCompile Include="..\..\source\engine\hgui\hguipen.cpp" />
+    <ClCompile Include="..\..\source\engine\hgui\hguipic.cpp" />
     <ClCompile Include="..\..\source\engine\hgui\hguiwnd.cpp" />
     <ClCompile Include="..\..\source\main\demoapp.cpp" />
     <ClCompile Include="..\..\source\main\mainrun.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="..\..\source\engine\hgui\hguifont.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguiobj.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguipen.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguipic.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguiwnd.h" />
     <ClInclude Include="..\..\source\main\demoapp.h" />
   </ItemGroup>

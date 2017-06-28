@@ -18,9 +18,11 @@ typedef void				S_VOID;
 typedef char				S_CHAR;
 typedef short				S_SHORT;
 typedef long				S_LONG;
+typedef int				S_INT;
 typedef unsigned char		S_BYTE;
 typedef unsigned short		S_WORD;
 typedef unsigned long		S_DWORD;
+typedef unsigned int		S_UINT;
 
 typedef unsigned long long		INT64U;
 typedef signed long long		INT64S;
@@ -121,6 +123,11 @@ inline void HAI_WRITEWORD(S_BYTE *p,S_WORD w)
 inline void HAI_WRITEDWORD(S_BYTE *p, S_DWORD dw)
 {
 	*(p)=(S_BYTE)((dw)&0xFF),*((p)+1)=(S_BYTE)(((dw)>>8)&0xFF),*((p)+2)=(S_BYTE)(((dw)>>16)&0xFF),*((p)+3)=(S_BYTE)(((dw)>>24)&0xFF);
+}
+/** @brief 将DWORD按小端方式写入p指向的内存 */
+inline void HAI_WRITEDWORD3(S_BYTE *p, S_DWORD dw)
+{
+	*(p)=(S_BYTE)((dw)&0xFF),*((p)+1)=(S_BYTE)(((dw)>>8)&0xFF),*((p)+2)=(S_BYTE)(((dw)>>16)&0xFF);
 }
 /** @brief WORD高低BYTE交换 */
 inline S_WORD HAI_SWAPWORD(S_WORD w)

@@ -78,6 +78,9 @@
     <ClCompile Include="..\..\source\main\demoapp.cpp">
       <Filter>源文件\main</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\engine\hgui\hguipic.cpp">
+      <Filter>源文件\hgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\engine\base\haialgo.h">
@@ -142,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="..\..\source\main\demoapp.h">
       <Filter>源文件\main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\engine\hgui\hguipic.h">
+      <Filter>源文件\hgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

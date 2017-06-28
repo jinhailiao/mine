@@ -24,9 +24,9 @@ public:
 
 	void SetBmpInfo(S_WORD w, S_WORD h, S_WORD bpp);
 	void *SetBmpData(void *pBuffer);
-	S_WORD GetWidth(void);
-	S_WORD GetHeight(void);
-	void *GetBmpData(void);
+	S_WORD GetWidth(void){return m_Width;}
+	S_WORD GetHeight(void){return m_Height;}
+	void *GetBmpData(void){return m_HGuiBuffer.m_pBuffer;}
 	bool DeleteObject(void);
 
 	virtual int SetPixel(S_WORD x, S_WORD y, S_DWORD color);
@@ -49,6 +49,7 @@ protected:
 	S_WORD m_Width;
 	S_WORD m_Height;
 	S_WORD m_BPP;
+	S_WORD	m_WidthBytes;
 	C_HGUIBUFFER m_HGuiBuffer;
 };
 

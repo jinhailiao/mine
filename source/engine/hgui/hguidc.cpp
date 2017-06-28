@@ -26,6 +26,13 @@ C_HGUIDC::C_HGUIDC(C_WNDBASE *pWnd):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_DC)
 	{
 		m_Rect = pWnd->GetWndRect();
 	}
+
+	m_ColorKey	= 0;
+	m_TextColor	= HGUI_COLOR_BLACK;
+	m_BkColor	= HGUI_COLOR_WHITE;
+	m_BkMode	= HGUI_BKM_OPAQUE;
+	m_Alpha		= 255;
+
 	m_pWnd  = pWnd;
 	m_pBMP  = &HGUI_LcdScrn;
 	SelectObject(GetStockGuiObj(HGUI_OBJ_BPEN));
