@@ -73,6 +73,18 @@ int C_HGUIDC::DrawVLine(S_WORD x, S_WORD y, S_WORD h)
 	return 0;
 }
 
+int C_HGUIDC::DrawLine(S_WORD sx, S_WORD sy, S_WORD ex, S_WORD ey)
+{
+	S_RECT sRect = {sx, sy, 1, 1};
+	S_RECT eRect = {ex, ey, 1, 1};
+	ClientToScreen(sRect);
+	ClientToScreen(eRect);
+
+	if (m_pPen->DrawLine(sRect.x, sRect.y, eRect.x, eRect.y, m_BkMode, m_BkColor, m_pBMP) == 0)
+		FlushScreen();
+	return 0;
+}
+
 int C_HGUIDC::DrawRect(const S_RECT &rRect)
 {
 	S_RECT rect = rRect;
@@ -156,10 +168,10 @@ int C_HGUIDC::GetStringExtent(const char *pText)
 	return size;
 }
 
-C_HGUIOBJ *C_HGUIDC::GetStockGuiObj(S_BYTE ObjName)
+C_HGUIOBJ *C_HGUIDC::GetStockGuiObj(S_BYTE ObjName)const
 {
-	static C_HGUIPEN HGUI_BPen(1);
-	static C_HGUIPEN HGUI_WPen(0);
+	static C_HGUIPEN HGUI_BPen(HGUI_COLOR_BLACK);
+	static C_HGUIPEN HGUI_WPen(HGUI_COLOR_WHITE);
 	static C_HGUIF12x12 HGUI_F12x12;
 	static C_HGUIF16x16 HGUI_F16x16;
 	static C_HGUIE5x8 HGUI_E5x8;
@@ -205,6 +217,13 @@ C_HGUIOBJ *C_HGUIDC::SelectObject(C_HGUIOBJ *pObj)
 		pOld = m_pFont;
 		m_pFont = dynamic_cast<C_HGUIFONT*>(pObj);
 		break;
+	case C_HGUIOBJ::OBJ_T_BMP:
+		pOld = m_pBMP;
+		m_pBMP = dynamic_cast<C_HGUIBMP*>(pObj);
+		m_Rect.x = 0, m_Rect.y = 0;
+		m_Rect.w = m_pBMP->GetWidth();
+		m_Rect.h = m_pBMP->GetHeight();
+		break;
 	default:
 		break;
 	}
@@ -233,13 +252,34 @@ bool C_HGUIDC::FlushScreen(void)
 	return true;
 }
 
-bool C_HGUIDC::BitBlt(S_SHORT xDst, S_SHORT yDst, S_SHORT w, S_SHORT h, C_HGUIDC *pdcSrc, S_SHORT xSrc, S_SHORT ySrc, S_DWORD dwRop)
+bool C_HGUIDC::StretchBlit(S_WORD dx, S_WORD dy, S_WORD dw, S_WORD dh, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_WORD sw, S_WORD sh)
+{
+	if (dw == 0) dw = m_Rect.w;
+	if (dh == 0) dh = m_Rect.h;
+	if (sw == 0) sw = pdcSrc->m_Rect.w;
+	if (sh == 0) sh = pdcSrc->m_Rect.h;
+
+	S_RECT dRect = {dx, dy, dw, dh};
+	ClientToScreen(dRect);
+
+	S_RECT sRect = {sx, sy, sw, sh};
+	pdcSrc->ClientToScreen(sRect);
+
+	return m_pBMP->StretchBlit(dRect, pdcSrc->m_pBMP, sRect);
+}
+
+bool C_HGUIDC::BitBlt(S_WORD dx, S_WORD dy, S_WORD dw, S_WORD dh, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop)
 {
 	return true;
 }
 
-bool C_HGUIDC::CreateCompatibleDC(C_HGUIDC *pDC)
+bool C_HGUIDC::CreateCompatibleDC(const C_HGUIDC *pDC)
 {
+	*this = *pDC;
+	m_pWnd = NULL;
+	m_Rect.x = 0, m_Rect.y = 0;
+	m_Rect.w = m_pBMP->GetWidth();
+	m_Rect.h = m_pBMP->GetHeight();
 	return true;
 }
 
@@ -248,7 +288,7 @@ bool C_HGUIDC::DeleteObject(void)
 	return true;
 }
 
-int C_HGUIDC::ClientToScreen(S_RECT &rRect)
+int C_HGUIDC::ClientToScreen(S_RECT &rRect)const
 {
 	if (m_pWnd == NULL)
 	{

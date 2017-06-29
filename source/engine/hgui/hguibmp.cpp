@@ -33,6 +33,7 @@ C_HGUIBMP::C_HGUIBMP(S_WORD w, S_WORD h, S_WORD bpp):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_
 
 C_HGUIBMP::~C_HGUIBMP()
 {
+	DeleteObject();
 }
 
 void C_HGUIBMP::SetBmpInfo(S_WORD w, S_WORD h, S_WORD bpp)
@@ -287,6 +288,33 @@ bool C_HGUIBMP::LoadBitmap(const string &strPath)
 	return true; 
 }
 
+bool C_HGUIBMP::StretchBlit(const S_RECT &dRect, const C_HGUIBMP *pBMP, const S_RECT &sRect)
+{
+	if (GetBitsPixel() != pBMP->GetBitsPixel())
+		return false;
+
+	S_WORD dx = dRect.x, dy = dRect.y;
+	S_WORD dw = dRect.w, dh = dRect.h;
+	S_WORD sx = sRect.x, sy = sRect.y;
+	S_WORD sw = sRect.w, sh = sRect.h;
+
+	S_BYTE *pDstImage = (S_BYTE *)m_HGuiBuffer.m_pBuffer + dy*m_WidthBytes + dx*m_BPP/8;
+	const S_BYTE *pSrcImage = (S_BYTE *)pBMP->m_HGuiBuffer.m_pBuffer + sy*pBMP->m_WidthBytes + sx*pBMP->m_BPP/8;
+
+	S_WORD HeightCnt = 0;
+	for (S_WORD i = 0; i < sh; i++)
+	{
+		for (HeightCnt += dh; HeightCnt >= sh; HeightCnt -= sh)
+		{
+			StretchBlitLine(pDstImage, dw, pSrcImage, sw);
+			pDstImage += m_WidthBytes;
+		}
+		pSrcImage += pBMP->m_WidthBytes;
+	}
+
+	return true;
+}
+
 void *C_HGUIBMP::SetBmpDataWithAutorelease(void *pBuffer)
 {
 	if (pBuffer == NULL)
@@ -296,6 +324,56 @@ void *C_HGUIBMP::SetBmpDataWithAutorelease(void *pBuffer)
 	m_HGuiBuffer.AutoRelease(); // 缓冲对象由系统自己管理
 	m_HGuiBuffer.Retain();
 	return pOld;
+}
+
+bool C_HGUIBMP::StretchBlitLine(S_BYTE *pDst, S_WORD dw, const S_BYTE *pSrc, S_WORD sw)
+{
+	S_WORD flag = 0xFFFF;
+
+	S_WORD WidthCnt = 0;
+	switch (m_BPP)
+	{
+	case 8:
+		for (S_WORD i = 0; i < sw; i++)
+		{
+			for (WidthCnt += dw; WidthCnt >= sw; WidthCnt -= sw)
+			{
+				*pDst++ = *pSrc;
+			}
+			pSrc++;
+		}
+		break;
+	case 16:
+		for (S_WORD i = 0; i < sw; i++)
+		{
+			for (WidthCnt += dw; WidthCnt >= sw; WidthCnt -= sw)
+			{
+				*(pDst+0) = *(pSrc+0);
+				*(pDst+1) = *(pSrc+1);
+				pDst += 2;
+			}
+			pSrc += 2;
+		}
+		break;
+
+	case 24:
+		for (S_WORD i = 0; i < sw; i++)
+		{
+			for (WidthCnt += dw; WidthCnt >= sw; WidthCnt -= sw)
+			{
+				*(pDst+0) = *(pSrc+0);
+				*(pDst+1) = *(pSrc+1);
+				*(pDst+2) = *(pSrc+2);
+				pDst += 3;
+			}
+			pSrc += 3;
+		}
+		break;
+	default:
+		//todo;
+		break;
+	}
+	return true;
 }
 
 int C_HGUIBMP::SetPixel_1(S_WORD x, S_WORD y, S_DWORD color)

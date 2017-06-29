@@ -81,6 +81,9 @@
     <ClCompile Include="..\..\source\engine\hgui\hguipic.cpp">
       <Filter>源文件\hgui</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\engine\hgui\hguirect.cpp">
+      <Filter>源文件\hgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\engine\base\haialgo.h">
@@ -147,6 +150,9 @@
       <Filter>源文件\main</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\engine\hgui\hguipic.h">
+      <Filter>源文件\hgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\engine\hgui\hguirect.h">
       <Filter>源文件\hgui</Filter>
     </ClInclude>
   </ItemGroup>

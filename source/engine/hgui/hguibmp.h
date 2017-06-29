@@ -24,9 +24,11 @@ public:
 
 	void SetBmpInfo(S_WORD w, S_WORD h, S_WORD bpp);
 	void *SetBmpData(void *pBuffer);
-	S_WORD GetWidth(void){return m_Width;}
-	S_WORD GetHeight(void){return m_Height;}
-	void *GetBmpData(void){return m_HGuiBuffer.m_pBuffer;}
+	S_WORD GetWidth(void)const{return m_Width;}
+	S_WORD GetHeight(void)const{return m_Height;}
+	S_WORD GetBitsPixel(void)const{return m_BPP;}
+	S_WORD	GetWidthBytes(void)const{return m_WidthBytes;}
+	void *GetBmpData(void)const{return m_HGuiBuffer.m_pBuffer;}
 	bool DeleteObject(void);
 
 	virtual int SetPixel(S_WORD x, S_WORD y, S_DWORD color);
@@ -37,8 +39,11 @@ public:
 
 	bool LoadBitmap(const string &strPath);
 
+	bool StretchBlit(const S_RECT &dRect, const C_HGUIBMP *pBMP, const S_RECT &sRect);
+
 protected:
 	void *SetBmpDataWithAutorelease(void *pBuffer);
+	bool StretchBlitLine(S_BYTE *pDst, S_WORD dw, const S_BYTE *pSrc, S_WORD sw);
 	int SetPixel_1(S_WORD x, S_WORD y, S_DWORD color);
 	S_DWORD GetPixel_1(S_WORD x, S_WORD y);
 	int FlipPixel_1(S_WORD x, S_WORD y);
