@@ -26,7 +26,7 @@
 //HGUI全局资源
 //
 char g_HGui_ResourcePath[CFG_PATH_FILE_MAX_LEN] = "./"; //显示资源路径
-char HGui_UsrBuf[HGUI_LCD_SIZE]; //用户显存 [用最大屏幕的]
+char HGui_UsrBuffer[HGUI_LCD_SIZE]; //用户显存 [用最大屏幕的]
 char *HGui_fb = NULL; //屏幕显存
 
 /** @brief 设置HGUI 驱动 */
@@ -52,7 +52,7 @@ int HGui_LcdInit(void)
 /** @brief Lcd参数 */
 char *HGui_LcdBuffer(void)
 {
-	return HGui_UsrBuf;
+	return HGui_UsrBuffer;
 }
 unsigned short HGui_LcdWidth(void)
 {
@@ -79,8 +79,8 @@ static bool flushScrnEnable = true;
 /** @brief 屏幕刷新*/
 void HGui_flushScreen(S_WORD x, S_WORD y, S_WORD w, S_WORD h)
 {
-//	if (flushScrnEnable == true)
-//		pSguiDriverBase->fbfresh();
+	if (flushScrnEnable == true)
+		memcpy(HGui_fb, HGui_UsrBuffer, sizeof(HGui_UsrBuffer));//fbfresh();
 }
 
 /** @brief 屏幕刷新使能*/

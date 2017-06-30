@@ -8,7 +8,7 @@
 
 #define LCD_WIDTH 480
 #define LCD_HEIGHT 272
-#define APP_RESOURCE_PATH ".//"
+#define APP_RESOURCE_PATH "..\\..\\resource\\bmp\\"
 
 C_DEMOAPP::C_DEMOAPP(void)
 {

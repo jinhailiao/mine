@@ -48,7 +48,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	MyRegisterClass(hInstance);
 
 	HGui_fb = rgbUserBuffer;
-	memset(rgbUserBuffer, 0xFF, sizeof(rgbUserBuffer));
+	memset(rgbUserBuffer, 0x00, sizeof(rgbUserBuffer));
 
 	bmpBitmapInfo.bmiHeader.biSize = 40;
 	bmpBitmapInfo.bmiHeader.biWidth = DEVICE_LCD_WIDTH;
@@ -252,7 +252,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		}break;
 	case WM_TIMER:
-		InvalidateRect(hWnd, NULL, true);
+//		InvalidateRect(hWnd, NULL, true); ª·…¡∆¡
+		PostMessage(hWnd, WM_PAINT, 0, 0);
 		break;
 	case WM_DESTROY:
 		KillTimer(hWnd, ID_TIMER_PAINT_SCREEN);

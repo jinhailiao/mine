@@ -34,6 +34,33 @@ enum
 	HGUI_OBJ_MAX
 };
 
+enum
+{
+	HGUI_BLACKNESS,
+	HGUI_CAPTUREBLT,
+	HGUI_DSTINVERT,
+	HGUI_MERGECOPY,
+	HGUI_MERGEPAINT,
+	HGUI_NOMIRRORBITMAP,
+	HGUI_NOTSRCCOPY,
+	HGUI_NOTSRCERASE,
+	HGUI_PATCOPY,
+	HGUI_PATINVERT,
+	HGUI_PATPAINT,
+	HGUI_SRCAND,
+	HGUI_SRCCOPY,
+	HGUI_SRCERASE,
+	HGUI_SRCINVERT,
+	HGUI_SRCPAINT,
+	HGUI_WHITENESS,
+	HGUI_BRIGHTCOPY,
+	HGUI_ALPHACOPY,
+	HGUI_TRANSCOPY,
+	HGUI_TRANSALPHACPY,
+
+	HGUI_BITBLT_MAX
+};
+
 class C_WNDBASE;
 class C_HGUIDC:public C_HGUIOBJ
 {
@@ -74,12 +101,16 @@ public:
 	bool FlushScreen(void);
 
 	bool StretchBlit(S_WORD dx, S_WORD dy, S_WORD dw, S_WORD dh, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_WORD sw, S_WORD sh);
-	bool BitBlt(S_WORD dx, S_WORD dy, S_WORD dw, S_WORD dh, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop);
+	bool BitBlt(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop);
 	bool CreateCompatibleDC(const C_HGUIDC *pDC);
 	bool DeleteObject(void);
 
 protected:
 	int ClientToScreen(S_RECT &rRect)const;
+
+	bool _BitBlt1(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop);
+	bool _BitBlt2(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, S_DWORD dwRop);
+	bool _BitBlt3(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop);
 
 protected:
 	S_RECT m_Rect;

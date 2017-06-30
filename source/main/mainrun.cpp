@@ -12,6 +12,7 @@ C_DESKTOP theDesktop;
 int InitEngine(void)
 {
 	C_DEMOAPP::SetCurApp(&theDemoApp);
+	theDemoApp.SysInit("..\\..\\resource\\");
 	theDemoApp.SetDesktopWnd(&theDesktop);
 	return 0;
 }

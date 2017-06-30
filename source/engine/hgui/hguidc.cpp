@@ -268,9 +268,34 @@ bool C_HGUIDC::StretchBlit(S_WORD dx, S_WORD dy, S_WORD dw, S_WORD dh, const C_H
 	return m_pBMP->StretchBlit(dRect, pdcSrc->m_pBMP, sRect);
 }
 
-bool C_HGUIDC::BitBlt(S_WORD dx, S_WORD dy, S_WORD dw, S_WORD dh, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop)
+bool C_HGUIDC::BitBlt(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop)
 {
-	return true;
+	switch (dwRop)
+	{
+	case HGUI_NOTSRCCOPY:
+	case HGUI_SRCAND:
+	case HGUI_SRCCOPY:
+	case HGUI_SRCINVERT:
+		return _BitBlt1(dx, dy, w, h, pdcSrc, sx, sy, dwRop);
+
+	case HGUI_BLACKNESS:
+	case HGUI_DSTINVERT:
+	case HGUI_WHITENESS:	
+	case HGUI_PATINVERT:
+	case HGUI_PATCOPY:
+	case HGUI_PATPAINT:
+		return _BitBlt2(dx, dy, w, h, dwRop);
+
+	case HGUI_BRIGHTCOPY:
+	case HGUI_ALPHACOPY:
+	case HGUI_TRANSCOPY:
+	case HGUI_TRANSALPHACPY:
+		return _BitBlt3(dx, dy, w, h, pdcSrc, sx, sy, dwRop);
+	
+	default:
+		break;
+	}
+	return false;
 }
 
 bool C_HGUIDC::CreateCompatibleDC(const C_HGUIDC *pDC)
@@ -303,6 +328,121 @@ int C_HGUIDC::ClientToScreen(S_RECT &rRect)const
 		m_pWnd->ClientToScreen(rRect);
 	}
 	return 0;
+}
+
+bool C_HGUIDC::_BitBlt1(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop)
+{
+	if (pdcSrc == NULL)
+		return false;
+	if (m_pBMP->GetBitsPixel() != pdcSrc->m_pBMP->GetBitsPixel())
+		return false;
+
+	if (dx >= m_Rect.w || dy >= m_Rect.h)
+		return false;
+	if (sx >= pdcSrc->m_Rect.w || sy >= pdcSrc->m_Rect.h)
+		return false;
+
+	if (w <= 0) w = m_Rect.w;
+	w = HAI_MIN(w, m_Rect.w);
+	w = HAI_MIN(w, pdcSrc->m_Rect.w);
+	if (h <= 0) h = m_Rect.h;
+	h = HAI_MIN(h, m_Rect.h);
+	h = HAI_MIN(h, pdcSrc->m_Rect.h);
+
+	S_RECT dRect = {dx, dy, w, h};
+	ClientToScreen(dRect);
+	S_RECT sRect = {sx, sy, w, h};
+	pdcSrc->ClientToScreen(sRect);
+
+	switch (dwRop)
+	{
+	case HGUI_NOTSRCCOPY:
+		return m_pBMP->BitBltNotSrcCopy(dRect.x, dRect.y, w, h, pdcSrc->m_pBMP, sRect.x, sRect.y);
+	case HGUI_SRCAND:
+		return m_pBMP->BitBltSrcAnd(dRect.x, dRect.y, w, h, pdcSrc->m_pBMP, sRect.x, sRect.y);
+	case HGUI_SRCCOPY:
+		return m_pBMP->BitBltSrcCopy(dRect.x, dRect.y, w, h, pdcSrc->m_pBMP, sRect.x, sRect.y);
+	case HGUI_SRCINVERT:
+		return m_pBMP->BitBltSrcInvert(dRect.x, dRect.y, w, h, pdcSrc->m_pBMP, sRect.x, sRect.y);
+	default:
+		break;
+	}
+
+	return false;
+}
+
+bool C_HGUIDC::_BitBlt2(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, S_DWORD dwRop)
+{
+	if (dx >= m_Rect.w || dy >= m_Rect.h)
+		return false;
+
+	if (w <= 0) w = m_Rect.w;
+	w = HAI_MIN(w, m_Rect.w);
+	if (h <= 0) h = m_Rect.h;
+	h = HAI_MIN(h, m_Rect.h);
+
+	S_RECT dRect = {dx, dy, w, h};
+	ClientToScreen(dRect);
+
+	switch (dwRop)
+	{
+	case HGUI_BLACKNESS:
+		return m_pBMP->BitBltBlackness(dRect.x, dRect.y, w, h);
+	case HGUI_WHITENESS:
+		return m_pBMP->BitBltWhiteness(dRect.x, dRect.y, w, h);
+	case HGUI_DSTINVERT:
+		return m_pBMP->BitBltDstinvert(dRect.x, dRect.y, w, h);
+	case HGUI_PATINVERT:
+		return m_pBMP->BitBltPatinvert(dRect.x, dRect.y, w, h, m_pPen->GetColor());
+	case HGUI_PATPAINT:
+		return m_pBMP->BitBltPatpaint(dRect.x, dRect.y, w, h, m_pPen->GetColor());
+	case HGUI_PATCOPY:
+		return m_pBMP->BitBltPatcopy(dRect.x, dRect.y, w, h, m_pPen->GetColor());
+	default:
+		break;
+	}
+	return false;
+}
+
+bool C_HGUIDC::_BitBlt3(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop)
+{
+	if (pdcSrc == NULL)
+		return false;
+	if (m_pBMP->GetBitsPixel() != pdcSrc->m_pBMP->GetBitsPixel())
+		return false;
+
+	if (dx >= m_Rect.w || dy >= m_Rect.h)
+		return false;
+	if (sx >= pdcSrc->m_Rect.w || sy >= pdcSrc->m_Rect.h)
+		return false;
+
+	if (w <= 0) w = m_Rect.w;
+	w = HAI_MIN(w, m_Rect.w);
+	w = HAI_MIN(w, pdcSrc->m_Rect.w);
+	if (h <= 0) h = m_Rect.h;
+	h = HAI_MIN(h, m_Rect.h);
+	h = HAI_MIN(h, pdcSrc->m_Rect.h);
+
+	S_RECT dRect = {dx, dy, w, h};
+	ClientToScreen(dRect);
+	S_RECT sRect = {sx, sy, w, h};
+	pdcSrc->ClientToScreen(sRect);
+
+	switch (dwRop)
+	{
+	case HGUI_BRIGHTCOPY:
+		return m_pBMP->BitBltBrightCopy(dRect.x, dRect.y, w, h, pdcSrc->m_pBMP, sRect.x, sRect.y, pdcSrc->m_ColorKey);
+	case HGUI_ALPHACOPY:
+		return m_pBMP->BitBltAlphaCopy(dRect.x, dRect.y, w, h, pdcSrc->m_pBMP, sRect.x, sRect.y, pdcSrc->m_Alpha);
+	case HGUI_TRANSCOPY:
+		return m_pBMP->BitBltTransCopy(dRect.x, dRect.y, w, h, pdcSrc->m_pBMP, sRect.x, sRect.y, pdcSrc->m_ColorKey);
+	case HGUI_TRANSALPHACPY:
+		return m_pBMP->BitBltTransAlphaCpy(dRect.x, dRect.y, w, h, pdcSrc->m_pBMP, sRect.x, sRect.y, pdcSrc->m_Alpha, pdcSrc->m_ColorKey);
+	default:
+		break;
+	}
+
+	return false;
 }
 
 

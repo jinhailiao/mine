@@ -15,6 +15,13 @@
 #include "haibase.h"
 #include "hguiobj.h"
 
+#define  HGUI_COLOR_BLACK_8		0x00
+#define  HGUI_COLOR_WHITE_8		0xFF
+#define  HGUI_COLOR_BLACK_16	0x0000
+#define  HGUI_COLOR_WHITE_16	0xFFFF
+#define  HGUI_COLOR_BLACK_24	0x000000
+#define  HGUI_COLOR_WHITE_24	0xFFFFFF
+
 class C_HGUIBMP:public C_HGUIOBJ
 {
 public:
@@ -40,6 +47,20 @@ public:
 	bool LoadBitmap(const string &strPath);
 
 	bool StretchBlit(const S_RECT &dRect, const C_HGUIBMP *pBMP, const S_RECT &sRect);
+	bool BitBltNotSrcCopy(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIBMP *pBMP, S_WORD sx, S_WORD sy);
+	bool BitBltSrcAnd(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIBMP *pBMP, S_WORD sx, S_WORD sy);
+	bool BitBltSrcCopy(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIBMP *pBMP, S_WORD sx, S_WORD sy);
+	bool BitBltSrcInvert(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIBMP *pBMP, S_WORD sx, S_WORD sy);
+	bool BitBltBlackness(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h);
+	bool BitBltWhiteness(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h);
+	bool BitBltDstinvert(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h);
+	bool BitBltPatinvert(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, S_DWORD color);
+	bool BitBltPatpaint(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, S_DWORD color);
+	bool BitBltPatcopy(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, S_DWORD color);
+	bool BitBltBrightCopy(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIBMP *pBMP, S_WORD sx, S_WORD sy, S_DWORD ColorKey);
+	bool BitBltAlphaCopy(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIBMP *pBMP, S_WORD sx, S_WORD sy, S_BYTE alpha);
+	bool BitBltTransCopy(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIBMP *pBMP, S_WORD sx, S_WORD sy, S_DWORD ColorKey);
+	bool BitBltTransAlphaCpy(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIBMP *pBMP, S_WORD sx, S_WORD sy, S_BYTE alpha, S_DWORD ColorKey);
 
 protected:
 	void *SetBmpDataWithAutorelease(void *pBuffer);
