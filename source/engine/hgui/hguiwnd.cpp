@@ -382,6 +382,7 @@ bool C_HGUIWND::DeleteAutoReleaseControl(void)
 	for (S_DWORD i = 0; i < AllCtrlQ.size(); i++)
 	{
 		C_GUICTRL *pWnd = AllCtrlQ[i];
+		pWnd->Release();
 		if (pWnd->GetReferenceCount() == 0)
 			ReleaseCtrlQ.push_back(pWnd);
 		else

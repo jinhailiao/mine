@@ -58,6 +58,7 @@ C_NUMEDIT *C_NUMEDIT::NewCtrl(void)
 		return NULL;
 
 	pCtrl->AutoRelease();
+	pCtrl->Retain();
 	return pCtrl;
 }
 
@@ -216,6 +217,7 @@ C_ASCEDIT *C_ASCEDIT::NewCtrl(void)
 		return NULL;
 
 	pCtrl->AutoRelease();
+	pCtrl->Retain();
 	return pCtrl;
 }
 
@@ -357,6 +359,7 @@ C_VKBOARD *C_VKBOARD::NewCtrl(void)
 		return NULL;
 
 	pCtrl->AutoRelease();
+	pCtrl->Retain();
 	return pCtrl;
 }
 
@@ -496,6 +499,7 @@ C_TEXTEDIT *C_TEXTEDIT::NewCtrl(void)
 		return NULL;
 
 	pCtrl->AutoRelease();
+	pCtrl->Retain();
 	return pCtrl;
 }
 
@@ -632,6 +636,7 @@ C_BUTTON *C_BUTTON::NewCtrl(void)
 		return NULL;
 
 	pCtrl->AutoRelease();
+	pCtrl->Retain();
 	return pCtrl;
 }
 
@@ -715,6 +720,7 @@ C_SELECTBOX *C_SELECTBOX::NewCtrl(void)
 		return NULL;
 
 	pCtrl->AutoRelease();
+	pCtrl->Retain();
 	return pCtrl;
 }
 
