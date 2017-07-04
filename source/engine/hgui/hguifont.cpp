@@ -23,9 +23,9 @@ extern char g_HGui_ResourcePath[CFG_PATH_FILE_MAX_LEN];
  */
 C_HGUIF12x12::C_HGUIF12x12(void)
 {
-	char FontName[CFG_PATH_FILE_MAX_LEN];
-	sprintf(FontName, "%s%s", g_HGui_ResourcePath, FONT12X12);
-	m_fpFont = fopen(FontName, "rb");
+	string strFontFile(g_HGui_ResourcePath);
+	strFontFile.append("font//").append(FONT12X12);
+	m_fpFont = fopen(strFontFile.c_str(), "rb");
 }
 
 C_HGUIF12x12::~C_HGUIF12x12()
@@ -119,9 +119,9 @@ int C_HGUIF12x12::GetFontMold(S_WORD font, S_BYTE *pFontBuf)
  */
 C_HGUIF16x16::C_HGUIF16x16(void)
 {
-	char FontName[CFG_PATH_FILE_MAX_LEN];
-	sprintf(FontName, "%s%s", g_HGui_ResourcePath, FONT16X16);
-	m_fpFont = fopen(FontName, "rb");
+	string strFontFile(g_HGui_ResourcePath);
+	strFontFile.append("font//").append(FONT16X16);
+	m_fpFont = fopen(strFontFile.c_str(), "rb");
 }
 
 C_HGUIF16x16::~C_HGUIF16x16()
@@ -477,9 +477,9 @@ int C_HGUIE5x8::GetFontMold(S_WORD font, S_BYTE *pFontBuf)
  */
 C_HGUISYM16x16::C_HGUISYM16x16(void)
 {
-	char FontName[CFG_PATH_FILE_MAX_LEN];
-	sprintf(FontName, "%s%s", g_HGui_ResourcePath, SYM16X16);
-	m_fpFont = fopen(FontName, "rb");
+	string strFontFile(g_HGui_ResourcePath);
+	strFontFile.append("font//").append(SYM16X16);
+	m_fpFont = fopen(strFontFile.c_str(), "rb");
 }
 
 C_HGUISYM16x16::~C_HGUISYM16x16()
@@ -552,9 +552,9 @@ int C_HGUISYM16x16::GetFontMold(S_WORD font, S_BYTE *pFontBuf)
  */
 C_HGUISYM08x16::C_HGUISYM08x16(void)
 {
-	char FontName[CFG_PATH_FILE_MAX_LEN];
-	sprintf(FontName, "%s%s", g_HGui_ResourcePath, SYM08X16);
-	m_fpFont = fopen(FontName, "rb");
+	string strFontFile(g_HGui_ResourcePath);
+	strFontFile.append("font//").append(SYM08X16);
+	m_fpFont = fopen(strFontFile.c_str(), "rb");
 }
 
 C_HGUISYM08x16::~C_HGUISYM08x16()
