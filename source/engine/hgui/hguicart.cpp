@@ -36,7 +36,7 @@ int C_HGUICARET::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		break;
 	case EVT_PAINT:
 	case EVT_TIMER:
-		if ((m_flag & WNDF_VISIBLE) && !(m_flag & WNDF_DISABLED))
+		if ((m_flag & HGUI_WNDF_VISIBLE) && !(m_flag & HGUI_WNDF_DISABLED))
 		{
 			C_HGUIDC dc(this);
 			S_RECT rect = m_WndRect;

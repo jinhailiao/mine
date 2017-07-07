@@ -10,17 +10,19 @@
 // Version		date		operations				by who
 // 1.0.0		2010-01-18  Create                  Kingsea
 //---------------------------------------------------------------------------------
+#include "hguicfg.h"
+#include "hguidef.h"
 #include "hguibase.h"
 #include "hguivirkey.h"
 
 //
 //
 //
-#define HGUI_LCD_WIDTH		480
-#define HGUI_LCD_HEIGHT		272
-#define HGUI_LCD_BPP		24
-#define HGUI_LCD_LINE	(HGUI_LCD_WIDTH * HGUI_LCD_BPP / 8)
-#define HGUI_LCD_SIZE	(HGUI_LCD_LINE * HGUI_LCD_HEIGHT)
+#define HGUI_LCD_W		HGUI_LCD_WIDTH
+#define HGUI_LCD_H		HGUI_LCD_HEIGHT
+#define HGUI_LCD_BPP		HGUI_LCD_BITSPERPIX
+#define HGUI_LCD_LINE	(HGUI_LCD_W * HGUI_LCD_BPP / 8)
+#define HGUI_LCD_SIZE	(HGUI_LCD_LINE * HGUI_LCD_H)
 
 //
 //HGUI全局资源
@@ -56,11 +58,11 @@ char *HGui_LcdBuffer(void)
 }
 unsigned short HGui_LcdWidth(void)
 {
-	return HGUI_LCD_WIDTH;
+	return HGUI_LCD_W;
 }
 unsigned short HGui_LcdHeight(void)
 {
-	return HGUI_LCD_HEIGHT;
+	return HGUI_LCD_H;
 }
 unsigned short HGui_LcdBpp(void)
 {
@@ -187,7 +189,7 @@ static S_WORD TouchEvt = 0;
 static S_DWORD TouchPos = 0;
 const S_WORD TouchEvtType[] = 
 {
-	EVT_TOUCHDN, EVT_TOUCHMV, EVT_TOUCHUP, EVT_TOUCHDB
+	EVT_MOUSEDN, EVT_MOUSEMV, EVT_MOUSEUP, EVT_MOUSEDB
 };
 
 void HGui_TouchISR(unsigned short Evt, unsigned short x, unsigned short y)

@@ -19,10 +19,13 @@
 class C_HGUIFONT:public C_HGUIOBJ
 {
 public:
-	C_HGUIFONT(void):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_FONT){m_style = 0; }
-	virtual ~C_HGUIFONT(){}
+	C_HGUIFONT(void);
+	virtual ~C_HGUIFONT();
 
 public:
+	S_BYTE SetBkMode(S_BYTE BkMode){S_BYTE old = m_BkMode;m_BkMode=BkMode;return old;}
+	S_DWORD SetBkColor(S_DWORD BkColor){S_DWORD old = m_BkColor;m_BkColor=BkColor;return old;}
+	S_DWORD SetTextColor(S_DWORD TextColor){S_DWORD old = m_TextColor;m_TextColor=TextColor;return old;}
 	virtual int GetWidth(S_WORD font) = 0;
 	virtual int GetHeight(S_WORD font) = 0;
 	virtual int DrawChar(S_WORD x, S_WORD y, char ch, C_HGUIBMP *pBMP) = 0;
@@ -30,6 +33,9 @@ public:
 
 protected:
 	int m_style;
+	S_BYTE m_BkMode;
+	S_DWORD m_TextColor;
+	S_DWORD m_BkColor;
 };
 
 class C_HGUIF12x12:public C_HGUIFONT

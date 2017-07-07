@@ -82,7 +82,7 @@ C_MSGBOX::C_MSGBOX(const S_CHAR *ptitle, const S_CHAR *ptext, S_DWORD dwFlag)
 	m_Title = ptitle;
 	m_WndText = ptext;
 	m_pParent = NULL;
-	m_flag = dwFlag | WNDF_VISIBLE;
+	m_flag = dwFlag | HGUI_WNDF_VISIBLE;
 	m_DelayMS = 0;
 }
 
@@ -128,12 +128,12 @@ int C_MSGBOX::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		}
 		break;
 	case EVT_COMMAND:
-		if (wParam == Btn_OK_ID && lParam == EVT_CMD_BTN_PUSHED)//OK
+		if (wParam == Btn_OK_ID && lParam == HGUI_EVT_CMD_BTN_PUSHED)//OK
 		{
 			EndDlg();
 			return MB_RTN_YESOK;
 		}
-		else if (wParam == Btn_Cancel_ID && lParam == EVT_CMD_BTN_PUSHED)//Cancel
+		else if (wParam == Btn_Cancel_ID && lParam == HGUI_EVT_CMD_BTN_PUSHED)//Cancel
 		{
 			EndDlg();
 			return MB_RTN_CANCEL;

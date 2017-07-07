@@ -103,6 +103,7 @@ public:
 	bool StretchBlit(S_WORD dx, S_WORD dy, S_WORD dw, S_WORD dh, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_WORD sw, S_WORD sh);
 	bool BitBlt(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop);
 	bool CreateCompatibleDC(const C_HGUIDC *pDC);
+	bool DrawBitmap(S_WORD x, S_WORD y, C_HGUIBMP *pbitmap);
 	bool DeleteObject(void);
 
 protected:

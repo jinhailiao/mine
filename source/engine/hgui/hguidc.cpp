@@ -128,6 +128,10 @@ int C_HGUIDC::DrawString(S_WORD x, S_WORD y, const char *pText)
 	ClientToScreen(rect);
 	x = rect.x, y = rect.y;
 
+	S_BYTE BkMode = m_pFont->SetBkMode(m_BkMode);
+	S_DWORD TextColor = m_pFont->SetTextColor(m_TextColor);
+	S_DWORD BkColor = m_pFont->SetBkColor(m_BkColor);
+
 	while (S_BYTE ch = *pText++)
 	{
 		if (ch & 0x80)//Hz font
@@ -142,6 +146,10 @@ int C_HGUIDC::DrawString(S_WORD x, S_WORD y, const char *pText)
 			x += m_pFont->GetWidth(ch);
 		}
 	}
+
+	m_pFont->SetBkMode(BkMode);
+	m_pFont->SetTextColor(TextColor);
+	m_pFont->SetBkColor(BkColor);
 
 	FlushScreen();
 	return 0;
@@ -306,6 +314,14 @@ bool C_HGUIDC::CreateCompatibleDC(const C_HGUIDC *pDC)
 	m_Rect.w = m_pBMP->GetWidth();
 	m_Rect.h = m_pBMP->GetHeight();
 	return true;
+}
+
+bool C_HGUIDC::DrawBitmap(S_WORD x, S_WORD y, C_HGUIBMP *pbitmap)
+{
+	C_HGUIDC dcMem(NULL);
+	dcMem.CreateCompatibleDC(this);
+	dcMem.SelectObject(pbitmap);
+	return BitBlt(x, y, pbitmap->GetWidth(), pbitmap->GetHeight(), &dcMem, pbitmap->GetWidth(), pbitmap->GetHeight(), HGUI_SRCCOPY);
 }
 
 bool C_HGUIDC::DeleteObject(void)

@@ -79,8 +79,8 @@ protected:
 protected:
 	string m_Title;
 	S_DWORD m_DelayMS;
-	static const S_DWORD Btn_OK_ID = 1;
-	static const S_DWORD Btn_Cancel_ID = 2;
+	static const S_WORD Btn_OK_ID = 1;
+	static const S_WORD Btn_Cancel_ID = 2;
 };
 
 int HGui_MsgBox(const S_CHAR *ptitle, const S_CHAR *ptext, S_DWORD dwFlag);

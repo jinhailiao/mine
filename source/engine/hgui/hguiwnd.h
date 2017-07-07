@@ -17,9 +17,11 @@
 #include "hguievt.h"
 #include "hguidc.h"
 
-#define WNDF_VISIBLE		0x00000001UL
-#define WNDF_DISABLED		0x00000002UL
-#define WNDF_FOCUS			0x00000004UL
+#define HGUI_WNDF_VISIBLE		0x00000001UL
+#define HGUI_WNDF_DISABLED		0x00000002UL
+#define HGUI_WNDF_FOCUS			0x00000004UL
+#define HGUI_WNDF_GRAYED			HGUI_WNDF_DISABLED
+#define HGUI_WNDF_GROUP			0x00000008UL
 
 class C_WNDBASE:public C_HGUIOBJ
 {
@@ -39,6 +41,18 @@ public:
 	void EnableWnd(bool bEnable = true);
 
 	bool InvalidRect(void){return m_InvalidRect.w && m_InvalidRect.h;}
+	bool WndVisible(void){return (m_flag&HGUI_WNDF_VISIBLE) == HGUI_WNDF_VISIBLE;}
+	bool WndFocus(void){return (m_flag&HGUI_WNDF_FOCUS) == HGUI_WNDF_FOCUS;}
+	bool WndDisabled(void){return (m_flag&HGUI_WNDF_DISABLED) == HGUI_WNDF_DISABLED;}
+	bool WndGrayed(void){return WndDisabled();}
+
+	virtual bool SetVisible(bool fVisible);
+	virtual bool SetFocus(bool fFocus);
+	virtual bool SetDisabled(bool fDisable);
+
+	bool SetGrayed(bool fGrayed){return SetDisabled(fGrayed);}
+	C_WNDBASE *SetCapture(C_WNDBASE *pWnd){C_WNDBASE *pOld=m_pCapture;m_pCapture=pWnd;return pOld;}
+	C_WNDBASE *GetCapture(void){return m_pCapture;}
 	int ClientToScreen(S_RECT &rect);
 	void UpdateWnd(void);
 
@@ -47,10 +61,11 @@ protected:
 	virtual int DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam);
 
 protected:
-	S_DWORD m_flag;
+	S_DWORD m_flag; // byte 0 is wndflag
 	S_RECT m_WndRect;
 	S_RECT m_InvalidRect;
 	C_WNDBASE *m_pParent;
+	C_WNDBASE *m_pCapture;
 };
 
 class C_HGUICARET;
@@ -107,6 +122,7 @@ public:
 	bool AddControl(C_GUICTRL *pCtrl){m_CtrlQ.push_back(pCtrl);return true;}
 	bool DeleteAutoReleaseControl(void);
 	C_GUICTRL *RemoveControl(int nID);
+	S_WORD GetLastCtrlGroup(void);
 
 protected:
 	virtual int WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam);

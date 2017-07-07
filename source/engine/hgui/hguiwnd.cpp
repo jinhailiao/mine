@@ -29,9 +29,10 @@ C_WNDBASE::C_WNDBASE(void):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_WNDB)
 	m_InvalidRect.w = 0;
 	m_InvalidRect.h = 0;
 
-	m_flag = WNDF_VISIBLE;
+	m_flag = HGUI_WNDF_VISIBLE;
 
 	m_pParent = NULL;
+	m_pCapture = NULL;
 }
 
 C_WNDBASE::~C_WNDBASE()
@@ -54,6 +55,33 @@ int C_WNDBASE::PostWndEvt(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 	SGuiApp->PostGuiEvt(aEvt);
 
 	return 0;
+}
+
+bool C_WNDBASE::SetVisible(bool fVisible)
+{
+	if (fVisible == true)
+		m_flag |= HGUI_WNDF_VISIBLE;
+	else
+		m_flag &= ~HGUI_WNDF_VISIBLE;
+	return true;
+}
+
+bool C_WNDBASE::SetFocus(bool fFocus)
+{
+	if (fFocus == true)
+		m_flag |= HGUI_WNDF_FOCUS;
+	else
+		m_flag &= ~HGUI_WNDF_FOCUS;
+	return true;
+}
+
+bool C_WNDBASE::SetDisabled(bool fDisable)
+{
+	if (fDisable == true)
+		m_flag |= HGUI_WNDF_DISABLED;
+	else
+		m_flag &= ~HGUI_WNDF_DISABLED;
+	return true;
 }
 
 int C_WNDBASE::ClientToScreen(S_RECT &rect)
@@ -101,17 +129,17 @@ void C_WNDBASE::UpdateWnd(void)
 void C_WNDBASE::ShowWnd(bool bShow)
 {
 	if (bShow == true)
-		m_flag |= WNDF_VISIBLE;
+		m_flag |= HGUI_WNDF_VISIBLE;
 	else
-		m_flag &= ~WNDF_VISIBLE;
+		m_flag &= ~HGUI_WNDF_VISIBLE;
 }
 
 void C_WNDBASE::EnableWnd(bool bEnable)
 {
 	if (bEnable == true)
-		m_flag |= WNDF_DISABLED;
+		m_flag |= HGUI_WNDF_DISABLED;
 	else
-		m_flag &= ~WNDF_DISABLED;
+		m_flag &= ~HGUI_WNDF_DISABLED;
 }
 
 int C_WNDBASE::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
@@ -199,7 +227,7 @@ int C_GUIWNDB::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 	switch (evt)
 	{
 	case EVT_SETFOCUS:
-		m_flag |= WNDF_FOCUS;
+		m_flag |= HGUI_WNDF_FOCUS;
 		SGuiApp->SetAppCaret(m_pCurCaret);
 		break;
 	case EVT_KILLFOCUS:{
@@ -209,7 +237,7 @@ int C_GUIWNDB::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 			if (pCaret->GetCaretStatus())
 				pCaret->SendWndEvt(EVT_PAINT, 0x00, 0x00);
 		}
-		m_flag &= ~WNDF_FOCUS;
+		m_flag &= ~HGUI_WNDF_FOCUS;
 		SGuiApp->SetAppCaret(NULL);}
 		break;
 	default:
@@ -266,7 +294,7 @@ void C_HGUIWND::EndPaint(C_HGUIDC *pDC)
 		for (S_DWORD i = 0; i < m_CtrlQ.size(); i++)
 		{
 			C_GUICTRL *pWnd = m_CtrlQ[i];
-			if (pWnd->GetWndLong() & WNDF_VISIBLE)
+			if (pWnd->GetWndLong() & HGUI_WNDF_VISIBLE)
 				pWnd->SendWndEvt(EVT_PAINT, 0x00, 0x00);
 		}
 	}
@@ -335,7 +363,7 @@ C_GUICTRL *C_HGUIWND::GetFocusCtrl(void)
 	{
 		C_GUICTRL *pWnd = m_CtrlQ[i];
 		S_DWORD flag = pWnd->GetWndLong();
-		if (flag & WNDF_FOCUS)
+		if (flag & HGUI_WNDF_FOCUS)
 			return pWnd;
 	}
 	return NULL;
@@ -391,6 +419,8 @@ bool C_HGUIWND::DeleteAutoReleaseControl(void)
 	for (S_DWORD i = 0; i < ReleaseCtrlQ.size(); i++)
 	{
 		C_GUICTRL *pWnd = ReleaseCtrlQ[i];
+		if (GetCapture() == pWnd)
+			SetCapture(NULL);
 		delete pWnd;
 	}
 
@@ -406,11 +436,22 @@ C_GUICTRL *C_HGUIWND::RemoveControl(int nID)
 		C_GUICTRL *pWnd = m_CtrlQ[i];
 		if (pWnd->GetCtrlID() == (S_DWORD)nID)
 		{
+			if (GetCapture() == pWnd)
+				SetCapture(NULL);
 			m_CtrlQ.erase(m_CtrlQ.begin() + i); // ´ÓÁ´±íÀïÒÆ³ý
 			return pWnd;
 		}
 	}
 	return NULL;
+}
+
+S_WORD C_HGUIWND::GetLastCtrlGroup(void)
+{
+	if (m_CtrlQ.empty())
+		return 0x00;
+
+	size_t i = m_CtrlQ.size();
+	return m_CtrlQ[i]->GetGroup();
 }
 
 int C_HGUIWND::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)

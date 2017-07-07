@@ -25,5 +25,13 @@ public:
 	virtual int WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam);
 };
 
+class C_LOGO:public C_HGUIWND
+{
+public:
+	C_LOGO(void){}
+
+	virtual int WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam);
+};
+
 #endif//__DEMO_APP_H__
 

@@ -112,8 +112,10 @@
     <ClInclude Include="..\..\source\engine\hgui\hguibase.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguibmp.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguicart.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguicfg.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguictrl.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguidc.h" />
+    <ClInclude Include="..\..\source\engine\hgui\hguidef.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguidlog.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguievt.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguifont.h" />

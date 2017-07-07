@@ -10,6 +10,7 @@
 // Version		date		operations				by who
 // 1.0.0		2010-01-18  Create                  Kingsea
 //---------------------------------------------------------------------------------
+#include "hguidef.h"
 #include "hguifont.h"
 
 #define FONT12X12	"font1212.bin"
@@ -18,6 +19,18 @@
 #define SYM08X16	"sym0816.bin"
 
 extern char g_HGui_ResourcePath[CFG_PATH_FILE_MAX_LEN];
+
+//
+C_HGUIFONT::C_HGUIFONT(void):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_FONT)
+{
+	m_style = 0;
+	m_BkMode = HGUI_BKM_OPAQUE;
+	m_TextColor = HGUI_COLOR_BLACK;
+	m_BkColor = HGUI_COLOR_WHITE;
+}
+C_HGUIFONT::~C_HGUIFONT()
+{
+}
 
 /** @brief Font 12x12
  */
