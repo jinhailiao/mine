@@ -3,6 +3,8 @@
 
 #include "stdafx.h"
 #include "main.h"
+#include <process.h> /* _beginthread, _endthread */
+
 #define MAX_LOADSTRING 100
 
 #define DEVICE_LCD_WIDTH		480
@@ -25,9 +27,12 @@ char rgbUserBuffer[DEVICE_LCD_WIDTH*(DEVICE_LCD_BPP/8)*DEVICE_LCD_HEIGHT];
 extern char *HGui_fb;
 
 extern void HGui_KeyISR(unsigned short key);
+extern void HGui_MouseISR(unsigned short Evt, unsigned short x, unsigned short y);
 
 extern int InitEngine(void);
 extern int RunEngine(void);
+extern void MainEngine(void *pData);
+
 
 // 此代码模块中包含的函数的前向声明:
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -72,16 +77,18 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	hAccelTable = LoadAccelerators(hInstance, (LPCTSTR)IDC_MAIN);
 
-	// 主消息循环:
-//	while (GetMessage(&msg, NULL, 0, 0)) 
-//	{
-//		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) 
-//		{
-//			TranslateMessage(&msg);
-//			DispatchMessage(&msg);
-//		}
-//	}
+	_beginthread(MainEngine, 0, NULL);
 
+	// 主消息循环:
+	while (GetMessage(&msg, NULL, 0, 0)) 
+	{
+		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) 
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+	}
+#if 0
 	InitEngine();
 	while (1)
     {
@@ -117,7 +124,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
-
+#endif
 	return (int) msg.wParam;
 }
 
@@ -258,6 +265,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_KEYUP:
 		HGui_KeyISR((unsigned short)wParam);
+		break;
+	case WM_LBUTTONDOWN:
+		HGui_MouseISR(0, LOWORD(lParam), HIWORD(lParam));
+		break;
+	case WM_MOUSEMOVE:
+		HGui_MouseISR(1, LOWORD(lParam), HIWORD(lParam));
+		break;
+	case WM_LBUTTONUP:
+		HGui_MouseISR(2, LOWORD(lParam), HIWORD(lParam));
+		break;
+	case WM_LBUTTONDBLCLK:
+		HGui_MouseISR(3, LOWORD(lParam), HIWORD(lParam));
 		break;
 	case WM_DESTROY:
 		KillTimer(hWnd, ID_TIMER_PAINT_SCREEN);

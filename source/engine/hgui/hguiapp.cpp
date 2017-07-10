@@ -115,7 +115,7 @@ S_GUIEVT C_HGUIAPP::GetGuiEvt(void)
 		}
 
 		if (m_EvtQ.empty() == true)
-			SleepMS(50);
+			SleepMS(1);
 	}
 
 	aEvt = m_EvtQ.front();

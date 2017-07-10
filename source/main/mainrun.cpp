@@ -22,4 +22,11 @@ int RunEngine(void)
 	return theDemoApp.GuiAppRun();
 }
 
+void MainEngine(void *pData)
+{
+	InitEngine();
+	for (;;)
+		RunEngine();
+}
+
 
