@@ -5,12 +5,12 @@
 #include "main.h"
 #define MAX_LOADSTRING 100
 
-#define SIMULATOR_WND_WIDTH		486
-#define SIMULATOR_WND_HEIGHT		300
-
 #define DEVICE_LCD_WIDTH		480
 #define DEVICE_LCD_HEIGHT		272
 #define DEVICE_LCD_BPP			24
+
+#define SIMULATOR_WND_WIDTH		(DEVICE_LCD_WIDTH+6)
+#define SIMULATOR_WND_HEIGHT	(DEVICE_LCD_HEIGHT+28)
 
 #define	ID_TIMER_PAINT_SCREEN	100
 
@@ -23,6 +23,8 @@ TCHAR szWindowClass[MAX_LOADSTRING];			// 主窗口类名
 BITMAPINFO bmpBitmapInfo;
 char rgbUserBuffer[DEVICE_LCD_WIDTH*(DEVICE_LCD_BPP/8)*DEVICE_LCD_HEIGHT];
 extern char *HGui_fb;
+
+extern void HGui_KeyISR(unsigned short key);
 
 extern int InitEngine(void);
 extern int RunEngine(void);
@@ -252,8 +254,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		EndPaint(hWnd, &ps);
 		}break;
 	case WM_TIMER:
-//		InvalidateRect(hWnd, NULL, true); 会闪屏
-		PostMessage(hWnd, WM_PAINT, 0, 0);
+		InvalidateRect(hWnd, NULL, false);
+		break;
+	case WM_KEYUP:
+		HGui_KeyISR((unsigned short)wParam);
 		break;
 	case WM_DESTROY:
 		KillTimer(hWnd, ID_TIMER_PAINT_SCREEN);

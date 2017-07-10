@@ -180,34 +180,34 @@ S_WORD HGui_PollKey(S_VOID)
 }
 
 /** @brief ´¥ÃþÆÁ³õÊ¼»¯ */
-int HGui_TouchscrnInit(void)
+int HGui_MouseInit(void)
 {
 	return 0;
 }
 
-static S_WORD TouchEvt = 0;
-static S_DWORD TouchPos = 0;
-const S_WORD TouchEvtType[] = 
+static S_WORD MouseEvt = 0;
+static S_DWORD MousePos = 0;
+const S_WORD MouseEvtType[] = 
 {
 	EVT_MOUSEDN, EVT_MOUSEMV, EVT_MOUSEUP, EVT_MOUSEDB
 };
 
-void HGui_TouchISR(unsigned short Evt, unsigned short x, unsigned short y)
+void HGui_MouseISR(unsigned short Evt, unsigned short x, unsigned short y)
 {
 	if (fUserInputEnable == false)
 		return;
 
-	TouchEvt = TouchEvtType[Evt];
-	TouchPos = HAI_COMBDWORD(x, y);
+	MouseEvt = MouseEvtType[Evt];
+	MousePos = HAI_COMBDWORD(y, x);
 }
 
-S_WORD HGui_PollTouch(S_DWORD &Pos)
+S_WORD HGui_PollMouse(S_DWORD &Pos)
 {
-	S_WORD evt = TouchEvt;
+	S_WORD evt = MouseEvt;
 
-	Pos = TouchPos;
-	TouchEvt = 0x00;
-	TouchPos = 0x00;
+	Pos = MousePos;
+	MouseEvt = 0x00;
+	MousePos = 0x00;
 
 	return evt;
 }
@@ -229,7 +229,7 @@ S_GUIEVT HGui_PollEvt(void)
 	{
 		S_DWORD Pos = 0x00;
 
-		aEvt.Evt = HGui_PollTouch(Pos);
+		aEvt.Evt = HGui_PollMouse(Pos);
 		if (aEvt.Evt != 0x00)
 			aEvt.lParam = Pos;
 	}

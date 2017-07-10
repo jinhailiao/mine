@@ -66,7 +66,7 @@ void HGui_KeyISR(unsigned short key);
 S_WORD HGui_PollKey(S_VOID);
 
 /** @brief 触摸屏初始化 */
-int HGui_TouchscrnInit(void);
+int HGui_MouseInit(void);
 
 /** @brief 查询消息*/
 S_GUIEVT HGui_PollEvt(void);

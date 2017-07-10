@@ -321,7 +321,7 @@ bool C_HGUIDC::DrawBitmap(S_WORD x, S_WORD y, C_HGUIBMP *pbitmap)
 	C_HGUIDC dcMem(NULL);
 	dcMem.CreateCompatibleDC(this);
 	dcMem.SelectObject(pbitmap);
-	return BitBlt(x, y, pbitmap->GetWidth(), pbitmap->GetHeight(), &dcMem, pbitmap->GetWidth(), pbitmap->GetHeight(), HGUI_SRCCOPY);
+	return BitBlt(x, y, pbitmap->GetWidth(), pbitmap->GetHeight(), &dcMem, 0, 0, HGUI_SRCCOPY);
 }
 
 bool C_HGUIDC::DeleteObject(void)

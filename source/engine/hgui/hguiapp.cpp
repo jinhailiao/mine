@@ -30,7 +30,7 @@ int C_HGUIAPP::SysInit(const char *pResourcePath)
 		return -1;
 	if (HGui_KeyboardInit() != 0)
 		return -1;
-	if (HGui_TouchscrnInit() != 0)
+	if (HGui_MouseInit() != 0)
 		return -1;
 	if (C_HGUISCRN::InitScreenBitmap() != 0)
 		return -1;

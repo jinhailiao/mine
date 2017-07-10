@@ -55,12 +55,15 @@ int C_DESKTOP::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		S_RECT Rect;
 		for (S_WORD i = 0; i < 8; i++)
 		{
+			Rect.x = 100+(i%4)*70, Rect.w = 48;
+			Rect.y = 30+(i/4)*90, Rect.h = 64;
 			C_ButtonEx *pButton = C_ButtonEx::NewCtrl();
-//			pButton->Create(ShortCutName[i], HGUI_BS_PUSHBTN|HGUI_CS_TEXT_BUTTOM, Rect, this, const char * pUpPic, const char * pDnPic, const char * pGrayPic, i+1);
+			pButton->Create(ShortCutName[i], HGUI_BS_PUSHBTN|HGUI_CS_TEXT_BUTTOM, Rect, this, APP_RESOURCE_PATH"tubiao.bmp", APP_RESOURCE_PATH"tubiao.bmp", APP_RESOURCE_PATH"tubiao.bmp", i+1);
 		}
-		C_ButtonEx *pStart = C_ButtonEx::NewCtrl();
-		pStart->Create("开始", HGUI_BS_PUSHBTN, Rect, this, NULL, NULL, NULL, 10);
+//		C_ButtonEx *pStart = C_ButtonEx::NewCtrl();
+//		pStart->Create("开始", HGUI_BS_PUSHBTN, Rect, this, NULL, NULL, NULL, 10);
 //		hai_CreateButton(BS_PUSHBTN, 10, 2, (LCD_HEIGHT-16-2), 40, 16, "开始", 0, 0, 0);
+		GOTOWND(C_LOGO, 0);
 		}break;
 	case EVT_PAINT:{
 		C_HGUIDC *pDC = BeginPaint();
@@ -208,8 +211,9 @@ int C_LOGO::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		DCmem.DeleteObject();
 		EndPaint(pDC);
 		}break;
+	case EVT_MOUSEUP:
 	case EVT_KEYUP:
-//		GOTOWND(C_MENUWND, 0);
+		RETURNWND();
 		break;
 	default:
 		return DefWndProcess(msg, wParam, lParam);

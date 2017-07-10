@@ -89,12 +89,6 @@ public:
 	virtual ~C_HGUISCRN();
 
 	bool BufferNotRelease(void);
-
-	virtual int SetPixel(S_WORD x, S_WORD y, S_DWORD color);
-	virtual S_DWORD GetPixel(S_WORD x, S_WORD y);
-	virtual int FlipPixel(S_WORD x, S_WORD y);
-	virtual int FlipHLine(S_WORD x, S_WORD y, S_WORD w);
-	virtual int FillHLine(S_WORD x, S_WORD y, S_WORD w, S_DWORD color);
 };
 
 extern C_HGUISCRN HGUI_LcdScrn;

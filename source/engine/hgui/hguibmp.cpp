@@ -1607,32 +1607,6 @@ bool C_HGUISCRN::BufferNotRelease(void)
 	return true;
 }
 
-int C_HGUISCRN::SetPixel(S_WORD x, S_WORD y, S_DWORD color)
-{
-	return -1;
-}
-
-S_DWORD C_HGUISCRN::GetPixel(S_WORD x, S_WORD y)
-{
-	return 0;
-}
-
-int C_HGUISCRN::FlipPixel(S_WORD x, S_WORD y)
-{
-	return -1;
-}
-
-int C_HGUISCRN::FlipHLine(S_WORD x, S_WORD y, S_WORD w)
-{
-	return 0;
-}
-
-int C_HGUISCRN::FillHLine(S_WORD x, S_WORD y, S_WORD w, S_DWORD color)
-{
-	return 0;
-}
-
-
 C_HGUISCRN HGUI_LcdScrn;
 
 

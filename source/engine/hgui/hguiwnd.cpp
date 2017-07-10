@@ -451,7 +451,7 @@ S_WORD C_HGUIWND::GetLastCtrlGroup(void)
 		return 0x00;
 
 	size_t i = m_CtrlQ.size();
-	return m_CtrlQ[i]->GetGroup();
+	return m_CtrlQ[i-1]->GetGroup();
 }
 
 int C_HGUIWND::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)

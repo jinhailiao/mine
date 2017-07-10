@@ -31,6 +31,11 @@ public:
 	virtual int DrawChar(S_WORD x, S_WORD y, char ch, C_HGUIBMP *pBMP) = 0;
 	virtual int DrawFont(S_WORD x, S_WORD y, S_WORD ch, C_HGUIBMP *pBMP) = 0;
 
+	inline void DrawPixel(S_WORD x, S_WORD y, S_BYTE FontBit, C_HGUIBMP *pBMP){
+		if (FontBit&0x01) pBMP->SetPixel(x, y, m_TextColor);
+		else if (m_BkMode == HGUI_BKM_OPAQUE) pBMP->SetPixel(x, y, m_BkColor);
+	}
+
 protected:
 	int m_style;
 	S_BYTE m_BkMode;
