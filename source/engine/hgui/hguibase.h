@@ -62,7 +62,7 @@ void HGui_direction(int direction);
 
 /** @brief 键盘初始化*/
 int HGui_KeyboardInit(void);
-void HGui_KeyISR(unsigned short key);
+void HGui_KeyISR(unsigned short key, bool fDown);
 S_WORD HGui_PollKey(S_VOID);
 
 /** @brief 触摸屏初始化 */

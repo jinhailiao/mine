@@ -15,6 +15,7 @@
 #include "hguibase.h"
 #include "hguicart.h"
 #include "hguictrl.h"
+#include "hguirect.h"
 
 /** GUI base window define
   */
@@ -149,6 +150,17 @@ int C_WNDBASE::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 
 int C_WNDBASE::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 {
+	switch(evt)
+	{
+	case EVT_KILLFOCUS:
+		SetFocus(false);
+		break;
+	case EVT_SETFOCUS:
+		SetFocus(true);
+		break;
+	default:
+		break;
+	}
 	return 0;
 }
 
@@ -293,7 +305,7 @@ void C_HGUIWND::EndPaint(C_HGUIDC *pDC)
 	{
 		for (S_DWORD i = 0; i < m_CtrlQ.size(); i++)
 		{
-			C_GUICTRL *pWnd = m_CtrlQ[i];
+			C_HGUICTRL *pWnd = m_CtrlQ[i];
 			if (pWnd->GetWndLong() & HGUI_WNDF_VISIBLE)
 				pWnd->SendWndEvt(EVT_PAINT, 0x00, 0x00);
 		}
@@ -355,13 +367,13 @@ int C_HGUIWND::InvalidateRect(const S_RECT *pRect)
 	return 0;
 }
 
-C_GUICTRL *C_HGUIWND::GetFocusCtrl(void)
+C_HGUICTRL *C_HGUIWND::GetFocusCtrl(void)
 {
 	if (m_CtrlQ.empty())
 		return NULL;
 	for (S_DWORD i = 0; i < m_CtrlQ.size(); i++)
 	{
-		C_GUICTRL *pWnd = m_CtrlQ[i];
+		C_HGUICTRL *pWnd = m_CtrlQ[i];
 		S_DWORD flag = pWnd->GetWndLong();
 		if (flag & HGUI_WNDF_FOCUS)
 			return pWnd;
@@ -369,31 +381,38 @@ C_GUICTRL *C_HGUIWND::GetFocusCtrl(void)
 	return NULL;
 }
 
-C_GUICTRL *C_HGUIWND::SetFocusCtrl(C_GUICTRL *pFocusCtrl)
+C_HGUICTRL *C_HGUIWND::SetFocusCtrl(C_HGUICTRL *pFocusCtrl)
 {
-	C_GUICTRL *pCurFocus = GetFocusCtrl();
-	if (pCurFocus == pFocusCtrl)
-		return pFocusCtrl;
-	if (pCurFocus != NULL)
-		pCurFocus->SendWndEvt(EVT_KILLFOCUS, 0x00, 0x00);
-	if (pFocusCtrl != NULL)
-		pFocusCtrl->SendWndEvt(EVT_SETFOCUS, 0x00, 0x00);
-	else
-		SendWndEvt(EVT_SETFOCUS, 0x00, 0x00);
-
-	InvalidateRect(NULL);
+	C_HGUICTRL *pCurFocus = GetFocusCtrl();
+	if (_SetFocusCtrl(pFocusCtrl) == true)
+		InvalidateRect(NULL);
 	return pCurFocus;
 }
 
-C_GUICTRL *C_HGUIWND::GetWndCtrl(int nID)
+C_HGUICTRL *C_HGUIWND::GetWndCtrl(int nID)
 {
 	if (m_CtrlQ.empty())
 		return NULL;
 	for (S_DWORD i = 0; i < m_CtrlQ.size(); i++)
 	{
-		C_GUICTRL *pWnd = m_CtrlQ[i];
+		C_HGUICTRL *pWnd = m_CtrlQ[i];
 		if (pWnd->GetCtrlID() == (S_DWORD)nID)
 			return pWnd;
+	}
+	return NULL;
+}
+
+C_HGUICTRL *C_HGUIWND::GetHittedCtrl(S_WORD x, S_WORD y)
+{
+	if (m_CtrlQ.empty())
+		return NULL;
+	for (vector<C_HGUICTRL*>::iterator iter = m_CtrlQ.begin(); iter != m_CtrlQ.end(); iter++)
+	{
+		if ((*iter)->WndVisible() == false || (*iter)->WndGrayed() == true)
+			continue;
+		C_HGUIRECT Rect((*iter)->GetWndRect());
+		if (Rect.PointInRect(x, y) == true)
+			return *iter;
 	}
 	return NULL;
 }
@@ -403,13 +422,13 @@ bool C_HGUIWND::DeleteAutoReleaseControl(void)
 	if (m_CtrlQ.empty())
 		return false;
 
-	vector<C_GUICTRL*> ReleaseCtrlQ;
-	vector<C_GUICTRL*> AllCtrlQ(m_CtrlQ);
+	vector<C_HGUICTRL*> ReleaseCtrlQ;
+	vector<C_HGUICTRL*> AllCtrlQ(m_CtrlQ);
 
 	m_CtrlQ.clear();
 	for (S_DWORD i = 0; i < AllCtrlQ.size(); i++)
 	{
-		C_GUICTRL *pWnd = AllCtrlQ[i];
+		C_HGUICTRL *pWnd = AllCtrlQ[i];
 		pWnd->Release();
 		if (pWnd->GetReferenceCount() == 0)
 			ReleaseCtrlQ.push_back(pWnd);
@@ -418,7 +437,7 @@ bool C_HGUIWND::DeleteAutoReleaseControl(void)
 	}
 	for (S_DWORD i = 0; i < ReleaseCtrlQ.size(); i++)
 	{
-		C_GUICTRL *pWnd = ReleaseCtrlQ[i];
+		C_HGUICTRL *pWnd = ReleaseCtrlQ[i];
 		if (GetCapture() == pWnd)
 			SetCapture(NULL);
 		delete pWnd;
@@ -427,13 +446,13 @@ bool C_HGUIWND::DeleteAutoReleaseControl(void)
 	return true;
 }
 
-C_GUICTRL *C_HGUIWND::RemoveControl(int nID)
+C_HGUICTRL *C_HGUIWND::RemoveControl(int nID)
 {
 	if (m_CtrlQ.empty())
 		return NULL;
 	for (S_DWORD i = 0; i < m_CtrlQ.size(); i++)
 	{
-		C_GUICTRL *pWnd = m_CtrlQ[i];
+		C_HGUICTRL *pWnd = m_CtrlQ[i];
 		if (pWnd->GetCtrlID() == (S_DWORD)nID)
 		{
 			if (GetCapture() == pWnd)
@@ -454,6 +473,25 @@ S_WORD C_HGUIWND::GetLastCtrlGroup(void)
 	return m_CtrlQ[i-1]->GetGroup();
 }
 
+bool C_HGUIWND::_SetFocusCtrl(C_HGUICTRL *pFocusCtrl)
+{
+	C_HGUICTRL *pCurFocus = GetFocusCtrl();
+	if (pCurFocus == pFocusCtrl)
+		return false;
+
+	if (pCurFocus != NULL)
+		pCurFocus->SendWndEvt(EVT_KILLFOCUS, 0x00, 0x00);
+	else if (WndFocus() == true)
+		SendWndEvt(EVT_KILLFOCUS, 0x00, 0x00);
+
+	if (pFocusCtrl != NULL)
+		pFocusCtrl->SendWndEvt(EVT_SETFOCUS, 0x00, 0x00);
+	else
+		SendWndEvt(EVT_SETFOCUS, 0x00, 0x00);
+
+	return true;
+}
+
 int C_HGUIWND::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 {
 	return DefWndProcess(evt, wParam, lParam);
@@ -465,6 +503,9 @@ int C_HGUIWND::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 	{
 	case EVT_QUIT:
 		SGuiApp->PopWnd();
+		break;
+	case EVT_CTRLFOCUS:
+		_SetFocusCtrl(GetWndCtrl(wParam));
 		break;
 	default:
 		return C_GUIWNDB::DefWndProcess(evt, wParam, lParam);

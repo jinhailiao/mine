@@ -26,7 +26,7 @@ BITMAPINFO bmpBitmapInfo;
 char rgbUserBuffer[DEVICE_LCD_WIDTH*(DEVICE_LCD_BPP/8)*DEVICE_LCD_HEIGHT];
 extern char *HGui_fb;
 
-extern void HGui_KeyISR(unsigned short key);
+extern void HGui_KeyISR(unsigned short key, bool fDown);
 extern void HGui_MouseISR(unsigned short Evt, unsigned short x, unsigned short y);
 
 extern int InitEngine(void);
@@ -263,8 +263,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_TIMER:
 		InvalidateRect(hWnd, NULL, false);
 		break;
+	case WM_KEYDOWN:
+		HGui_KeyISR((unsigned short)wParam, true);
+		break;
 	case WM_KEYUP:
-		HGui_KeyISR((unsigned short)wParam);
+		HGui_KeyISR((unsigned short)wParam, false);
 		break;
 	case WM_LBUTTONDOWN:
 		HGui_MouseISR(0, LOWORD(lParam), HIWORD(lParam));

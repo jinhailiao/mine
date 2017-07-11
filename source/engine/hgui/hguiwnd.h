@@ -94,7 +94,7 @@ protected:
 	C_HGUICARET *m_pCurCaret;
 };
 
-class C_GUICTRL;
+class C_HGUICTRL;
 class C_HGUIWND:public C_GUIWNDB
 {
 public:
@@ -115,23 +115,25 @@ public:
 	void SetFatherWndData(void *pFatherWndData);
 
 	int InvalidateRect(const S_RECT *pRect);
-	C_GUICTRL *GetFocusCtrl(void);
-	C_GUICTRL *SetFocusCtrl(C_GUICTRL *pFocusCtrl);
-	C_GUICTRL *GetWndCtrl(int nID);
+	C_HGUICTRL *GetFocusCtrl(void);
+	C_HGUICTRL *SetFocusCtrl(C_HGUICTRL *pFocusCtrl);
+	C_HGUICTRL *GetWndCtrl(int nID);
+	C_HGUICTRL *GetHittedCtrl(S_WORD x, S_WORD y);
 
-	bool AddControl(C_GUICTRL *pCtrl){m_CtrlQ.push_back(pCtrl);return true;}
+	bool AddControl(C_HGUICTRL *pCtrl){m_CtrlQ.push_back(pCtrl);return true;}
 	bool DeleteAutoReleaseControl(void);
-	C_GUICTRL *RemoveControl(int nID);
+	C_HGUICTRL *RemoveControl(int nID);
 	S_WORD GetLastCtrlGroup(void);
 
 protected:
+	bool _SetFocusCtrl(C_HGUICTRL *pFocusCtrl);
 	virtual int WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam);
 	virtual int DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam);
 
 protected:
 	char *m_pWndData;
 	void *m_pFatherWndData;
-	vector<C_GUICTRL*> m_CtrlQ;
+	vector<C_HGUICTRL*> m_CtrlQ;
 
 private:
 	bool m_ScrnFlushEn;

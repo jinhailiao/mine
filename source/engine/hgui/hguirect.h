@@ -23,6 +23,11 @@ public:
 	C_HGUIRECT(const C_HGUIRECT &HGuiRect);
 	~C_HGUIRECT(void);
 
+	S_WORD GetX(void){return m_rect.x;}
+	S_WORD GetY(void){return m_rect.y;}
+	S_WORD GetW(void){return m_rect.w;}
+	S_WORD GetH(void){return m_rect.h;}
+
 	bool Intersect(const S_RECT &rect)const;
 	bool Add(const S_RECT &rect);
 	bool PointInRect(S_WORD x, S_WORD y)const;

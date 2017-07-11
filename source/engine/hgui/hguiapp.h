@@ -60,6 +60,7 @@ public:
 protected:
 	int EmptyEvtQ(void);
 	int EmptyWndStack(void);
+	C_HGUIWND *GetCurrentWnd(void);
 
 protected:
 	static C_HGUIAPP *m_pGuiApp;

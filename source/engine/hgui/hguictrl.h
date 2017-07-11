@@ -50,11 +50,11 @@
 //
 //控件父类
 //
-class C_GUICTRL:public C_GUIWNDB
+class C_HGUICTRL:public C_GUIWNDB
 {
 public:
-	C_GUICTRL(void);
-	virtual ~C_GUICTRL();
+	C_HGUICTRL(void);
+	virtual ~C_HGUICTRL();
 
 public:
 	S_DWORD GetCtrlStyle(void){return m_flag;}
@@ -80,7 +80,7 @@ protected:
 //用户处理EVT_CMD要点
 //EVT_CMD消息参数:wParam=控件ID,lParam=EVT_CMD_CTRL_UPDATE(表示框内容有变化)
 //
-class C_NUMEDIT:public C_GUICTRL
+class C_NUMEDIT:public C_HGUICTRL
 {
 public:
 	C_NUMEDIT(void);
@@ -114,7 +114,7 @@ protected:
 //用户处理EVT_CMD要点
 //EVT_CMD消息参数:wParam=控件ID,lParam=EVT_CMD_CTRL_UPDATE(表示框内容有变化)
 //
-class C_ASCEDIT:public C_GUICTRL
+class C_ASCEDIT:public C_HGUICTRL
 {
 public:
 	C_ASCEDIT(void);
@@ -148,7 +148,7 @@ struct S_VKBTN
 //虚拟键盘控件
 //响应EVT_KEYUP（VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT,VK_RETURN）消息
 //
-class C_VKBOARD:public C_GUICTRL
+class C_VKBOARD:public C_HGUICTRL
 {
 public:
 	C_VKBOARD(void);
@@ -186,7 +186,7 @@ protected:
 //用户处理EVT_CMD要点
 //EVT_CMD消息参数:wParam=控件ID,lParam=EVT_CMD_CTRL_UPDATE(表示框内容有变化)
 //
-class C_TEXTEDIT:public C_GUICTRL
+class C_TEXTEDIT:public C_HGUICTRL
 {
 public:
 	C_TEXTEDIT(void);
@@ -216,7 +216,7 @@ protected:
 //用户处理EVT_CMD要点
 //EVT_CMD消息参数:wParam=控件ID,lParam=EVT_CMD_BTN_PUSHED(表示按钮按下了)
 //
-class C_BUTTON:public C_GUICTRL
+class C_BUTTON:public C_HGUICTRL
 {
 public:
 	C_BUTTON(void);
@@ -244,7 +244,7 @@ protected:
 //EVT_CMD消息参数:wParam=控件ID,lParam=EVT_CMD_CTRL_UPDATE(表示框内容有变化)
 //lParam 为其它值为当前选择框确认的项
 //
-class C_SELECTBOX:public C_GUICTRL
+class C_SELECTBOX:public C_HGUICTRL
 {
 public:
 	C_SELECTBOX(void);
@@ -276,7 +276,7 @@ protected:
 	static const char m_Direction_Width = 16;//固定宽度为16（SYM16X16符号高度）
 };
 
-class C_ButtonEx:public C_GUICTRL
+class C_ButtonEx:public C_HGUICTRL
 {
 public:
 	C_ButtonEx(void);

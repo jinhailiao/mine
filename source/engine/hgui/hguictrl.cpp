@@ -11,6 +11,7 @@
 // 1.0.0		2010-06-06  Create                  Kingsea
 //---------------------------------------------------------------------------------
 #include "hguictrl.h"
+#include "hguirect.h"
 
 #define HGUI_CS_TEXT_LF_MASK		0x00000300UL
 #define HGUI_CS_TEXT_TB_MASK		0x00000C00UL
@@ -19,41 +20,41 @@
 //
 //¿Ø¼þ¸¸Àà
 //
-C_GUICTRL::C_GUICTRL(void)
+C_HGUICTRL::C_HGUICTRL(void)
 {
 	m_ID = 0;
 	m_group = 0;
 }
 
-C_GUICTRL::~C_GUICTRL()
+C_HGUICTRL::~C_HGUICTRL()
 {
 }
 
-bool C_GUICTRL::AddCtrl2ParentWnd(C_HGUIWND *pWnd)
+bool C_HGUICTRL::AddCtrl2ParentWnd(C_HGUIWND *pWnd)
 {
 	if (pWnd == NULL)
 		return false;
 	return pWnd->AddControl(this);
 }
 
-S_WORD C_GUICTRL::GetLastCtrlGroup(C_HGUIWND *pWnd)
+S_WORD C_HGUICTRL::GetLastCtrlGroup(C_HGUIWND *pWnd)
 {
 	if (pWnd == NULL)
 		return 0x00;
 	return pWnd->GetLastCtrlGroup();
 }
 
-S_WORD C_GUICTRL::DrawText(C_HGUIDC &dc, const string &strText)
+S_WORD C_HGUICTRL::DrawText(C_HGUIDC &dc, const string &strText)
 {
 	return 0;
 }
 
-int C_GUICTRL::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
+int C_HGUICTRL::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 {
 	return C_GUIWNDB::WndProcess(evt, wParam, lParam);
 }
 
-int C_GUICTRL::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
+int C_HGUICTRL::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 {
 	return C_GUIWNDB::DefWndProcess(evt, wParam, lParam);
 }
@@ -174,14 +175,14 @@ int C_NUMEDIT::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		delete pdc;}
 		break;
 	default:
-		return C_GUICTRL::WndProcess(evt, wParam, lParam);
+		return C_HGUICTRL::WndProcess(evt, wParam, lParam);
 	}
 	return ok;
 }
 
 int C_NUMEDIT::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 {
-	return C_GUICTRL::DefWndProcess(evt, wParam, lParam);
+	return C_HGUICTRL::DefWndProcess(evt, wParam, lParam);
 }
 
 S_CHAR C_NUMEDIT::IncreaseChar(S_CHAR ch)
@@ -321,14 +322,14 @@ int C_ASCEDIT::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		delete pdc;}
 		break;
 	default:
-		return C_GUICTRL::WndProcess(evt, wParam, lParam);
+		return C_HGUICTRL::WndProcess(evt, wParam, lParam);
 	}
 	return ok;
 }
 
 int C_ASCEDIT::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 {
-	return C_GUICTRL::DefWndProcess(evt, wParam, lParam);
+	return C_HGUICTRL::DefWndProcess(evt, wParam, lParam);
 }
 
 S_CHAR C_ASCEDIT::IncreaseChar(S_CHAR ch)
@@ -461,14 +462,14 @@ int C_VKBOARD::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		}
 		break;
 	default:
-		return C_GUICTRL::WndProcess(evt, wParam, lParam);
+		return C_HGUICTRL::WndProcess(evt, wParam, lParam);
 	}
 	return ok;
 }
 
 int C_VKBOARD::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 {
-	return C_GUICTRL::DefWndProcess(evt, wParam, lParam);
+	return C_HGUICTRL::DefWndProcess(evt, wParam, lParam);
 }
 
 int C_VKBOARD::GetHighlightRect(S_RECT &rect, const C_HGUIDC *pdc)
@@ -623,14 +624,14 @@ int C_TEXTEDIT::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		}
 		break;
 	default:
-		return C_GUICTRL::WndProcess(evt, wParam, lParam);
+		return C_HGUICTRL::WndProcess(evt, wParam, lParam);
 	}
 	return ok;
 }
 
 int C_TEXTEDIT::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 {
-	return C_GUICTRL::DefWndProcess(evt, wParam, lParam);
+	return C_HGUICTRL::DefWndProcess(evt, wParam, lParam);
 }
 
 
@@ -715,7 +716,7 @@ int C_BUTTON::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 
 int C_BUTTON::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 {
-	return C_GUICTRL::DefWndProcess(evt, wParam, lParam);
+	return C_HGUICTRL::DefWndProcess(evt, wParam, lParam);
 }
 
 //
@@ -845,14 +846,14 @@ int C_SELECTBOX::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		}
 		break;
 	default:
-		return C_GUICTRL::WndProcess(evt, wParam, lParam);
+		return C_HGUICTRL::WndProcess(evt, wParam, lParam);
 	}
 	return ok;
 }
 
 int C_SELECTBOX::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 {
-	return C_GUICTRL::DefWndProcess(evt, wParam, lParam);
+	return C_HGUICTRL::DefWndProcess(evt, wParam, lParam);
 }
 
 int C_SELECTBOX::DrawFocusDirection(C_HGUIDC *pdc)
@@ -1100,40 +1101,20 @@ int C_ButtonEx::PushBtnProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		PushBtnProcess(EVT_PAINT, 0, 0);
 		m_pParent->SendWndEvt(EVT_COMMAND, m_ID, m_state);
 		break;
-	case EVT_MOUSEUP:
+	case EVT_MOUSEUP:{
+		S_WORD x = HAI_GETLOWORD(lParam);
+		S_WORD y = HAI_GETHIWORD(lParam);
+		C_HGUIRECT Rect(m_WndRect);
 		m_state = HGUI_BS_PUSHBTN_UP;
 		PushBtnProcess(EVT_PAINT, 0, 0);
-		m_pParent->SendWndEvt(EVT_COMMAND, m_ID, m_state);
 		m_pParent->SetCapture(NULL);
-		break;
+		if (Rect.PointInRect(x, y) == true)
+			m_pParent->SendWndEvt(EVT_COMMAND, m_ID, m_state);
+		}break;
 	case EVT_MOUSEDB:
 		m_pParent->SetCapture(NULL);
 		break;
-	case EVT_MOUSEMV:{
-		S_WORD x = HAI_GETLOWORD(lParam);
-		S_WORD y = HAI_GETHIWORD(lParam);
-		if (x>m_WndRect.x && x<m_WndRect.x+m_WndRect.w && y>m_WndRect.y && y<m_WndRect.y+m_WndRect.h)
-		{
-			if (m_state == HGUI_BS_PUSHBTN_UP)
-			{
-				m_state = HGUI_BS_PUSHBTN_DN;
-				m_pParent->SetCapture(this);
-				m_pParent->SendWndEvt(EVT_CTRLFOCUS, m_ID, 0);
-				PushBtnProcess(EVT_PAINT, 0, 0);
-			}
-		}
-		else
-		{
-			m_state = HGUI_BS_PUSHBTN_UP;
-			m_pParent->SetCapture(NULL);
-			PushBtnProcess(EVT_PAINT, 0, 0);
-		}
-		}break;
-	case EVT_SETFOCUS:
-		SetFocus(true);
-		break;
-	case EVT_KILLFOCUS:
-		SetFocus(false);
+	case EVT_MOUSEMV:
 		break;
 	case EVT_RESTORE:
 		break;

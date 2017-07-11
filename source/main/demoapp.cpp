@@ -47,7 +47,6 @@ S_VOID hai_DisplayTime(SH_DC hDC, S_WORD x, S_WORD y, S_WORD w, S_WORD h)
 	hai_DrawButton(hDC, x, y, w, h, S_FALSE, time);
 }
 */
-S_WORD x = 0;
 int C_DESKTOP::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 {
 	switch (msg)
@@ -59,7 +58,7 @@ int C_DESKTOP::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 			Rect.x = 100+(i%4)*70, Rect.w = 48;
 			Rect.y = 30+(i/4)*90, Rect.h = 64;
 			C_ButtonEx *pButton = C_ButtonEx::NewCtrl();
-			pButton->Create(ShortCutName[i], HGUI_BS_PUSHBTN|HGUI_CS_TEXT_BUTTOM, Rect, this, APP_RESOURCE_PATH"tubiao.bmp", APP_RESOURCE_PATH"tubiao.bmp", APP_RESOURCE_PATH"tubiao.bmp", i+1);
+			pButton->Create(ShortCutName[i], HGUI_BS_PUSHBTN|HGUI_CS_TEXT_BUTTOM, Rect, this, APP_RESOURCE_PATH"tubiao.bmp", APP_RESOURCE_PATH"tubiao2.bmp", APP_RESOURCE_PATH"tubiao2.bmp", i+1);
 		}
 //		C_ButtonEx *pStart = C_ButtonEx::NewCtrl();
 //		pStart->Create("¿ªÊ¼", HGUI_BS_PUSHBTN, Rect, this, NULL, NULL, NULL, 10);
@@ -67,11 +66,8 @@ int C_DESKTOP::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		GOTOWND(C_LOGO, 0);
 		}break;
 	case EVT_PAINT:{
-		char buffer[10];
 		C_HGUIDC *pDC = BeginPaint();
 		pDC->BitBlt(0, 0, LCD_WIDTH, LCD_HEIGHT, NULL, 0, 0, HGUI_WHITENESS);
-		sprintf(buffer, "%03d", x);
-		pDC->DrawString(20, 40, buffer);
 	//	hai_Draw3DBlock(hDC, 0, LCD_HEIGHT-20, LCD_WIDTH, 20, S_TRUE, GRAY_BRUSH);
 	//	hai_DisplayTime(hDC, DT_TIME_X, DT_TIME_Y, DT_TIME_W, DT_TIME_H);
 	//	hai_SetTextColor(hDC, (S_COLOR)COLOR_GRAY);
@@ -83,11 +79,10 @@ int C_DESKTOP::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 //		GOTOWND(C_MENUWND, 0);
 		break;
 	case EVT_MOUSEDN:
-		x = HAI_GETLOWORD(lParam);
-		InvalidateRect(NULL);
+//		InvalidateRect(NULL);
 		break;
 	case EVT_TIMER:
-		InvalidateRect(NULL);
+//		InvalidateRect(NULL);
 		break;
 	default:
 		return DefWndProcess(msg, wParam, lParam);

@@ -14,6 +14,7 @@
 #include "hguiapp.h"
 #include "hguibase.h"
 #include "hguictrl.h"
+#include "hguirect.h"
 
 C_HGUIAPP *C_HGUIAPP::m_pGuiApp = NULL;
 
@@ -146,6 +147,26 @@ int C_HGUIAPP::TranslateEvt(S_GUIEVT &evt)
 	case EVT_TIMER:
 		if (m_pCurCaret != NULL)
 			return m_pCurCaret->SendWndEvt(evt.Evt, evt.wParam, evt.lParam);
+		break;
+	case EVT_MOUSEDN:
+	case EVT_MOUSEMV:
+	case EVT_MOUSEDB:
+	case EVT_MOUSEUP:{
+		S_WORD x = HAI_GETLOWORD(evt.lParam);
+		S_WORD y = HAI_GETHIWORD(evt.lParam);
+		C_HGUIWND *pWnd = GetCurrentWnd();
+		C_HGUIRECT Rect(pWnd->GetWndRect());
+		if (Rect.PointInRect(x, y) == false)
+			break;
+		C_WNDBASE *pCtrl = NULL;
+		x -= pWnd->GetWndRect().x; y -= pWnd->GetWndRect().y;
+		if (evt.Evt == EVT_MOUSEDN) pCtrl = pWnd->GetHittedCtrl(x, y);
+		else pCtrl = pWnd->GetCapture();
+		if (pCtrl != NULL)
+			evt.pWnd = pCtrl, evt.lParam = HAI_COMBDWORD(y, x);
+		else
+			evt.pWnd = pWnd;
+		}break;
 	default:
 		break;
 	}
@@ -363,6 +384,13 @@ int C_HGUIAPP::EmptyWndStack(void)
 	m_EvtQ.push(aEvt);
 
 	return 0;
+}
+
+C_HGUIWND *C_HGUIAPP::GetCurrentWnd(void)
+{
+	if (m_pCurDlg != NULL)
+		return m_pCurDlg;
+	return m_pCurWnd;
 }
 
 

@@ -163,11 +163,13 @@ int HGui_KeyboardInit(void)
 	return 0;
 }
 
-void HGui_KeyISR(unsigned short key)
+void HGui_KeyISR(unsigned short key, bool fDown)
 {
 	if (fUserInputEnable == false)
 		return;
-	
+
+	if (fDown == true)
+		key |= 0x8000;
 	KeyBuffer = key;
 }
 
@@ -219,11 +221,13 @@ S_GUIEVT HGui_PollEvt(void)
 	S_WORD key = HGui_PollKey();
 	if (key != 0x00)
 	{
-		if (key >= VK_F1 && key <= VK_F24)
+		if ((key & 0x8000) == 0x8000)
+			aEvt.Evt = EVT_KEYDN;
+		else if (key >= VK_F1 && key <= VK_F24)
 			aEvt.Evt = EVT_SYSKEY;
 		else
 			aEvt.Evt = EVT_KEYUP;
-		aEvt.wParam = key;
+		aEvt.wParam = key&0x7FFF;
 	}
 	else
 	{
