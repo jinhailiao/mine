@@ -1,14 +1,14 @@
 --[[
 ***************************************************************************
-* Copyright (C) 2016, HaisoftÓÐÏÞ¹«Ë¾                                     
-* All rights reserved.                                                    
+* Copyright (C) 2016, HaisoftÓÐÏÞ¹«Ë¾
+* All rights reserved.
 
-* ÎÄ¼þÃû³Æ: mine.lua                                                   
-* Õª    Òª£º·ÂWINDOWSÖÐµÄÉ¨À×µÄÓÎÏ·                  
+* ÎÄ¼þÃû³Æ: mine.lua
+* Õª    Òª£º·ÂWINDOWSÖÐµÄÉ¨À×µÄÓÎÏ·
 
-* µ±Ç°°æ±¾: 2.0                                                           
-* ×÷    Õß: ÁÎ½ðº£                                                        
-* Íê³ÉÈÕÆÚ: 2016.11.1                                                     
+* µ±Ç°°æ±¾: 2.0
+* ×÷    Õß: ÁÎ½ðº£
+* Íê³ÉÈÕÆÚ: 2016.11.1
 ***************************************************************************
 --]]
 
@@ -18,19 +18,178 @@ BtnColor.BTNFACE = 0xC0C0C0
 BtnColor.BTNHIGHLIGHT = 0xFFFFFF
 BtnColor.BTNSHADOW = 0x808080
 
+GRIDWIDTH = 16
 
-#define GRIDWIDTH			16
-#define MAX_LOADSTRING		16
-#define EB_PRESSENTER		0x8000
-#define EB_PRESSESC			0x8001
-
-/************************* data structure **********************************/
-struct GRID             /* ·½¸ñµÄÊý¾Ý½á¹¹ */
+--ÓÎÏ·×´Ì¬
+GAMESTART=1
+GAMEOVER=2
+--É¨À×ÇøÓò {x,y,w}
+FACE_PLATE =
 {
-    int mine;           /* -1£ºÓÐÀ×£» 0-8£ºÖÜÎ§°Ë¸ñÀ×µÄÇé¿ö */
-    int status;         /* 1£º³õÊ¼»¯£»2£ºÒÑÅÅÀ×£»3£º±êÀ×£»4£º»³ÒÉ£»0£º²ÈÀ×; 5:ÏÔÊ¾À×; 6: ±êÀ×´íÎó*/
-    int check;          /* 1£º±êÊ¾ÕýÈ·£»0£º±êÊ¾´íÎó»òÎÞ±êÊ¾ */
-};
+	{x=106, y=150, w=183},
+	{x=46,  y=105, w=291},
+	{x=10,  y=75,  w=363}
+}
+--ÓÎÏ·Êý¾Ý
+GRID_LINE = {10, 16, 20}
+MINE_NUM = {15, 40, 80}
+
+MS_INIT = 1
+MS_CLEAR = 2
+MS_MARK = 3
+MS_DOUBT = 4
+MS_BOMB = 5
+MS_SHOW = 6
+MS_ERROR = 7
+
+---------------------------[[ global define ]]----------------------------
+g =
+{
+	GameLevel = 1,
+	--[[
+	struct GRID             /* ·½¸ñµÄÊý¾Ý½á¹¹ */
+	{
+    	int mine;           /* -1£ºÓÐÀ×£» 0-8£ºÖÜÎ§°Ë¸ñÀ×µÄÇé¿ö */
+    	int status;         /* 1£º³õÊ¼»¯£»2£ºÒÑÅÅÀ×£»3£º±êÀ×£»4£º»³ÒÉ£»0£º²ÈÀ×; 5:ÏÔÊ¾À×; 6: ±êÀ×´íÎó*/
+	};
+	--]]
+	GameBoard = {}, --À×ÇøÊý¾Ý
+	GameState = GAMESTART,
+	GameTime = 0, --ÓÎÏ·ÓÃÊ±
+	TimeStart = false, --¼ÆÊ±¿ªÊ¼
+
+--TCHAR MineStr[3][6]  = {TEXT("15"),TEXT("40"),TEXT("80")};
+--TCHAR LevelStr[3][6] = {TEXT("µÍ¼¶"), TEXT("ÖÐ¼¶"), TEXT("¸ß¼¶")};
+
+--struct GRID board[20][20];        /* À×Çø: 20*20; */
+--struct USER player, players[10];  /* playerÎªµ±Ç°Íæ¼Ò£¬playersÎª´¢´æµÄÍæ¼Ò*/
+--struct HERO hero[3];              /* heroÎªÉ¨À×Ó¢ÐÛÅÅÐÐ°ñ */
+--int    gamestart, gametime, timestart;		  /* gamestart:ÓÎÏ·¿ªÊ¼£» gametime:ÓÎÏ·ÓÃÊ±£»*/
+	MineRestNum = 0,               --/* Ê£ÓàÀ×µÄÊýÄ¿ */
+}
+
+function main_init()
+	DataInit()
+end
+
+function main_update()
+
+end
+
+function main_draw()
+	local boardx = FACE_PLATE[g.GameLevel].x
+	local boardy = FACE_PLATE[g.GameLevel].y
+	local boardw = FACE_PLATE[g.GameLevel].w
+
+	mine.DrawBoxUp(1, 1, 381, 445);
+	mine.DrawBoxDn(10, 10, 363, 50);
+	mine.DrawBoxDn(boardX, boardY, boardw, boardw);
+	ShowMineArea();
+--	DrawGridding(hDC, boardX+2, boardY+2, GridLine[Level]);
+end
+
+--/* ³õÊ¼»¯Îªlevel¼¶±ðµÄÊý¾Ý */
+function DataInit()
+	local gridnum = GRID_LINE[g.GameLevel]				--/* ¸ù¾Ýlevel¾ö¶¨ÐÐÁÐ¸ñ×ÓÊýºÍÀ×Êý */
+	g.MineRestNum = MINE_NUM[g.GameLevel]
+
+	g.GameTime  = 0
+	g.TimeStart = false
+	g.GameState = GAMESTART
+
+	g.GameBoard = {}
+	for i = 1,gridnum do        --/* ·½¸ñµÄ³õÊ¼¸÷Öµ */
+		g.GameBoard[i] = {}
+		for j = 1,gridnum do
+        	g.GameBoard[i][j] = {status = MS_INIT, mine = 0}
+        end
+	end
+
+	local m = 0
+	math.randomseed(os.time())
+	while m < MINE_NUM[g.GameLevel] do
+		local i = math.random(gridnum)
+		local j = math.random(gridnum)
+		if g.GameBoard[i][j].mine ~= -1 then
+			g.GameBoard[i][j].mine = -1;
+			m = m + 1;
+		end
+	end
+
+	for i = 1,gridnum do        --/* ÎÞÀ×¸ñ¼ÇÂ¼ÖÜÎ§µÄ°Ë¸ö¸ñ×ÓµÄÀ×Êý */
+		for j = 1,gridnum do
+			if g.GameBoard[i][j].mine ~= -1 then
+				CountMine(i, j, gridnum)
+			end
+        end
+	end
+	return
+end
+
+--Í³¼ÆÖÜÎ§8¸ñµÄÀ×µÄÊýÁ¿
+function CountMine(i, j, gridnum)
+	for m = i-1,i+1 do
+		if m>0 and m<=gridnum then
+			for n = j-1,j+1 do
+				if n>0 and n<=gridnum then
+					if g.GameBoard[m][n].mine == -1 then
+						g.GameBoard[i][j].mine = g.GameBoard[i][j].mine + 1
+					end
+				end
+			end
+		end
+	end
+end
+
+function ShowMineArea()
+	local gridnum = GRID_LINE[g.GameLevel]				--/* ¸ù¾Ýlevel¾ö¶¨ÐÐÁÐ¸ñ×ÓÊýºÍÀ×Êý */
+
+	for i=1,gridnum do
+		for j=1,gridnum do
+			ShowMine(i, j)
+		end
+	end
+end
+
+function ShowMine(i, j)
+	local boardx = FACE_PLATE[g.GameLevel].x
+	local boardy = FACE_PLATE[g.GameLevel].y
+	local status = g.GameBoard[i][j].status
+
+	if status == MS_BOMB then
+		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+		mine.FillRect(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
+		mine.DrawMine(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
+	elseif status == MS_INIT then
+		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+	elseif status == MS_CLEAR then
+		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+		if g.GameBoard[i][j].mine > 0 then
+			mime.DrawText(boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), g.GameBoard[i][j].mine);
+		end
+	elseif status == MS_MARK then
+		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), COLOR_RED);
+	elseif status == MS_DOUBT then
+		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), COLOR_RED);
+		mine.DrawText(boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), "?");
+	elseif status == MS_SHOW then
+		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawMine(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
+	elseif status == MS_ERROR then
+		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
+		mine.DrawText(boardX+3+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), "¡Á");
+	else
+		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+	end
+end
+
+
+--[[
+/************************* data structure **********************************/
+
 
 struct USER             /* Íæ¼ÒµÄÊý¾Ý½á¹¹ */
 {
@@ -38,9 +197,9 @@ struct USER             /* Íæ¼ÒµÄÊý¾Ý½á¹¹ */
 	int  time[3];        /* ²»Í¬¼¶±ðµÄ×îÉÙÊ±¼ä */
 };
 
-struct HERO             /* É¨À×Ó¢ÐÛµÄÊý¾Ý½á¹¹ */       
+struct HERO             /* É¨À×Ó¢ÐÛµÄÊý¾Ý½á¹¹ */
 {
-    TCHAR name[12];       /* É¨À×Ó¢ÐÛµÄÐÕÃû */ 
+    TCHAR name[12];       /* É¨À×Ó¢ÐÛµÄÐÕÃû */
     int time;           /* É¨À×Ó¢ÐÛËùÓÃµÄ×îÉÙÊ±¼ä */
 };
 
@@ -51,46 +210,7 @@ struct FACEPLATE
 	WORD w;
 };
 
-/************************* global constant *********************************/
-
-/************************* global variable *********************************/
-HWND hWND;
-HWND hwndpler, hwndedit, hwndlevel, hwndlevel2, hwndscore, hwndscore2;
-HWND hwndreset, hwndmine, hwndtime, hwndhero, hwndabout;
-HBRUSH hBrushwhite, hBrushblack;
-HINSTANCE hInst;											// current instance
-WNDPROC fnEditProc;
-
-TCHAR szTitle[MAX_LOADSTRING] = TEXT("Ì½ÏÕ");			// The title bar text
-TCHAR szWindowClass[MAX_LOADSTRING]  = TEXT("W_EXPLORER");	// The title bar text
-
-struct FACEPLATE FacePlate[3] =
-{
-	{106, 150, 183},
-	{46,  105, 291},
-	{10,  75,  363}
-};
-WORD Level = 0;
-WORD GridLine[3] = {10, 16, 20};
-WORD MineNum[3]  = {15, 40, 80};
-TCHAR MineStr[3][6]  = {TEXT("15"),TEXT("40"),TEXT("80")};
-TCHAR LevelStr[3][6] = {TEXT("µÍ¼¶"), TEXT("ÖÐ¼¶"), TEXT("¸ß¼¶")};
-
-struct GRID board[20][20];        /* À×Çø: 20*20; */
-struct USER player, players[10];  /* playerÎªµ±Ç°Íæ¼Ò£¬playersÎª´¢´æµÄÍæ¼Ò*/
-struct HERO hero[3];              /* heroÎªÉ¨À×Ó¢ÐÛÅÅÐÐ°ñ */
-int    gamestart, gametime, timestart;		  /* gamestart:ÓÎÏ·¿ªÊ¼£» gametime:ÓÎÏ·ÓÃÊ±£»*/
-int    MineRestNum;               /* Ê£ÓàÀ×µÄÊýÄ¿ */
-
 /************************ function prototype *******************************/
-ATOM				MyRegisterClass(HINSTANCE hInstance);
-BOOL				InitInstance(HINSTANCE, int);
-LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK	About(HWND, UINT, WPARAM, LPARAM);
-LRESULT CALLBACK	RecardProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-LRESULT CALLBACK	HeroProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-LRESULT CALLBACK	EditProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-
 BOOL Draw3DRect(HDC hDC, WORD x, WORD y, WORD cx, WORD cy, BOOL IsUp);
 BOOL DrawGridding(HDC hDC, WORD x, WORD y, WORD GridCnt);
 void DrawMine(HDC hDC, WORD x, WORD y);
@@ -113,80 +233,6 @@ void NameInputOver(void);
 void SelectPlayer(void);
 
 /************************** main function **********************************/
-int APIENTRY WinMain(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     LPSTR     lpCmdLine,
-                     int       nCmdShow)
-{
-	MSG msg;
-	
-	MyRegisterClass(hInstance);
-	
-	if (!InitInstance (hInstance, nCmdShow)) 
-	{
-		return FALSE;
-	}
-	
-	while (GetMessage(&msg, NULL, 0, 0)) 
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-	
-	return msg.wParam;
-}
-
-ATOM MyRegisterClass(HINSTANCE hInstance)
-{
-	WNDCLASSEX wcex;
-	
-	wcex.cbSize = sizeof(WNDCLASSEX); 
-	
-	wcex.style			= CS_DBLCLKS;
-	wcex.lpfnWndProc	= (WNDPROC)WndProc;
-	wcex.cbClsExtra		= 0;
-	wcex.cbWndExtra		= DLGWINDOWEXTRA;
-	wcex.hInstance		= hInstance;
-	wcex.hIcon			= LoadIcon(hInstance, (LPCTSTR)IDI_EXPLORER);
-	wcex.hCursor		= LoadCursor(NULL, IDC_ARROW);
-	wcex.hbrBackground	= (HBRUSH)(COLOR_BTNFACE+1);
-	wcex.lpszMenuName	= (LPCSTR)NULL;
-	wcex.lpszClassName	= szWindowClass;
-	wcex.hIconSm		= LoadIcon(wcex.hInstance, (LPCTSTR)IDI_SMALL);
-	
-	return RegisterClassEx(&wcex);
-}
-
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
-{
-	RECT rc;
-	int  x, y;
-	
-	hInst = hInstance; // Store instance handle in our global variable
-	
-	hWND = GetDesktopWindow();
-	GetClientRect(hWND, &rc);
-	x = (rc.right - rc.left) - 390;
-	y = (rc.bottom - rc.top) - 480;
-	if (x < 0) x = 0;
-	if (y < 0) y = 0;
-	x /= 2;
-	y /= 2;
-	
-	hWND = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,
-		x, y, 390, 480, NULL, NULL, hInstance, NULL);
-	
-	if (!hWND)
-	{
-		return FALSE;
-	}
-	
-	ShowWindow(hWND, nCmdShow);
-	UpdateWindow(hWND);
-	
-	return TRUE;
-}
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int i, j;
@@ -199,8 +245,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	WORD boardX = FacePlate[Level].x;
 	WORD boardY = FacePlate[Level].y;
 	TCHAR str[14];
-	
-	switch (message) 
+
+	switch (message)
 	{
 	case WM_CREATE:
 		hwndpler   = CreateWindow(TEXT("BUTTON"), TEXT("Íæ¼Ò"),WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON|BS_CENTER|WS_TABSTOP, 14, 24, 40, 24, hWnd, (HMENU)1, hInst, NULL);
@@ -214,17 +260,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hwndabout  = CreateWindow(TEXT("BUTTON"), TEXT("¹ØÓÚ"),WS_CHILD|WS_VISIBLE|BS_PUSHBUTTON|BS_CENTER|WS_TABSTOP, 332, 12, 40, 24, hWnd, (HMENU)9, hInst, NULL);
 		hwndmine   = CreateWindow(TEXT("STATIC"), TEXT("15"),WS_CHILD|WS_VISIBLE|SS_CENTER, 264, 38, 40, 20, hWnd, (HMENU)10, hInst, NULL);
 		hwndtime   = CreateWindow(TEXT("STATIC"), TEXT("000"),WS_CHILD|WS_VISIBLE|SS_CENTER, 320, 38, 40, 20, hWnd, (HMENU)11, hInst, NULL);
-		
+
 		fnEditProc = (WNDPROC)SetWindowLong(hwndedit, GWL_WNDPROC, (LONG)EditProc);
 		hBrushwhite = (HBRUSH)GetStockObject(WHITE_BRUSH);
 		hBrushblack = (HBRUSH)GetStockObject(BLACK_BRUSH);
-		
+
 		DataInit();
 		PlayerInit();
-		
+
 		SetTimer(hWnd, 1, 1000, NULL);
 		break;
-		
+
 	case WM_SETFOCUS:
 		//			SetFocus(hwndpler);
 		break;
@@ -232,7 +278,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//			if ((HWND)wParam != hwndedit)
 		//				SetFocus(hWnd);
 		break;
-		
+
 	case WM_CTLCOLORSTATIC:
 		id = GetWindowLong((HWND)lParam, GWL_ID);
 		if (id == 4 || id == 6)
@@ -246,10 +292,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_CTLCOLOREDIT:
 		return (LRESULT)hBrushwhite;
-		
+
 	case WM_COMMAND:
-		wmId    = LOWORD(wParam); 
-		wmEvent = HIWORD(wParam); 
+		wmId    = LOWORD(wParam);
+		wmEvent = HIWORD(wParam);
 		switch (wmId)
 		{
 		case 1:
@@ -312,7 +358,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			SetWindowText(hwndedit, player.name);
 			SendMessage(hWnd, WM_COMMAND, 8, 0);
 			break;
-			
+
 		case IDM_EXIT:
 			DestroyWindow(hWnd);
 			break;
@@ -331,7 +377,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				DrawGridding(hDC, boardX+2, boardY+2, GridLine[Level]);
 				EndPaint(hWnd, &ps);
 				break;
-				
+
 		case WM_LBUTTONDOWN:
 			if (!gamestart)
 				break;
@@ -360,13 +406,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			ReleaseDC(hWnd, hDC);
 			break;
-			
+
 		case WM_RBUTTONDOWN:
 			x = LOWORD(lParam); y = HIWORD(lParam);
 			if (!gamestart || !timestart && (x <= boardX || x >= boardX + FacePlate[Level].w || y <= boardY || y >= boardY+ FacePlate[Level].w))//
 			{
 				POINT point;
-				
+
 				point.x = x; point.y = y;
 				ClientToScreen(hWnd, &point);
 				GameMenu(hWnd, point.x, point.y);
@@ -386,7 +432,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			ReleaseDC(hWnd, hDC);
 			break;
-			
+
 		case WM_LBUTTONDBLCLK:
 			if (!gamestart)
 				break;
@@ -396,7 +442,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				i = (x - boardX) / (GRIDWIDTH+2); /* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
 				j = (y - boardY) / (GRIDWIDTH+2);
-				
+
 				if (board[i][j].status == 2)
 				{
 					operate = PlayGameLDblClk(hDC, boardX, boardY, x, y, GridLine[Level]);
@@ -420,7 +466,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			ReleaseDC(hWnd, hDC);
 			break;
-			
+
 		case WM_CHAR:
 			switch (wParam)
 			{
@@ -432,7 +478,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 			break;
-			
+
 			case WM_TIMER:
 				if (timestart)
 				{
@@ -442,7 +488,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					SetWindowText(hwndtime, str);
 				}
 				break;
-				
+
 			case WM_DESTROY:
 				KillTimer(hWnd, 1);
 				WriteDisk();
@@ -454,29 +500,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
    return 0;
 }
 
-LRESULT CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	switch (message)
-	{
-	case WM_INITDIALOG:
-		return TRUE;
-		
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) 
-		{
-			EndDialog(hDlg, LOWORD(wParam));
-			return TRUE;
-		}
-		break;
-	}
-    return FALSE;
-}
-
 BOOL Draw3DRect(HDC hDC, WORD x, WORD y, WORD cx, WORD cy, BOOL IsUp)
 {
 	HPEN hPen;
 	COLORREF TopColor, BottomColor;
-	
+
 	if (IsUp)
 	{
 		TopColor    = C_BTNHIGHLIGHT;
@@ -490,41 +518,41 @@ BOOL Draw3DRect(HDC hDC, WORD x, WORD y, WORD cx, WORD cy, BOOL IsUp)
 	hPen = CreatePen(PS_SOLID, 1, TopColor);
 	assert(hPen);
 	SelectObject(hDC, hPen);
-	
+
 	MoveToEx(hDC, x, y, NULL);
 	LineTo(hDC, x+cx, y);
 	MoveToEx(hDC, x, y+1, NULL);
 	LineTo(hDC, x+cx, y+1);
-	
+
 	MoveToEx(hDC, x, y, NULL);
 	LineTo(hDC, x, y+cy);
 	MoveToEx(hDC, x+1, y, NULL);
 	LineTo(hDC, x+1, y+cy);
-	
+
 	DeleteObject(hPen);
 	hPen = CreatePen(PS_SOLID, 1, BottomColor);
 	assert(hPen);
 	SelectObject(hDC, hPen);
-	
+
 	MoveToEx(hDC, x+cx-1, y+2, NULL);
 	LineTo(hDC, x+cx-1, y+cy);
 	MoveToEx(hDC, x+cx, y+1, NULL);
 	LineTo(hDC, x+cx, y+cy);
-	
+
 	MoveToEx(hDC, x+2, y+cy-1, NULL);
 	LineTo(hDC, x+cx, y+cy-1);
 	MoveToEx(hDC, x+1, y+cy, NULL);
 	LineTo(hDC, x+cx+1, y+cy);
-	
+
 	SelectObject(hDC, GetStockObject(BLACK_PEN));
 	DeleteObject(hPen);
-	
+
 	return TRUE;
 }
 void DrawRedRect(HDC hDC, WORD x, WORD y)
 {
 	HBRUSH hBrush;
-	
+
 	hBrush = CreateSolidBrush(RGB(255,0,0));
 	hBrush = (HBRUSH)SelectObject(hDC, hBrush);
 	Rectangle(hDC, x, y, x+GRIDWIDTH, y+GRIDWIDTH);
@@ -536,7 +564,7 @@ void DrawRedFlag(HDC hDC, WORD x, WORD y)
 {
 	HBRUSH hBrush;
 	HPEN   hPen;
-	
+
 	hBrush = CreateSolidBrush(RGB(255,0,0));
 	hBrush = (HBRUSH)SelectObject(hDC, hBrush);
 	hPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
@@ -555,7 +583,7 @@ void DrawRedFlag(HDC hDC, WORD x, WORD y)
 void DrawMine(HDC hDC, WORD x, WORD y)
 {
 	HBRUSH hBrush;
-	
+
 	hBrush = (HBRUSH)SelectObject(hDC, GetStockObject(BLACK_BRUSH));
 	Ellipse(hDC, x+3, y+3, x+GRIDWIDTH-2, y+GRIDWIDTH-2);
 	SelectObject(hDC, hBrush);
@@ -568,7 +596,7 @@ void DrawMine(HDC hDC, WORD x, WORD y)
 BOOL DrawGridding(HDC hDC, WORD x, WORD y, WORD GridCnt)
 {
 	WORD i;
-	
+
 	for (i = 0; i < GridCnt+1; i++)
 	{
 		MoveToEx(hDC, x-1+i*(GRIDWIDTH+2), y, NULL);
@@ -582,88 +610,33 @@ BOOL DrawGridding(HDC hDC, WORD x, WORD y, WORD GridCnt)
 	return TRUE;
 }
 
-void DataInit(void)   /* ³õÊ¼»¯Îªlevel¼¶±ðµÄÊý¾Ý */
-{
-	int i, j, m, n;
-	int gridnum;		/* gridnumÎªÐÐÁÐ¸ñ×ÓÊý */
-	SYSTEMTIME SysTime;
-	
-	gridnum     = GridLine[Level];				/* ¸ù¾Ýlevel¾ö¶¨ÐÐÁÐ¸ñ×ÓÊýºÍÀ×Êý */
-	MineRestNum = MineNum[Level];
-	
-	gametime  = 0;    
-	timestart = 0;
-	gamestart = 1;
-	
-	for (i = 0; i < gridnum; i++)        /* ·½¸ñµÄ³õÊ¼¸÷Öµ */
-	{
-		for (j = 0; j < gridnum; j++)
-        {
-			board[i][j].status = 1;
-			board[i][j].mine = board[i][j].check = 0;
-        }
-	}
-	GetLocalTime(&SysTime);
-	srand(SysTime.wMinute+SysTime.wMilliseconds);                      /* Ëæ»ú²¼À× */
-	for (m = 0; m < MineNum[Level];)
-	{
-		i = rand() % gridnum;
-		j = rand() % gridnum;
-		if (board[i][j].mine != -1)
-		{
-			board[i][j].mine = -1;
-			m++;
-		}
-	}
-	
-	for (i = 0; i < gridnum; i++)        /* ÎÞÀ×¸ñ¼ÇÂ¼ÖÜÎ§µÄ°Ë¸ö¸ñ×ÓµÄÀ×Êý */
-	{
-		for (j = 0; j < gridnum; j++)
-        {
-			if (board[i][j].mine != -1)
-			{
-				for (m = i-1; m <= i+1; m++)
-				{
-					if ((m < 0) || (m >= gridnum)) 
-						continue;
-					for (n = j-1; n <= j+1; n++)
-					{
-						if ((n < 0) || (n >= gridnum)) 
-							continue;
-						if (board[m][n].mine == -1) 
-							board[i][j].mine++;
-					}
-				}
-			}
-        }
-	}
-}
+
 
 /* Èç¹û×ó»÷·½¸ñµÄÖÜÎ§°Ë¸ö·½¸ñÎÞÀ×£¬ÔòÈ«´ò¿ª£¬µÝ¹é¡£i,jÎªµ±Ç°¸ñµÄ×ø±ê*/
 void OpenGrid(HDC hDC, int startx, int starty, int i, int j, int gridnum)
 {
 	TCHAR num[2] = {0,0};
 	int x, y;
-	
+
 	if (board[i][j].mine != 0)  /* ×ó»÷µÄ·½¸ñÖµ²»Îª0£¬Ôò·µ»Ø */
 	{
 		return;
 	}
-	
+
 	for (x = i-1; x <= i+1; x++) /* ´ò¿ªÖÜÎ§°Ë¸ñ */
 	{
 		if ((x < 0) || (x >= gridnum))   /* xÏÂ±êÔ½½ç¼ÌÐø */
 		{
 			continue;
 		}
-		
+
 		for (y = j-1; y <= j+1; y++)
 		{
 			if ((y < 0) || (y >= gridnum))  /* yÏÂ±êÔ½½ç¼ÌÐø */
 			{
 				continue;
 			}
-			
+
 			if (board[x][y].mine != 0)          /* ÖÜÎ§°Ë¸ñÓÐÀ×µÄÇé¿ö */
 			{
 				if (board[x][y].status == 2)
@@ -676,7 +649,7 @@ void OpenGrid(HDC hDC, int startx, int starty, int i, int j, int gridnum)
 				board[x][y].check = 1;
 				DisplayOperateResult(hDC, board[x][y].status, startx, starty, x, y);
 			}
-			
+
 			else if (board[x][y].status != 2)/*ÖÜÎ§°Ë¸ñÎÞÀ×µÄÇé¿ö£¬ÇÒÃ»´ò¿ª*/
 			{
 				if (board[x][y].status == 3)/* Èç±êÀ×Ôò´íÎó£¬À×Êý¼Ó1 */
@@ -698,10 +671,10 @@ int PlayGameL(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 {
 	TCHAR num[4];
 	int i, j;
-	
+
 	i = (x - startx) / (GRIDWIDTH+2); /* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
 	j = (y - starty) / (GRIDWIDTH+2);
-	
+
 	if (board[i][j].status == 1)              /* Ö¸Ïò³õÊ¼×´Ì¬µÄ¸ñ×Ó */
 	{
 		if (board[i][j].mine != -1)          /* Ö¸ÏòÎÞÀ×¸ñ */
@@ -719,8 +692,8 @@ int PlayGameL(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 			else                    /* ÖÜÎ§°Ë¸ñÎÞÀ×£¬´ò¿ª±¾ÉíºÍÖÜÎ§°Ë¸ö¸ñ */
 			{                    /* µÝ¹é */
 				OpenGrid(hDC, startx, starty, i, j, gridnum);
-			} 
-			
+			}
+
 			return 1;
 		}
 		else                        /* ×ó»÷´íÎó£¬±ê¼ÇÓÐÀ×£¬·µ»Ø0 */
@@ -740,24 +713,24 @@ int PlayGameLDblClk(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 {
 	//	TCHAR num[4];
 	int i, j;
-	
+
 	i = (x - startx) / (GRIDWIDTH+2); /* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
 	j = (y - starty) / (GRIDWIDTH+2);
-	
+
 	for (x = i-1; x <= i+1; x++) /* ´ò¿ªÖÜÎ§°Ë¸ñ */
 	{
 		if ((x < 0) || (x >= gridnum))   /* xÏÂ±êÔ½½ç¼ÌÐø */
 		{
 			continue;
 		}
-		
+
 		for (y = j-1; y <= j+1; y++)
 		{
 			if ((y < 0) || (y >= gridnum))  /* yÏÂ±êÔ½½ç¼ÌÐø */
 			{
 				continue;
 			}
-			
+
 			if (board[x][y].status != 2 && board[x][y].status != 3)
 			{
 				if (board[x][y].mine == -1)
@@ -780,10 +753,10 @@ int PlayGameLDblClk(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦Àí */
 {
 	int i, j;
-	
+
 	i = (x - startx) / (GRIDWIDTH+2);  /* Êó±êÖ¸Ïò·½¸ñµÄ×ø±ê */
 	j = (y - starty) / (GRIDWIDTH+2);
-	
+
 	if (board[i][j].status == 1)     /* ±êÀ× */
 	{
 		board[i][j].status = 3;
@@ -795,7 +768,7 @@ void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦À
 		CountMine(-1);
 		return;
 	}
-	
+
 	if (board[i][j].status == 3)    /* ±ê£¿£º±íÊ¾´Ë¸ñÓÐÒÉÎÊ */
 	{
 		board[i][j].status = 4;
@@ -805,13 +778,13 @@ void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦À
 		CountMine(1);
 		return;
 	}
-	
+
 	if (board[i][j].status == 4)    /* ½â³ý£¿ºÅ */
 	{
 		HPEN   hPen;
 		HBRUSH hBrush;
 		//		DWORD c = GetPixel(hDC, 50, 40);
-		
+
 		board[i][j].status = 1;
 		hPen   = CreatePen(PS_SOLID, 1, 0xD8E9EC);
 		hBrush = CreateSolidBrush(0xD8E9EC);
@@ -829,23 +802,23 @@ void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦À
 int Win(int gridnum)   /* ¼ì²âÒ»ÏÂÊÇ·ñÓ®ÁË */
 {
 	int i, j;
-	
+
 	for (i = 0; i < gridnum; i++)
 	{
 		for (j = 0; j < gridnum; j++)
 		{
-			if (board[i][j].check == 0) 
+			if (board[i][j].check == 0)
 				return 0;
 		}
 	}
-	
+
 	return 1;
 }
 
 void GameOver(int gridnum)  /* ÓÎÏ·Ê§°ÜµÄ´¦Àí */
 {
 	int i, j;
-	
+
 	for (i = 0; i < gridnum; i++)
 	{
 		for (j = 0; j < gridnum; j++)
@@ -867,15 +840,15 @@ void PlayerInit(void)
 	int i, j;
 	int m = 0, n = 0;
 	FILE *fp;
-	
+
 	lstrcpy(player.name, TEXT("ÎÞÃû"));            /* µ±Ç°Íæ¼ÒÈ±Ê¡Îªnoname */
 	player.time[0] = player.time[1] = player.time[2] = 999;
-	
+
 	if ((fp = fopen("c:\\windows\\profile.epl", "rb")) != NULL)/*¶ÁÒÑ´æµÄÍæ¼Ò*/
 	{
 		m = fread(hero, sizeof(hero[0]), 3, fp);
 		n = fread(players, sizeof(player), 10, fp);
-		
+
 		for (i = 0; i < 3; i++)       /* ÒÔÏÂÎªÑéÖ¤¶ÁÈëÊý¾ÝµÄÕýÈ·ÐÔºÍÍêÕûÐÔ */
 		{
 			hero[i].name[10] = 0;
@@ -897,7 +870,7 @@ void PlayerInit(void)
 		}
 		fclose(fp);
 	}
-	
+
 	if ((m != 3) || (n != 10))   /* ¶ÁÈë´íÎó, ¾ÍÖØÐ´ */
 	{
 		for (i = 0; i < 3; i++)
@@ -916,7 +889,7 @@ void CountMine(int flag)/* ÔËËãÊ£ÓàÀ×Êý£ºflag=-1±êÁËÒ»¸öÀ×,flag=1±êÁËÒ»ÎÊºÅ */
 {
 	int temp;
 	TCHAR mnum[8];
-	
+
 	if (flag == 1)
 	{
 		MineRestNum++;
@@ -925,7 +898,7 @@ void CountMine(int flag)/* ÔËËãÊ£ÓàÀ×Êý£ºflag=-1±êÁËÒ»¸öÀ×,flag=1±êÁËÒ»ÎÊºÅ */
 	{
 		MineRestNum--;
 	}
-	
+
 	if (MineRestNum < 0)   /* ±êµÄÀ×±ÈÊµ¼ÊÀ×¶àµÄÇé¿ö */
 	{
 		temp = 0;
@@ -934,7 +907,7 @@ void CountMine(int flag)/* ÔËËãÊ£ÓàÀ×Êý£ºflag=-1±êÁËÒ»¸öÀ×,flag=1±êÁËÒ»ÎÊºÅ */
 	{
 		temp = MineRestNum;
 	}
-	
+
 	wsprintf(mnum, TEXT("%02d"), temp);
 	SetWindowText(hwndmine, mnum);
 }
@@ -943,7 +916,7 @@ void WriteDisk(void)        /* ÓÎÏ·½áÊø£¬Êý¾ÝÐ´ÅÌ */
 {
 	int i;
 	FILE *fp;
-	
+
 	for (i = 0; i < 10; i++)
 	{
 		if (lstrcmp(players[i].name, TEXT("ÎÞÃû")) == 0)
@@ -952,7 +925,7 @@ void WriteDisk(void)        /* ÓÎÏ·½áÊø£¬Êý¾ÝÐ´ÅÌ */
 				= players[i].time[2] = 999;
 		}
 	}
-	
+
 	if ((fp = fopen("c:\\windows\\profile.epl", "wb")) != NULL)
 	{
 		fwrite(hero, sizeof(struct HERO), 3, fp);
@@ -981,7 +954,7 @@ void Record(int level)  /* ¼ÇÂ¼³É¼¨ */
 {
 	int i;
 	TCHAR  str[8];
-	
+
 	if (player.time[level] > gametime)    /* ¼ÇÂ¼×îÉÙµÄÃëÊý */
 	{
 		player.time[level] = gametime;
@@ -996,7 +969,7 @@ void Record(int level)  /* ¼ÇÂ¼³É¼¨ */
 		wsprintf(str, TEXT("%03dÃë"), gametime);
 		SetWindowText(hwndscore2, str);
 	}
-	
+
 	if (hero[level].time > gametime)               /* ÆÆ¼ÍÂ¼ */
 	{
 		hero[level].time = gametime;              /* ¸üÐÂ¼ÍÂ¼ */
@@ -1010,7 +983,7 @@ LRESULT CALLBACK HeroProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 	int i;
 	HDC hDC;
 	TCHAR str[8];
-	
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
@@ -1061,9 +1034,9 @@ void GameMenu(HWND hwnd, int x, int y)
 	int i, j;
 	HMENU hMenu, hPopMenu, hSubMenu;
 	TCHAR ScoreStr[20];
-	
+
 	hMenu = CreatePopupMenu();
-	
+
 	hPopMenu = CreatePopupMenu();
 	if (!lstrcmp(players[0].name, TEXT("ÎÞÃû")))
 	{
@@ -1079,13 +1052,13 @@ void GameMenu(HWND hwnd, int x, int y)
 			AppendMenu(hPopMenu, MF_STRING, 400+i, players[i].name);
 		}
 	}
-	
+
 	hPopMenu = CreatePopupMenu();
 	AppendMenu(hMenu, MF_POPUP, (DWORD)hPopMenu, TEXT("Ñ¡Ôñ¼¶±ð"));
 	AppendMenu(hPopMenu, MF_STRING, 200+0, TEXT("µÍ¼¶"));
 	AppendMenu(hPopMenu, MF_STRING, 200+1, TEXT("ÖÐ¼¶"));
 	AppendMenu(hPopMenu, MF_STRING, 200+2, TEXT("¸ß¼¶"));
-	
+
 	hPopMenu = CreatePopupMenu();
 	if (!lstrcmp(players[0].name, TEXT("ÎÞÃû")))
 	{
@@ -1109,15 +1082,15 @@ void GameMenu(HWND hwnd, int x, int y)
 			}
 		}
 	}
-	
+
 	AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
 	AppendMenu(hMenu, MF_STRING, 7, TEXT("Ó¢ÐÛ°ñ"));
 	AppendMenu(hMenu, MF_STRING, 8, TEXT("ÖØÖÃ"));
 	AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
 	AppendMenu(hMenu, MF_STRING, 9, TEXT("¹ØÓÚ..."));
-	
+
 	TrackPopupMenu(hMenu, TPM_LEFTALIGN, x, y, 0, hwnd, NULL);
-	
+
 	for (i = 0; i < 2; i++)
 	{
 		hPopMenu = GetSubMenu(hMenu, i);
@@ -1132,14 +1105,14 @@ void GameMenu(HWND hwnd, int x, int y)
 		DestroyMenu(hSubMenu);
 	}
 	DestroyMenu(hPopMenu);
-	
-	DestroyMenu(hMenu);	
+
+	DestroyMenu(hMenu);
 }
 
 void DisplayOperateResult(HDC hDC, int status, int boardX, int boardY, int i, int j)
 {
 	TCHAR str[14];
-	
+
 	SetBkMode(hDC, TRANSPARENT);
 	switch (status)
 	{
@@ -1199,7 +1172,7 @@ void NameInputOver(void)
 				break;
 		}
 		if (i == 10)                         /* ÎÞÍ¬Ãû */
-		{ 
+		{
 			for (i = 9; i > 0; i--)          /* È¥µô×îºóÒ»¸ö */
 			{
 				players[i] = players[i-1];
@@ -1224,7 +1197,7 @@ void SelectPlayer(void)
 	int i;
 	HMENU hPopMenu;
 	POINT point = {14, 48};
-	
+
 	hPopMenu = CreatePopupMenu();
 	if (lstrcmp(players[0].name, TEXT("ÎÞÃû")))
 	{
@@ -1240,3 +1213,8 @@ void SelectPlayer(void)
 	DestroyMenu(hPopMenu);
 }
 
+--]]
+
+main_init()
+main_update()
+main_draw()

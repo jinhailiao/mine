@@ -329,6 +329,21 @@ bool C_HGUIDC::DeleteObject(void)
 	return true;
 }
 
+bool C_HGUIDC::DrawBox(S_WORD x, S_WORD y, S_WORD w, S_WORD h)
+{
+	return _DrawBox(x, y, w, h, false);
+}
+
+bool C_HGUIDC::DrawBoxUp(S_WORD x, S_WORD y, S_WORD w, S_WORD h)
+{
+	return _DrawBox(x, y, w, h, false);
+}
+
+bool C_HGUIDC::DrawBoxDn(S_WORD x, S_WORD y, S_WORD w, S_WORD h)
+{
+	return _DrawBox(x, y, w, h, true);
+}
+
 int C_HGUIDC::ClientToScreen(S_RECT &rRect)const
 {
 	if (m_pWnd == NULL)
@@ -344,6 +359,37 @@ int C_HGUIDC::ClientToScreen(S_RECT &rRect)const
 		m_pWnd->ClientToScreen(rRect);
 	}
 	return 0;
+}
+
+bool C_HGUIDC::_DrawBox(S_WORD x, S_WORD y, S_WORD w, S_WORD h, bool fDown)
+{
+	if (x > m_Rect.w) x = m_Rect.w - 1;
+	if (y > m_Rect.h) y = m_Rect.h - 1;
+	if (w+x > m_Rect.w) w = m_Rect.w - x;
+	if (h+y > m_Rect.h) h = m_Rect.h - y;
+	if (w <= 3 || h <= 3)
+		return false;
+
+	C_HGUIPEN Pen(HGUI_COLOR_GRAY);
+	SelectObject(&Pen);
+	BitBlt(x+1, y+1, w-2, h-2, NULL, 0, 0, HGUI_PATCOPY);
+
+	if (fDown == false)
+		Pen.SetColor(HGUI_COLOR_LIGHT);
+	else
+		Pen.SetColor(HGUI_COLOR_BLACK);
+	SelectObject(&Pen);
+	DrawHLine(x, y, w-1);
+	DrawVLine(x, y, h);
+
+	if (fDown == false)
+		Pen.SetColor(HGUI_COLOR_BLACK);
+	else
+		Pen.SetColor(HGUI_COLOR_LIGHT);
+	SelectObject(&Pen);
+	DrawHLine(x, y+h-1, w);
+	DrawVLine(x+w-1, y, h-1);
+	return true;
 }
 
 bool C_HGUIDC::_BitBlt1(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop)

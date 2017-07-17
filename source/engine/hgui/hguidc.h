@@ -106,9 +106,14 @@ public:
 	bool DrawBitmap(S_WORD x, S_WORD y, C_HGUIBMP *pbitmap);
 	bool DeleteObject(void);
 
+	bool DrawBox(S_WORD x, S_WORD y, S_WORD w, S_WORD h);
+	bool DrawBoxUp(S_WORD x, S_WORD y, S_WORD w, S_WORD h);
+	bool DrawBoxDn(S_WORD x, S_WORD y, S_WORD w, S_WORD h);
+
 protected:
 	int ClientToScreen(S_RECT &rRect)const;
 
+	bool _DrawBox(S_WORD x, S_WORD y, S_WORD w, S_WORD h, bool fDown);
 	bool _BitBlt1(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop);
 	bool _BitBlt2(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, S_DWORD dwRop);
 	bool _BitBlt3(S_WORD dx, S_WORD dy, S_WORD w, S_WORD h, const C_HGUIDC *pdcSrc, S_WORD sx, S_WORD sy, S_DWORD dwRop);

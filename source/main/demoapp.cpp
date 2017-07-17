@@ -52,9 +52,9 @@ int C_DESKTOP::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 	switch (msg)
 	{
 	case EVT_CREATE:{
-		S_RECT Rect;
 		for (S_WORD i = 0; i < 8; i++)
 		{
+			S_RECT Rect;
 			Rect.x = 100+(i%4)*70, Rect.w = 48;
 			Rect.y = 30+(i/4)*90, Rect.h = 64;
 			C_ButtonEx *pButton = C_ButtonEx::NewCtrl();
@@ -68,7 +68,7 @@ int C_DESKTOP::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 	case EVT_PAINT:{
 		C_HGUIDC *pDC = BeginPaint();
 		pDC->BitBlt(0, 0, LCD_WIDTH, LCD_HEIGHT, NULL, 0, 0, HGUI_WHITENESS);
-	//	hai_Draw3DBlock(hDC, 0, LCD_HEIGHT-20, LCD_WIDTH, 20, S_TRUE, GRAY_BRUSH);
+		pDC->DrawBox(10, LCD_HEIGHT-30, 30, 20);
 	//	hai_DisplayTime(hDC, DT_TIME_X, DT_TIME_Y, DT_TIME_W, DT_TIME_H);
 	//	hai_SetTextColor(hDC, (S_COLOR)COLOR_GRAY);
 	//	hai_TextOut(hDC,  70, 180, "温馨提示:F1为输入法切换按键,F2,F3,F4,F5为消息框测试按键,", 0);

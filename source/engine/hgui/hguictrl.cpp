@@ -59,6 +59,20 @@ int C_HGUICTRL::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 	return C_GUIWNDB::DefWndProcess(evt, wParam, lParam);
 }
 
+C_HGUIDC *C_HGUICTRL::BeginPaint(void)
+{
+	C_HGUIDC *pdc = new C_HGUIDC(m_pParent);
+	m_ScrnFlushEn = HGui_FlushScreenEn(false);
+	return pdc;
+}
+
+void C_HGUICTRL::EndPaint(C_HGUIDC *pDC)
+{
+	HGui_FlushScreenEn(m_ScrnFlushEn);
+	UpdateWnd();
+	delete pDC;
+}
+
 //
 //数字编辑框，支持八进制、十进制、十六进制
 //响应EVT_KEYUP（VK_UP,VK_DOWN,VK_LEFT,VK_RIGHT）消息
@@ -939,7 +953,7 @@ S_WORD C_ButtonEx::DrawText(C_HGUIDC &dc, const string &strText)
 		return 0;
 
 	S_WORD x = 0, y = 0;
-	S_BYTE bkmode = dc.GetBkMode();
+	S_BYTE bkmode = HGUI_BKM_TRANSPARENT;
 	S_DWORD textcolor = dc.GetTextColor();
 	S_WORD h = dc.GetFontHeight(' ');
 	S_WORD w = (S_WORD)dc.GetStringExtent(strText.c_str());
@@ -1019,19 +1033,20 @@ int C_ButtonEx::PushBtnProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		{
 			if (WndVisible() == false)
 				break;
+
 			C_HGUIBMP bitmap;
-			C_HGUIDC dc(m_pParent);
+			C_HGUIDC *pdc = BeginPaint();
 //			m_pParent->SendWndEvt(EVT_CTRLCOLOR, m_ID, (S_DWORD)&dc);
 			if (WndGrayed() == true)
 			{
 				if (m_strGrayPic.empty() == false)
 				{
 					bitmap.LoadBitmap(m_strGrayPic);
-					dc.DrawBitmap(m_WndRect.x, m_WndRect.y, &bitmap);
+					pdc->DrawBitmap(m_WndRect.x, m_WndRect.y, &bitmap);
 				}
 				else
 				{
-//					dc.DrawBox(m_WndRect.x, m_WndRect.y, m_WndRect.w, m_WndRect.h, BLOCK_3D_UP, DKGRAY_BRUSH);
+					pdc->DrawBox(m_WndRect.x, m_WndRect.y, m_WndRect.w, m_WndRect.h);
 				}
 			}
 			else
@@ -1041,11 +1056,11 @@ int C_ButtonEx::PushBtnProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 					if (m_strUpPic.empty() == false)
 					{
 						bitmap.LoadBitmap(m_strUpPic);
-						dc.DrawBitmap(m_WndRect.x, m_WndRect.y, &bitmap);
+						pdc->DrawBitmap(m_WndRect.x, m_WndRect.y, &bitmap);
 					}
 					else
 					{
-//						dc.DrawBox(m_WndRect.x, m_WndRect.y, m_WndRect.w, m_WndRect.h, BLOCK_3D_UP, GRAY_BRUSH);
+						pdc->DrawBoxUp(m_WndRect.x, m_WndRect.y, m_WndRect.w, m_WndRect.h);
 					}
 				}
 				else if (m_state == HGUI_BS_PUSHBTN_DN)
@@ -1053,20 +1068,20 @@ int C_ButtonEx::PushBtnProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 					if (m_strDnPic.empty() == false)
 					{
 						bitmap.LoadBitmap(m_strDnPic);
-						dc.DrawBitmap(m_WndRect.x, m_WndRect.y, &bitmap);
+						pdc->DrawBitmap(m_WndRect.x, m_WndRect.y, &bitmap);
 					}
 					else
 					{
-//						dc.DrawBox(m_WndRect.x, m_WndRect.y, m_WndRect.w, m_WndRect.h, BLOCK_3D_DN, GRAY_BRUSH);
+						pdc->DrawBoxDn(m_WndRect.x, m_WndRect.y, m_WndRect.w, m_WndRect.h);
 					}
 				}
 			}
-			DrawText(dc, m_WndText);
-			UpdateWnd();
+			DrawText(*pdc, m_WndText);
+			EndPaint(pdc);
 		}
-		break;	
+		break;
 	case EVT_TIMER:
-		break;	
+		break;
 	case EVT_KEYDN:
 		if (wParam == ' ' || wParam == VK_RETURN)
 		{

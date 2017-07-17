@@ -69,9 +69,15 @@ protected:
 	virtual int WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam);
 	virtual int DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam);
 
+	C_HGUIDC *BeginPaint(void);
+	void EndPaint(C_HGUIDC *pDC);
+
 protected:
 	S_WORD m_ID;
 	S_WORD m_group;
+
+private:
+	bool m_ScrnFlushEn;
 };
 
 //
