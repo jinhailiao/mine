@@ -77,15 +77,15 @@ function main_update()
 end
 
 function main_draw()
-	local boardx = FACE_PLATE[g.GameLevel].x
-	local boardy = FACE_PLATE[g.GameLevel].y
-	local boardw = FACE_PLATE[g.GameLevel].w
+	local boardX = FACE_PLATE[g.GameLevel].x
+	local boardY = FACE_PLATE[g.GameLevel].y
+	local boardW = FACE_PLATE[g.GameLevel].w
 
 	mine.DrawBoxUp(1, 1, 381, 445);
 	mine.DrawBoxDn(10, 10, 363, 50);
-	mine.DrawBoxDn(boardX, boardY, boardw, boardw);
+	mine.DrawBoxDn(boardX, boardY, boardW, boardW);
 	ShowMineArea();
---	DrawGridding(hDC, boardX+2, boardY+2, GridLine[Level]);
+--	DrawGridding(boardX+2, boardY+2, GridLine[Level]);
 end
 
 --/* 初始化为level级别的数据 */
@@ -152,8 +152,8 @@ function ShowMineArea()
 end
 
 function ShowMine(i, j)
-	local boardx = FACE_PLATE[g.GameLevel].x
-	local boardy = FACE_PLATE[g.GameLevel].y
+	local boardX = FACE_PLATE[g.GameLevel].x
+	local boardY = FACE_PLATE[g.GameLevel].y
 	local status = g.GameBoard[i][j].status
 
 	if status == MS_BOMB then

@@ -14,6 +14,7 @@
 #include "hguibase.h"
 #include "hguipic.h"
 #include "haifile.h"
+#include "hguidef.h"
 
 C_HGUIBMP::C_HGUIBMP(void):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_BMP)
 {

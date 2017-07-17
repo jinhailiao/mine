@@ -100,6 +100,7 @@
 #define  HGUI_BKM_OPAQUE			0
 #define  HGUI_BKM_TRANSPARENT	1
 
+#define BITMAP_WIDTHBYTES(w, bits) (((w*bits+31)>>5)<<2)
 
 #endif // __HGUI_DEFINE_H__
 

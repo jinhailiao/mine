@@ -22,6 +22,9 @@
     <Filter Include="源文件\main">
       <UniqueIdentifier>{f03e884a-fff0-47d6-b650-37e18a4d3d8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\script">
+      <UniqueIdentifier>{4917ca41-90c5-48b7-a78c-3a9e41c86c8d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\engine\base\haialgo.cpp">
@@ -83,6 +86,12 @@
     </ClCompile>
     <ClCompile Include="..\..\source\engine\hgui\hguirect.cpp">
       <Filter>源文件\hgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\main\engineapp.cpp">
+      <Filter>源文件\main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\engine\script\script.cpp">
+      <Filter>源文件\script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +169,12 @@
     </ClInclude>
     <ClInclude Include="..\..\source\engine\hgui\hguicfg.h">
       <Filter>源文件\hgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\main\engineapp.h">
+      <Filter>源文件\main</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\engine\script\script.h">
+      <Filter>源文件\script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

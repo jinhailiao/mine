@@ -5,13 +5,28 @@
  *  @version 0.1
  */
 #include "demoapp.h"
+#include "engineapp.h"
+
+#if defined(HGUI_DEMO_APP)
 
 C_DEMOAPP theDemoApp;
 C_DESKTOP theDesktop;
 
+#elif defined(MINE_ENGINE_APP)
+
+C_MINEAPP theDemoApp;
+C_MINEWND theDesktop;
+
+#elif defined(ELS_ENGINE_APP)
+
+C_DEMOAPP theDemoApp;
+C_DESKTOP theDesktop;
+
+#endif
+
 int InitEngine(void)
 {
-	C_DEMOAPP::SetCurApp(&theDemoApp);
+	C_HGUIAPP::SetCurApp(&theDemoApp);
 	theDemoApp.SysInit("..\\..\\resource\\");
 	theDemoApp.SetDesktopWnd(&theDesktop);
 	return 0;

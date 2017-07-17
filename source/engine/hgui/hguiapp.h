@@ -42,6 +42,7 @@ public:
 	int DispatchGuiEvt(S_GUIEVT GuiEvt);
 	void SetDesktopWnd(C_HGUIWND *pDesktopWnd);
 	S_GUIEVT GetGuiEvt(void);
+	S_GUIEVT PeekGuiEvt(void);
 
 	int GotoWnd(C_HGUIWND *pWnd, S_DWORD UserData = 0);
 	int CloseWnd(C_HGUIWND *pWnd);

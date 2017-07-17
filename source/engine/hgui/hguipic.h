@@ -16,8 +16,6 @@
 #define __HGUI_PIC_H__
 #include "haibase.h"
 
-#define BITMAP_WIDTHBYTES(w, bits) (((w*bits+31)>>5)<<2)
-
 struct S_BmpInfo
 {
 	S_WORD m_width;

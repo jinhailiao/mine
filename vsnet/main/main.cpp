@@ -4,12 +4,14 @@
 #include "stdafx.h"
 #include "main.h"
 #include <process.h> /* _beginthread, _endthread */
+#include "hguicfg.h"
+#include "hguidef.h"
 
 #define MAX_LOADSTRING 100
 
-#define DEVICE_LCD_WIDTH		480
-#define DEVICE_LCD_HEIGHT		272
-#define DEVICE_LCD_BPP			24
+#define DEVICE_LCD_WIDTH		HGUI_LCD_WIDTH
+#define DEVICE_LCD_HEIGHT		HGUI_LCD_HEIGHT
+#define DEVICE_LCD_BPP			HGUI_LCD_BITSPERPIX
 
 #define SIMULATOR_WND_WIDTH		(DEVICE_LCD_WIDTH+6)
 #define SIMULATOR_WND_HEIGHT	(DEVICE_LCD_HEIGHT+28)
@@ -23,7 +25,7 @@ TCHAR szWindowClass[MAX_LOADSTRING];			// 主窗口类名
 
 //BITMAP bmpBitmap;
 BITMAPINFO bmpBitmapInfo;
-char rgbUserBuffer[DEVICE_LCD_WIDTH*(DEVICE_LCD_BPP/8)*DEVICE_LCD_HEIGHT];
+char rgbUserBuffer[BITMAP_WIDTHBYTES(DEVICE_LCD_WIDTH, DEVICE_LCD_BPP)*DEVICE_LCD_HEIGHT];
 extern char *HGui_fb;
 
 extern void HGui_KeyISR(unsigned short key, bool fDown);
@@ -49,13 +51,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	MSG msg;
 	HACCEL hAccelTable;
 
+	HGui_fb = rgbUserBuffer;
+	memset(rgbUserBuffer, 0x00, sizeof(rgbUserBuffer));
+
 	// 初始化全局字符串
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadString(hInstance, IDC_MAIN, szWindowClass, MAX_LOADSTRING);
 	MyRegisterClass(hInstance);
-
-	HGui_fb = rgbUserBuffer;
-	memset(rgbUserBuffer, 0x00, sizeof(rgbUserBuffer));
 
 	bmpBitmapInfo.bmiHeader.biSize = 40;
 	bmpBitmapInfo.bmiHeader.biWidth = DEVICE_LCD_WIDTH;
@@ -63,7 +65,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	bmpBitmapInfo.bmiHeader.biPlanes = 1; 
 	bmpBitmapInfo.bmiHeader.biBitCount = DEVICE_LCD_BPP;
 	bmpBitmapInfo.bmiHeader.biCompression = BI_RGB;
-	bmpBitmapInfo.bmiHeader.biSizeImage = DEVICE_LCD_WIDTH*(DEVICE_LCD_BPP/8)*DEVICE_LCD_HEIGHT;
+	bmpBitmapInfo.bmiHeader.biSizeImage = sizeof(rgbUserBuffer);
 	bmpBitmapInfo.bmiHeader.biXPelsPerMeter = 0;
 	bmpBitmapInfo.bmiHeader.biYPelsPerMeter = 0;
 	bmpBitmapInfo.bmiHeader.biClrUsed = 0;
@@ -252,7 +254,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hdc = BeginPaint(hWnd, &ps);
 		HDC hdcmem = CreateCompatibleDC(hdc);
 		HBITMAP HBitmap = CreateDIBSection(hdc, &bmpBitmapInfo,DIB_PAL_COLORS,NULL, NULL, 0);
-		SetBitmapBits(HBitmap, DEVICE_LCD_WIDTH*(DEVICE_LCD_BPP/8)*DEVICE_LCD_HEIGHT, rgbUserBuffer);
+		SetBitmapBits(HBitmap, sizeof(rgbUserBuffer), rgbUserBuffer);
 		HGDIOBJ hOldObj = SelectObject(hdcmem, HBitmap);
 		BOOL ok = BitBlt(hdc, 0, 0, DEVICE_LCD_WIDTH, DEVICE_LCD_HEIGHT, hdcmem, 0, 0, SRCCOPY);
 		SelectObject(hdcmem, hOldObj);

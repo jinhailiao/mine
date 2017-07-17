@@ -125,6 +125,47 @@ S_GUIEVT C_HGUIAPP::GetGuiEvt(void)
 	return aEvt;
 }
 
+S_GUIEVT C_HGUIAPP::PeekGuiEvt(void)
+{
+	S_GUIEVT aEvt;
+	static S_TIME s_timeSystem = C_TIME::TimeNow();
+	
+	if (m_EvtQ.empty() == true)
+	{
+		/**poll key
+		 */
+		aEvt = HGui_PollEvt();
+		if (aEvt.Evt != EVT_NULL)
+			m_EvtQ.push(aEvt);
+
+		/** time tick message
+		 */
+		S_TIME CurTime = C_TIME::TimeNow();
+		if (CurTime != s_timeSystem)
+		{
+			s_timeSystem = CurTime;
+			if (m_pCurDlg != NULL) aEvt.pWnd = m_pCurDlg;
+			else aEvt.pWnd = m_pCurWnd;
+			aEvt.Evt = EVT_TIMER;
+			aEvt.wParam = 0;
+			aEvt.lParam = 0;
+			m_EvtQ.push(aEvt);
+		}
+	}
+
+	if (m_EvtQ.empty() == true)
+	{
+		SleepMS(1);
+	}
+	else
+	{
+		aEvt = m_EvtQ.front();
+		m_EvtQ.pop();
+	}
+
+	return aEvt;
+}
+
 int C_HGUIAPP::SendGuiEvt(S_GUIEVT GuiEvt)
 {
 	if (GuiEvt.pWnd == NULL)
