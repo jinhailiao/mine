@@ -370,20 +370,20 @@ bool C_HGUIDC::_DrawBox(S_WORD x, S_WORD y, S_WORD w, S_WORD h, bool fDown)
 	if (w <= 3 || h <= 3)
 		return false;
 
-	C_HGUIPEN Pen(HGUI_COLOR_GRAY);
+	C_HGUIPEN Pen(HGUI_COLOR_LIGRAY);
 	SelectObject(&Pen);
 	BitBlt(x+1, y+1, w-2, h-2, NULL, 0, 0, HGUI_PATCOPY);
 
 	if (fDown == false)
 		Pen.SetColor(HGUI_COLOR_LIGHT);
 	else
-		Pen.SetColor(HGUI_COLOR_BLACK);
+		Pen.SetColor(HGUI_COLOR_LIDARK);
 	SelectObject(&Pen);
 	DrawHLine(x, y, w-1);
 	DrawVLine(x, y, h);
 
 	if (fDown == false)
-		Pen.SetColor(HGUI_COLOR_BLACK);
+		Pen.SetColor(HGUI_COLOR_LIDARK);
 	else
 		Pen.SetColor(HGUI_COLOR_LIGHT);
 	SelectObject(&Pen);

@@ -17,6 +17,8 @@
 #define  __HGUI_DEFINE_H__
 #include "hguicfg.h"
 
+#define HGUI_RGB(r,g,b) ((S_DWORD)(((S_BYTE)(r)|((S_WORD)((S_BYTE)(g))<<8))|(((S_DWORD)(S_BYTE)(b))<<16)))
+
 #ifdef HGUI_16BITS_COLOR_REVERSION
 #define  HGUI_COLOR_GRAY00	0xF
 #define  HGUI_COLOR_GRAY01	0xE

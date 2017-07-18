@@ -33,8 +33,8 @@
 #elif defined(MINE_ENGINE_APP)
 
 #define HGUI_LCD_BITSPERPIX		24
-#define HGUI_LCD_WIDTH		392
-#define HGUI_LCD_HEIGHT		480
+#define HGUI_LCD_WIDTH		384
+#define HGUI_LCD_HEIGHT		448
 
 #elif defined(ELS_ENGINE_APP)
 

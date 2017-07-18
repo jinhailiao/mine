@@ -15,7 +15,7 @@
 C_HGUIPEN::C_HGUIPEN(S_DWORD color):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_PEN)
 {
 	m_color = color;
-	m_style = HGUI_PS_NONE;
+	m_style = HGUI_PS_SOLID;
 }
 
 C_HGUIPEN::C_HGUIPEN(S_DWORD color, S_DWORD style):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_PEN)

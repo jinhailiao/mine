@@ -25,6 +25,9 @@
     <Filter Include="源文件\script">
       <UniqueIdentifier>{4917ca41-90c5-48b7-a78c-3a9e41c86c8d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\input">
+      <UniqueIdentifier>{ad93fdf4-0a2b-466c-a883-a2250eb284a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\engine\base\haialgo.cpp">
@@ -92,6 +95,9 @@
     </ClCompile>
     <ClCompile Include="..\..\source\engine\script\script.cpp">
       <Filter>源文件\script</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\engine\input\input.cpp">
+      <Filter>源文件\input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="..\..\source\engine\script\script.h">
       <Filter>源文件\script</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\engine\input\input.h">
+      <Filter>源文件\input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

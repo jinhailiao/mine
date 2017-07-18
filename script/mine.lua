@@ -81,13 +81,16 @@ function main_draw()
 	local boardY = FACE_PLATE[g.GameLevel].y
 	local boardW = FACE_PLATE[g.GameLevel].w
 
-	mine.DrawBoxUp(1, 1, 381, 445);
+	mine.DrawBoxUp(1, 1, 382, 446);
 	mine.DrawBoxDn(10, 10, 363, 50);
 	mine.DrawBoxDn(boardX, boardY, boardW, boardW);
+
+	DrawGrid(boardX+2, boardY+2, GRID_LINE[g.GameLevel]);
 	ShowMineArea();
---	DrawGridding(boardX+2, boardY+2, GridLine[Level]);
 end
 
+--[[ 数据刷新函数集合
+--]]
 --/* 初始化为level级别的数据 */
 function DataInit()
 	local gridnum = GRID_LINE[g.GameLevel]				--/* 根据level决定行列格子数和雷数 */
@@ -141,6 +144,19 @@ function CountMine(i, j, gridnum)
 	end
 end
 
+--[[ 绘图函数集合
+--]]
+
+function DrawGrid(x, y, GridCnt)
+	for i = 0,GridCnt+1 do
+		mine.DrawLine(x-1+i*(GRIDWIDTH+2), y, x-1+i*(GRIDWIDTH+2), y-1+GridCnt*(GRIDWIDTH+2));
+	end
+
+	for i = 0,GridCnt+1 do
+		mine.DrawLine(x, y-1+i*(GRIDWIDTH+2), x-1+GridCnt*(GRIDWIDTH+2), y-1+i*(GRIDWIDTH+2));
+	end
+end
+
 function ShowMineArea()
 	local gridnum = GRID_LINE[g.GameLevel]				--/* 根据level决定行列格子数和雷数 */
 
@@ -155,7 +171,9 @@ function ShowMine(i, j)
 	local boardX = FACE_PLATE[g.GameLevel].x
 	local boardY = FACE_PLATE[g.GameLevel].y
 	local status = g.GameBoard[i][j].status
+	local mineNum = g.GameBoard[i][j].mine
 
+	i = i-1; j = j-1
 	if status == MS_BOMB then
 		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
 		mine.FillRect(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
@@ -164,22 +182,22 @@ function ShowMine(i, j)
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
 	elseif status == MS_CLEAR then
 		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
-		if g.GameBoard[i][j].mine > 0 then
-			mime.DrawText(boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), g.GameBoard[i][j].mine);
+		if mineNum > 0 then
+			mime.DrawText(boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), mineNum);
 		end
 	elseif status == MS_MARK then
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), COLOR_RED);
+		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH-4);
 	elseif status == MS_DOUBT then
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), COLOR_RED);
+		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH-4);
 		mine.DrawText(boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), "?");
 	elseif status == MS_SHOW then
 		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
 		mine.DrawMine(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
 	elseif status == MS_ERROR then
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
+		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH-4);
 		mine.DrawText(boardX+3+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), "×");
 	else
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);

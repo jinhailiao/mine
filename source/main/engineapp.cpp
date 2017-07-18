@@ -6,7 +6,7 @@
  */
 #include "engineapp.h"
 #include "hguicfg.h"
-//#include "hguictrl.h"
+#include "input.h"
 #include "script.h"
 
 #define LCD_WIDTH HGUI_LCD_WIDTH
@@ -47,13 +47,17 @@ int C_MINEWND::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		EndPaint(pDC);
 		}break;
 	case EVT_KEYUP:
-//		GOTOWND(C_MENUWND, 0);
 		break;
-	case EVT_MOUSEDN:
-//		InvalidateRect(NULL);
-		break;
+	case EVT_MOUSEDB:
+	case EVT_MOUSEUP:{
+		S_WORD state = MOUSE_STATE_CLICK;
+		C_INPUT &input = C_INPUT::GetInstance();
+		if (msg == EVT_MOUSEDB)
+			state = MOUSE_STATE_DBCLICK;
+		input.SetMouseState(state, lParam);
+		}break;
 	case EVT_TIMER:
-//		InvalidateRect(NULL);
+		InvalidateRect(NULL);
 		break;
 	default:
 		return DefWndProcess(msg, wParam, lParam);

@@ -8,6 +8,7 @@
 #include "script.h"
 #include "hstrings.h"
 #include "hguidc.h"
+#include "input.h"
 
 /****************Lua API ******************/
 static int lua_DrawBoxUp(lua_State *L)
@@ -36,10 +37,64 @@ static int lua_DrawBoxDn(lua_State *L)
 
 static int lua_DrawLine(lua_State *L)
 {
-	return 0;
+	C_HGUIDC dc(NULL);
+	S_WORD sx = (S_WORD)lua_tonumber(L, 1);
+	S_WORD sy = (S_WORD)lua_tonumber(L, 2);
+	S_WORD ex = (S_WORD)lua_tonumber(L, 3);
+	S_WORD ey = (S_WORD)lua_tonumber(L, 4);
+	int ok = dc.DrawLine(sx, sy, ex, ey);
+	lua_pushboolean(L, ok);
+	return 1;
 }
 
+static int lua_DrawFlag(lua_State *L)
+{
+	bool ok = false;
+	C_HGUIDC dc(NULL);
+	C_HGUIPEN Pen(HGUI_RGB(255,0,0));
+	S_WORD x = (S_WORD)lua_tonumber(L, 1);
+	S_WORD y = (S_WORD)lua_tonumber(L, 2);
+	S_WORD w = (S_WORD)lua_tonumber(L, 3);
 
+	if (w > 4)
+	{
+		S_RECT Rect;
+
+		ok = true;
+		Rect.x = x, Rect.y = y;
+		Rect.w = w, Rect.h = w/2;
+		dc.SelectObject(&Pen);
+		dc.FillRect(Rect);
+		dc.DrawHLine(x+w, y+w/2, w/2);
+		dc.DrawHLine(x+w-1, y+w/2, w/2);
+	}
+	lua_pushboolean(L, ok);
+	return 1;
+}
+
+static int lua_DrawText(lua_State *L)
+{
+	int offset = 0;
+	C_HGUIDC dc(NULL);
+	S_WORD x = (S_WORD)lua_tonumber(L, 1);
+	S_WORD y = (S_WORD)lua_tonumber(L, 2);
+	const char *pString = lua_tostring(L, 3);
+	if (pString != NULL)
+		offset = dc.DrawString(x, y, pString);
+	lua_pushnumber(L, offset);
+	return 1;
+}
+
+static int lua_MouseState(lua_State *L)
+{
+	S_DWORD position = 0;
+	C_INPUT &input = C_INPUT::GetInstance();
+	S_WORD State = input.GetMouseState(position);
+	lua_pushnumber(L, State); // 
+	lua_pushnumber(L, HAI_GETLOWORD(position)); // x
+	lua_pushnumber(L, HAI_GETHIWORD(position)); // y
+	return 3;
+}
 
 static int lua_debug(lua_State *L)
 {
@@ -99,8 +154,9 @@ int C_LuaScript::RegisterAPI(void)
 		{"DrawBoxUp", lua_DrawBoxUp},
 		{"DrawBoxDn", lua_DrawBoxDn},
 		{"DrawLine", lua_DrawLine},
-
-//		{ "surface_draw_sprite", L_draw_sprite },
+		{"DrawFlag", lua_DrawFlag},
+		{"DrawText", lua_DrawText},
+		{ "MouseState", lua_MouseState},
 //		{ "pen_print", L_print },
 //		{ "key_down", L_key_down_by_name },
 //		{ "key_up", L_key_up_by_name },
