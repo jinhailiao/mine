@@ -25,10 +25,10 @@ public:
 	virtual int WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam);
 };
 
-class C_LOGO:public C_HGUIWND
+class C_DEMOLOGO:public C_HGUIWND
 {
 public:
-	C_LOGO(void){}
+	C_DEMOLOGO(void){}
 
 	virtual int WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam);
 };

@@ -63,7 +63,6 @@ int C_DESKTOP::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 //		C_ButtonEx *pStart = C_ButtonEx::NewCtrl();
 //		pStart->Create("开始", HGUI_BS_PUSHBTN, Rect, this, NULL, NULL, NULL, 10);
 //		hai_CreateButton(BS_PUSHBTN, 10, 2, (LCD_HEIGHT-16-2), 40, 16, "开始", 0, 0, 0);
-		GOTOWND(C_LOGO, 0);
 		}break;
 	case EVT_PAINT:{
 		C_HGUIDC *pDC = BeginPaint();
@@ -194,7 +193,7 @@ static void  DTOnKey(SP_EVT pEvent)
 }
 */
 
-int C_LOGO::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
+int C_DEMOLOGO::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 {
 	switch (msg)
 	{
@@ -216,7 +215,7 @@ int C_LOGO::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		}break;
 	case EVT_MOUSEUP:
 	case EVT_KEYUP:
-		RETURNWND();
+		GOTOWND(C_DESKTOP, 0);
 		break;
 	default:
 		return DefWndProcess(msg, wParam, lParam);

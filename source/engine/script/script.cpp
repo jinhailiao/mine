@@ -7,16 +7,31 @@
  */
 #include "script.h"
 #include "hstrings.h"
+#include "hguidc.h"
 
 /****************Lua API ******************/
 static int lua_DrawBoxUp(lua_State *L)
 {
-	return 0;
+	C_HGUIDC dc(NULL);
+	S_WORD x = (S_WORD)lua_tonumber(L, 1);
+	S_WORD y = (S_WORD)lua_tonumber(L, 2);
+	S_WORD w = (S_WORD)lua_tonumber(L, 3);
+	S_WORD h = (S_WORD)lua_tonumber(L, 4);
+	bool ok = dc.DrawBoxUp(x, y, w, h);
+	lua_pushboolean(L, ok);
+	return 1;
 }
 
 static int lua_DrawBoxDn(lua_State *L)
 {
-	return 0;
+	C_HGUIDC dc(NULL);
+	S_WORD x = (S_WORD)lua_tonumber(L, 1);
+	S_WORD y = (S_WORD)lua_tonumber(L, 2);
+	S_WORD w = (S_WORD)lua_tonumber(L, 3);
+	S_WORD h = (S_WORD)lua_tonumber(L, 4);
+	bool ok = dc.DrawBoxDn(x, y, w, h);
+	lua_pushboolean(L, ok);
+	return 1;
 }
 
 static int lua_DrawLine(lua_State *L)

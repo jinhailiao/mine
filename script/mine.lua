@@ -45,7 +45,7 @@ MS_ERROR = 7
 ---------------------------[[ global define ]]----------------------------
 g =
 {
-	GameLevel = 1,
+	GameLevel = 3,
 	--[[
 	struct GRID             /* 方格的数据结构 */
 	{

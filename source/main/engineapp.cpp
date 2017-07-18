@@ -39,17 +39,11 @@ int C_MINEWND::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		LuaScript.Init();
 		LuaScript.loadScritp("..\\..\\script\\mine.lua");
 		LuaScript.call("main_init");
-
-		GOTOWND(C_MINELOGO, 0);
 		}break;
 	case EVT_PAINT:{
 		C_HGUIDC *pDC = BeginPaint();
-		pDC->BitBlt(0, 0, LCD_WIDTH, LCD_HEIGHT, NULL, 0, 0, HGUI_WHITENESS);
-		pDC->DrawBox(10, LCD_HEIGHT-30, 30, 20);
-	//	hai_DisplayTime(hDC, DT_TIME_X, DT_TIME_Y, DT_TIME_W, DT_TIME_H);
-	//	hai_SetTextColor(hDC, (S_COLOR)COLOR_GRAY);
-	//	hai_TextOut(hDC,  70, 180, "温馨提示:F1为输入法切换按键,F2,F3,F4,F5为消息框测试按键,", 0);
-	//	hai_TextOut(hDC, 124, 200, "请在各个版面试按,谢了!", 0);
+		C_LuaScript &LuaScript = C_LuaScript::GetInstance();
+		LuaScript.call("main_draw");
 		EndPaint(pDC);
 		}break;
 	case EVT_KEYUP:
@@ -89,7 +83,7 @@ int C_MINELOGO::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		}break;
 	case EVT_MOUSEUP:
 	case EVT_KEYUP:
-		RETURNWND();
+		GOTOWND(C_MINEWND, 0);
 		break;
 	default:
 		return DefWndProcess(msg, wParam, lParam);
