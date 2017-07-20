@@ -151,7 +151,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 	wcex.cbSize = sizeof(WNDCLASSEX); 
 
-	wcex.style			= CS_HREDRAW | CS_VREDRAW;
+	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
 	wcex.lpfnWndProc	= (WNDPROC)WndProc;
 	wcex.cbClsExtra		= 0;
 	wcex.cbWndExtra		= 0;
@@ -206,7 +206,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	dwStyle   &=   ~(WS_MAXIMIZEBOX);   
 //	dwStyle   &=   ~(WS_MINIMIZEBOX);   
 	SetWindowLong(hWnd,   GWL_STYLE,   dwStyle); 
-
+	
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
 

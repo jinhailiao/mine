@@ -85,6 +85,11 @@ static int lua_DrawText(lua_State *L)
 	return 1;
 }
 
+static int lua_DrawMine(lua_State *L)
+{
+	return 0;
+}
+
 static int lua_MouseState(lua_State *L)
 {
 	S_DWORD position = 0;
@@ -98,6 +103,15 @@ static int lua_MouseState(lua_State *L)
 
 static int lua_debug(lua_State *L)
 {
+	string strInfo;
+	int top = lua_gettop(L);
+	for (int i = 1; i <= top; i++)
+	{
+		const char *pString = lua_tostring(L, i);
+		if (pString != NULL)
+			strInfo.append(pString);
+	}
+	printf(strInfo.c_str());
 	return 0;
 }
 
@@ -156,8 +170,8 @@ int C_LuaScript::RegisterAPI(void)
 		{"DrawLine", lua_DrawLine},
 		{"DrawFlag", lua_DrawFlag},
 		{"DrawText", lua_DrawText},
-		{ "MouseState", lua_MouseState},
-//		{ "pen_print", L_print },
+		{"DrawMine", lua_DrawMine},
+		{"MouseState", lua_MouseState},
 //		{ "key_down", L_key_down_by_name },
 //		{ "key_up", L_key_up_by_name },
 //		{ "music_play", L_play_music },

@@ -21,9 +21,12 @@ C_MINEAPP::~C_MINEAPP()
 {
 }
 
+#define EVT_GAME_UPDATE (EVT_USER + 1)
 int C_MINEAPP::GuiAppRun(void)
 {
 	S_GUIEVT aEvt = PeekGuiEvt();
+	if (aEvt.Evt == EVT_NULL)
+		aEvt.Evt = EVT_GAME_UPDATE;
 	TranslateEvt(aEvt);
 	DispatchGuiEvt(aEvt);
 
@@ -49,16 +52,18 @@ int C_MINEWND::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 	case EVT_KEYUP:
 		break;
 	case EVT_MOUSEDB:
-	case EVT_MOUSEUP:{
+	case EVT_MOUSEDN:{
 		S_WORD state = MOUSE_STATE_CLICK;
 		C_INPUT &input = C_INPUT::GetInstance();
 		if (msg == EVT_MOUSEDB)
 			state = MOUSE_STATE_DBCLICK;
 		input.SetMouseState(state, lParam);
 		}break;
-	case EVT_TIMER:
-		InvalidateRect(NULL);
-		break;
+	case EVT_GAME_UPDATE:{
+		C_LuaScript &LuaScript = C_LuaScript::GetInstance();
+		LuaScript.call("main_update");
+		SendWndEvt(EVT_PAINT, 0, 0);
+		}break;
 	default:
 		return DefWndProcess(msg, wParam, lParam);
 	}

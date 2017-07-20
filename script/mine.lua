@@ -23,6 +23,9 @@ GRIDWIDTH = 16
 --游戏状态
 GAMESTART=1
 GAMEOVER=2
+--鼠标状态
+MOUSE_STATE_CLICK=1
+MOUSE_STATE_DBCLICK=2
 --扫雷区域 {x,y,w}
 FACE_PLATE =
 {
@@ -34,10 +37,15 @@ FACE_PLATE =
 GRID_LINE = {10, 16, 20}
 MINE_NUM = {15, 40, 80}
 
+--[[状态转换：
+单击，MS_INIT->MS_MARK;MS_MARK->MS_DOUBT;MS_DOUBT->MS_INIT
+双击，MS_MARK->MS_CLEAR;MS_DOUBT->MS_INIT
+--]]
 MS_INIT = 1
 MS_CLEAR = 2
 MS_MARK = 3
 MS_DOUBT = 4
+--以下不参与状态转换
 MS_BOMB = 5
 MS_SHOW = 6
 MS_ERROR = 7
@@ -73,7 +81,7 @@ function main_init()
 end
 
 function main_update()
-
+	HandleMouseEvent()
 end
 
 function main_draw()
@@ -144,6 +152,62 @@ function CountMine(i, j, gridnum)
 	end
 end
 
+--根据坐标计算格子
+function GetGridWithCoordinate(x, y)
+	local startx = FACE_PLATE[g.GameLevel].x
+	local starty = FACE_PLATE[g.GameLevel].y
+	local i = (x - startx) / (GRIDWIDTH+2) --/* 鼠标指向格子的行列下标值 */
+	local j = (y - starty) / (GRIDWIDTH+2)
+	i = math.floor(i)
+	j = math.floor(j)
+
+	return i+1,j+1 --坐标从1开始
+end
+
+function HandleMouseEvent()
+	local state,x,y = mine.MouseState()
+	if state == MOUSE_STATE_CLICK then
+		HandleMouseClick(x, y)
+	elseif state == MOUSE_STATE_DBCLICK then
+		HandleMouseDoubleClick(x, y)
+	end
+end
+
+function HandleMouseClick(x, y)
+	local boardX = FACE_PLATE[g.GameLevel].x
+	local boardY = FACE_PLATE[g.GameLevel].y
+	local boardW = FACE_PLATE[g.GameLevel].w
+	if x>boardX and x<boardX+boardW and y>boardY and y<boardY+boardW then --坐标是否在雷区
+		local i,j=GetGridWithCoordinate(x,y)
+		local status = g.GameBoard[i][j].status
+		if status == MS_INIT then
+			g.GameBoard[i][j].status = MS_MARK
+		elseif status == MS_MARK then
+			g.GameBoard[i][j].status = MS_DOUBT
+		elseif status == MS_DOUBT then
+			g.GameBoard[i][j].status = MS_INIT
+		end
+	end
+end
+
+function HandleMouseDoubleClick(x, y)
+	local boardX = FACE_PLATE[g.GameLevel].x
+	local boardY = FACE_PLATE[g.GameLevel].y
+	local boardW = FACE_PLATE[g.GameLevel].w
+	if x>boardX and x<boardX+boardW and y>boardY and y<boardY+boardW then --坐标是否在雷区
+		local i,j=GetGridWithCoordinate(x,y)
+		local status = g.GameBoard[i][j].status
+--		if status == MS_CLEAR then
+--			g.GameBoard[i][j].status = MS_CLEAR --打开周围8格未打开的格子
+--		else
+		if status == MS_MARK then
+			g.GameBoard[i][j].status = MS_CLEAR --windows系统双击会收到单击消息
+		elseif status == MS_DOUBT then
+			g.GameBoard[i][j].status = MS_INIT
+		end
+	end
+end
+
 --[[ 绘图函数集合
 --]]
 
@@ -173,6 +237,8 @@ function ShowMine(i, j)
 	local status = g.GameBoard[i][j].status
 	local mineNum = g.GameBoard[i][j].mine
 
+--	mine.msg("i=",i,",j=",j,",status=",status,",mine=",mineNum)
+
 	i = i-1; j = j-1
 	if status == MS_BOMB then
 		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
@@ -183,7 +249,7 @@ function ShowMine(i, j)
 	elseif status == MS_CLEAR then
 		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
 		if mineNum > 0 then
-			mime.DrawText(boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), mineNum);
+			mine.DrawText(boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), mineNum);
 		end
 	elseif status == MS_MARK then
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
