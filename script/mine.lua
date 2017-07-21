@@ -76,15 +76,15 @@ g =
 	MineRestNum = 0,               --/* Ê£ÓàÀ×µÄÊýÄ¿ */
 }
 
-function main_init()
+function GameInit()
 	DataInit()
 end
 
-function main_update()
+function GameUpdate()
 	HandleMouseEvent()
 end
 
-function main_draw()
+function GameDraw()
 	local boardX = FACE_PLATE[g.GameLevel].x
 	local boardY = FACE_PLATE[g.GameLevel].y
 	local boardW = FACE_PLATE[g.GameLevel].w

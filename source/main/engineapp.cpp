@@ -41,12 +41,12 @@ int C_MINEWND::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		C_LuaScript &LuaScript = C_LuaScript::GetInstance();
 		LuaScript.Init();
 		LuaScript.loadScritp("..\\..\\script\\mine.lua");
-		LuaScript.call("main_init");
+		LuaScript.call("GameInit");
 		}break;
 	case EVT_PAINT:{
 		C_HGUIDC *pDC = BeginPaint();
 		C_LuaScript &LuaScript = C_LuaScript::GetInstance();
-		LuaScript.call("main_draw");
+		LuaScript.call("GameDraw");
 		EndPaint(pDC);
 		}break;
 	case EVT_KEYUP:
@@ -61,7 +61,7 @@ int C_MINEWND::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		}break;
 	case EVT_GAME_UPDATE:{
 		C_LuaScript &LuaScript = C_LuaScript::GetInstance();
-		LuaScript.call("main_update");
+		LuaScript.call("GameUpdate");
 		SendWndEvt(EVT_PAINT, 0, 0);
 		}break;
 	default:
