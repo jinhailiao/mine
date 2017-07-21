@@ -394,8 +394,8 @@ bool C_HGUIDC::_DrawBox(S_WORD x, S_WORD y, S_WORD w, S_WORD h, bool fDown)
 	SelectObject(&Pen);
 	DrawHLine(x, y+h-1, w);
 	DrawHLine(x+1, y+h-2, w-2);
-	DrawVLine(x+w, y, h);
-	DrawVLine(x+w-1, y+1, h-2);
+	DrawVLine(x+w-1, y, h);
+	DrawVLine(x+w-2, y+1, h-2);
 	return true;
 }
 
