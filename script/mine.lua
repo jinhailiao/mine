@@ -18,7 +18,7 @@ BtnColor.BTNFACE = 0xC0C0C0
 BtnColor.BTNHIGHLIGHT = 0xFFFFFF
 BtnColor.BTNSHADOW = 0x808080
 
-GRIDWIDTH = 16
+GRIDWIDTH = 17
 
 --ÓÎÏ·×´Ì¬
 GAMESTART=1
@@ -156,8 +156,8 @@ end
 function GetGridWithCoordinate(x, y)
 	local startx = FACE_PLATE[g.GameLevel].x
 	local starty = FACE_PLATE[g.GameLevel].y
-	local i = (x - startx) / (GRIDWIDTH+2) --/* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
-	local j = (y - starty) / (GRIDWIDTH+2)
+	local i = (x - startx) / (GRIDWIDTH+1) --/* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
+	local j = (y - starty) / (GRIDWIDTH+1)
 	i = math.floor(i)
 	j = math.floor(j)
 
@@ -213,11 +213,11 @@ end
 
 function DrawGrid(x, y, GridCnt)
 	for i = 0,GridCnt+1 do
-		mine.DrawLine(x-1+i*(GRIDWIDTH+2), y, x-1+i*(GRIDWIDTH+2), y-1+GridCnt*(GRIDWIDTH+2));
+		mine.DrawLine(x-1+i*(GRIDWIDTH+1), y, x-1+i*(GRIDWIDTH+1), y-1+GridCnt*(GRIDWIDTH+1));
 	end
 
 	for i = 0,GridCnt+1 do
-		mine.DrawLine(x, y-1+i*(GRIDWIDTH+2), x-1+GridCnt*(GRIDWIDTH+2), y-1+i*(GRIDWIDTH+2));
+		mine.DrawLine(x, y-1+i*(GRIDWIDTH+1), x-1+GridCnt*(GRIDWIDTH+1), y-1+i*(GRIDWIDTH+1));
 	end
 end
 
@@ -241,32 +241,32 @@ function ShowMine(i, j)
 
 	i = i-1; j = j-1
 	if status == MS_BOMB then
-		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
-		mine.FillRect(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
-		mine.DrawMine(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
+		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
+		mine.FillRect(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
+		mine.DrawMine(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
 	elseif status == MS_INIT then
-		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
 	elseif status == MS_CLEAR then
-		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
 		if mineNum > 0 then
-			mine.DrawText(boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), mineNum);
+			mine.DrawText(boardX+8+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), mineNum);
 		end
 	elseif status == MS_MARK then
-		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH-4);
+		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawFlag(boardX+5+i*(GRIDWIDTH+1), boardY+5+j*(GRIDWIDTH+1), GRIDWIDTH-7);
 	elseif status == MS_DOUBT then
-		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH-4);
-		mine.DrawText(boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), "?");
+		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawFlag(boardX+5+i*(GRIDWIDTH+1), boardY+5+j*(GRIDWIDTH+1), GRIDWIDTH-7);
+		mine.DrawText(boardX+8+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), "?");
 	elseif status == MS_SHOW then
-		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawMine(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
+		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawMine(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
 	elseif status == MS_ERROR then
-		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawFlag(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH-4);
-		mine.DrawText(boardX+3+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), "¡Á");
+		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawFlag(boardX+5+i*(GRIDWIDTH+1), boardY+5+j*(GRIDWIDTH+1), GRIDWIDTH-7);
+		mine.DrawText(boardX+8+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), "X");
 	else
-		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
 	end
 end
 
@@ -524,8 +524,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			x = LOWORD(lParam); y = HIWORD(lParam);
 			if (x > boardX && x < boardX + FacePlate[Level].w && y > boardY && y < boardY+ FacePlate[Level].w)
 			{
-				i = (x - boardX) / (GRIDWIDTH+2); /* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
-				j = (y - boardY) / (GRIDWIDTH+2);
+				i = (x - boardX) / (GRIDWIDTH+1); /* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
+				j = (y - boardY) / (GRIDWIDTH+1);
 
 				if (board[i][j].status == 2)
 				{
@@ -683,13 +683,13 @@ BOOL DrawGridding(HDC hDC, WORD x, WORD y, WORD GridCnt)
 
 	for (i = 0; i < GridCnt+1; i++)
 	{
-		MoveToEx(hDC, x-1+i*(GRIDWIDTH+2), y, NULL);
-		LineTo(hDC, x-1+i*(GRIDWIDTH+2), y-1+GridCnt*(GRIDWIDTH+2));
+		MoveToEx(hDC, x-1+i*(GRIDWIDTH+1), y, NULL);
+		LineTo(hDC, x-1+i*(GRIDWIDTH+1), y-1+GridCnt*(GRIDWIDTH+1));
 	}
 	for (i = 0; i < GridCnt+1; i++)
 	{
-		MoveToEx(hDC, x, y-1+i*(GRIDWIDTH+2), NULL);
-		LineTo(hDC, x-1+GridCnt*(GRIDWIDTH+2), y-1+i*(GRIDWIDTH+2));
+		MoveToEx(hDC, x, y-1+i*(GRIDWIDTH+1), NULL);
+		LineTo(hDC, x-1+GridCnt*(GRIDWIDTH+1), y-1+i*(GRIDWIDTH+1));
 	}
 	return TRUE;
 }
@@ -756,8 +756,8 @@ int PlayGameL(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 	TCHAR num[4];
 	int i, j;
 
-	i = (x - startx) / (GRIDWIDTH+2); /* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
-	j = (y - starty) / (GRIDWIDTH+2);
+	i = (x - startx) / (GRIDWIDTH+1); /* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
+	j = (y - starty) / (GRIDWIDTH+1);
 
 	if (board[i][j].status == 1)              /* Ö¸Ïò³õÊ¼×´Ì¬µÄ¸ñ×Ó */
 	{
@@ -767,11 +767,11 @@ int PlayGameL(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 			{
 				board[i][j].status = 2;
 				board[i][j].check = 1;
-				Draw3DRect(hDC, startx+2+i*(GRIDWIDTH+2), starty+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH, FALSE);
+				Draw3DRect(hDC, startx+2+i*(GRIDWIDTH+1), starty+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH, FALSE);
 				num[0] = board[i][j].mine+48;
 				num[1] = 0;
 				SetBkMode(hDC, TRANSPARENT);
-				TextOut(hDC, startx+7+i*(GRIDWIDTH+2), starty+3+j*(GRIDWIDTH+2), num, lstrlen(num));
+				TextOut(hDC, startx+7+i*(GRIDWIDTH+1), starty+3+j*(GRIDWIDTH+1), num, lstrlen(num));
 			}
 			else                    /* ÖÜÎ§°Ë¸ñÎÞÀ×£¬´ò¿ª±¾ÉíºÍÖÜÎ§°Ë¸ö¸ñ */
 			{                    /* µÝ¹é */
@@ -798,8 +798,8 @@ int PlayGameLDblClk(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 	//	TCHAR num[4];
 	int i, j;
 
-	i = (x - startx) / (GRIDWIDTH+2); /* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
-	j = (y - starty) / (GRIDWIDTH+2);
+	i = (x - startx) / (GRIDWIDTH+1); /* Êó±êÖ¸Ïò¸ñ×ÓµÄÐÐÁÐÏÂ±êÖµ */
+	j = (y - starty) / (GRIDWIDTH+1);
 
 	for (x = i-1; x <= i+1; x++) /* ´ò¿ªÖÜÎ§°Ë¸ñ */
 	{
@@ -838,8 +838,8 @@ void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦À
 {
 	int i, j;
 
-	i = (x - startx) / (GRIDWIDTH+2);  /* Êó±êÖ¸Ïò·½¸ñµÄ×ø±ê */
-	j = (y - starty) / (GRIDWIDTH+2);
+	i = (x - startx) / (GRIDWIDTH+1);  /* Êó±êÖ¸Ïò·½¸ñµÄ×ø±ê */
+	j = (y - starty) / (GRIDWIDTH+1);
 
 	if (board[i][j].status == 1)     /* ±êÀ× */
 	{
@@ -848,7 +848,7 @@ void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦À
 		{
 			board[i][j].check = 1;
 		}
-		DrawRedFlag(hDC, i*(GRIDWIDTH+2)+startx+2, j*(GRIDWIDTH+2)+starty+2);
+		DrawRedFlag(hDC, i*(GRIDWIDTH+1)+startx+2, j*(GRIDWIDTH+1)+starty+2);
 		CountMine(-1);
 		return;
 	}
@@ -858,7 +858,7 @@ void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦À
 		board[i][j].status = 4;
 		board[i][j].check = 0;
 		SetBkMode(hDC, TRANSPARENT);
-		TextOut(hDC, i*(GRIDWIDTH+2)+startx+6, j*(GRIDWIDTH+2)+starty+2, TEXT("?"), 1);
+		TextOut(hDC, i*(GRIDWIDTH+1)+startx+6, j*(GRIDWIDTH+1)+starty+2, TEXT("?"), 1);
 		CountMine(1);
 		return;
 	}
@@ -874,7 +874,7 @@ void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦À
 		hBrush = CreateSolidBrush(0xD8E9EC);
 		hPen   = (HPEN)SelectObject(hDC, hPen);
 		hBrush = (HBRUSH)SelectObject(hDC, hBrush);
-		Rectangle(hDC, i*(GRIDWIDTH+2)+startx+4, j*(GRIDWIDTH+2)+starty+4, i*(GRIDWIDTH+2)+startx+1+GRIDWIDTH, j*(GRIDWIDTH+2)+starty+1+GRIDWIDTH);
+		Rectangle(hDC, i*(GRIDWIDTH+1)+startx+4, j*(GRIDWIDTH+1)+starty+4, i*(GRIDWIDTH+1)+startx+1+GRIDWIDTH, j*(GRIDWIDTH+1)+starty+1+GRIDWIDTH);
 		hPen   = (HPEN)SelectObject(hDC, hPen);
 		hBrush = (HBRUSH)SelectObject(hDC, hBrush);
 		DeleteObject(hPen);
@@ -1201,42 +1201,42 @@ void DisplayOperateResult(HDC hDC, int status, int boardX, int boardY, int i, in
 	switch (status)
 	{
 	case 0:
-		DrawRedRect(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
-		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH, FALSE);
-		DrawMine(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
+		DrawRedRect(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
+		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH, FALSE);
+		DrawMine(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
 		break;
 	case 1:
-		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH, TRUE);
+		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH, TRUE);
 		break;
 	case 2:
-		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH, FALSE);
+		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH, FALSE);
 		if (board[i][j].mine > 0)
 		{
 			str[0] = board[i][j].mine+48;
 			str[1] = 0;
-			TextOut(hDC, boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), str, lstrlen(str));
+			TextOut(hDC, boardX+6+i*(GRIDWIDTH+1), boardY+3+j*(GRIDWIDTH+1), str, lstrlen(str));
 		}
 		break;
 	case 3:
-		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH, TRUE);
-		DrawRedFlag(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
+		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH, TRUE);
+		DrawRedFlag(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
 		break;
 	case 4:
-		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH, TRUE);
-		DrawRedFlag(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
-		TextOut(hDC, boardX+6+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), TEXT("?"), lstrlen(TEXT("?")));
+		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH, TRUE);
+		DrawRedFlag(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
+		TextOut(hDC, boardX+6+i*(GRIDWIDTH+1), boardY+3+j*(GRIDWIDTH+1), TEXT("?"), lstrlen(TEXT("?")));
 		break;
 	case 5:
-		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH, FALSE);
-		DrawMine(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
+		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH, FALSE);
+		DrawMine(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
 		break;
 	case 6:
-		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH, TRUE);
-		DrawRedFlag(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2));
-		TextOut(hDC, boardX+3+i*(GRIDWIDTH+2), boardY+3+j*(GRIDWIDTH+2), TEXT("¡Á"), lstrlen(TEXT("¡Á")));
+		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH, TRUE);
+		DrawRedFlag(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
+		TextOut(hDC, boardX+3+i*(GRIDWIDTH+1), boardY+3+j*(GRIDWIDTH+1), TEXT("¡Á"), lstrlen(TEXT("¡Á")));
 		break;
 	default:
-		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+2), boardY+2+j*(GRIDWIDTH+2), GRIDWIDTH, GRIDWIDTH, TRUE);
+		Draw3DRect(hDC, boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH, TRUE);
 		break;
 	}
 }
