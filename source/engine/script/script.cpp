@@ -65,8 +65,8 @@ static int lua_DrawFlag(lua_State *L)
 		Rect.w = w, Rect.h = w/2;
 		dc.SelectObject(&Pen);
 		dc.FillRect(Rect);
-		dc.DrawVLine(x+w, y+w/2, w/2);
 		dc.DrawVLine(x+w-1, y+w/2, w/2);
+		dc.DrawVLine(x+w-2, y+w/2, w/2);
 	}
 	lua_pushboolean(L, ok);
 	return 1;
