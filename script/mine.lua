@@ -240,11 +240,7 @@ function ShowMine(i, j)
 --	mine.msg("i=",i,",j=",j,",status=",status,",mine=",mineNum)
 
 	i = i-1; j = j-1
-	if status == MS_BOMB then
-		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
-		mine.FillRect(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
-		mine.DrawMine(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
-	elseif status == MS_INIT then
+	if status == MS_INIT then
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
 	elseif status == MS_CLEAR then
 		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
@@ -253,20 +249,21 @@ function ShowMine(i, j)
 		end
 	elseif status == MS_MARK then
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawFlag(boardX+5+i*(GRIDWIDTH+1), boardY+5+j*(GRIDWIDTH+1), GRIDWIDTH-7);
+		mine.DrawFlag(boardX+4+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), GRIDWIDTH-7);
 	elseif status == MS_DOUBT then
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawFlag(boardX+5+i*(GRIDWIDTH+1), boardY+5+j*(GRIDWIDTH+1), GRIDWIDTH-7);
+		mine.DrawFlag(boardX+4+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), GRIDWIDTH-7);
 		mine.DrawText(boardX+8+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), "?");
 	elseif status == MS_SHOW then
 		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawMine(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1));
+		mine.DrawMine(boardX+4+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), false);
 	elseif status == MS_ERROR then
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawFlag(boardX+5+i*(GRIDWIDTH+1), boardY+5+j*(GRIDWIDTH+1), GRIDWIDTH-7);
+		mine.DrawFlag(boardX+4+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), GRIDWIDTH-7);
 		mine.DrawText(boardX+8+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), "X");
-	else
-		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
+	elseif status == MS_BOMB then
+		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
+		mine.DrawMine(boardX+4+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), true);
 	end
 end
 

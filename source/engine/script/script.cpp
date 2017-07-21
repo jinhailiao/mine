@@ -49,26 +49,14 @@ static int lua_DrawLine(lua_State *L)
 
 static int lua_DrawFlag(lua_State *L)
 {
-	bool ok = false;
 	C_HGUIDC dc(NULL);
-	C_HGUIPEN Pen(HGUI_RGB(255,0,0));
+	dc.SetTextColor(HGUI_RGB(255,0,0));
+	dc.SelectObject(dc.GetStockGuiObj(HGUI_OBJ_SYM12x12));
+
 	S_WORD x = (S_WORD)lua_tonumber(L, 1);
 	S_WORD y = (S_WORD)lua_tonumber(L, 2);
-	S_WORD w = (S_WORD)lua_tonumber(L, 3);
-
-	if (w > 4)
-	{
-		S_RECT Rect;
-
-		ok = true;
-		Rect.x = x, Rect.y = y;
-		Rect.w = w, Rect.h = w/2;
-		dc.SelectObject(&Pen);
-		dc.FillRect(Rect);
-		dc.DrawVLine(x+w-1, y+w/2, w/2);
-		dc.DrawVLine(x+w-2, y+w/2, w/2);
-	}
-	lua_pushboolean(L, ok);
+	int offset = dc.DrawString(x, y, "!");
+	lua_pushnumber(L, offset);
 	return 1;
 }
 
@@ -89,7 +77,20 @@ static int lua_DrawText(lua_State *L)
 
 static int lua_DrawMine(lua_State *L)
 {
-	return 0;
+	C_HGUIDC dc(NULL);
+	dc.SelectObject(dc.GetStockGuiObj(HGUI_OBJ_SYM12x12));
+
+	S_WORD x = (S_WORD)lua_tonumber(L, 1);
+	S_WORD y = (S_WORD)lua_tonumber(L, 2);
+	int status = lua_toboolean(L, 3); // ״̬: 0,δը;1,��ը
+	if (status != 0)
+	{
+		dc.SetBkColor(HGUI_RGB(255,0,0));
+		dc.SetBkMode(HGUI_BKM_OPAQUE);
+	}
+	int offset = dc.DrawString(x, y, "#");
+	lua_pushnumber(L, offset);
+	return 1;
 }
 
 static int lua_MouseState(lua_State *L)
