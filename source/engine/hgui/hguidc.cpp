@@ -185,6 +185,7 @@ C_HGUIOBJ *C_HGUIDC::GetStockGuiObj(S_BYTE ObjName)const
 	static C_HGUIE5x8 HGUI_E5x8;
 	static C_HGUISYM16x16 HGUI_SYM16x16;
 	static C_HGUISYM08x16 HGUI_SYM08x16;
+	static C_HGUISYM12x12 HGUI_SYM12x12;
 
 	switch (ObjName)
 	{
@@ -202,6 +203,8 @@ C_HGUIOBJ *C_HGUIDC::GetStockGuiObj(S_BYTE ObjName)const
 		return &HGUI_SYM16x16;
 	case HGUI_OBJ_SYM08x16:
 		return &HGUI_SYM08x16;
+	case HGUI_OBJ_SYM12x12:
+		return &HGUI_SYM12x12;
 	default:
 		break;
 	}

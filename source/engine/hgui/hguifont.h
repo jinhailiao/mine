@@ -135,5 +135,24 @@ private:
 	FILE *m_fpFont;
 };
 
+class C_HGUISYM12x12:public C_HGUIFONT
+{
+public:
+	C_HGUISYM12x12(void);
+	virtual ~C_HGUISYM12x12();
+
+public:
+	virtual int GetWidth(S_WORD font);
+	virtual int GetHeight(S_WORD font);
+	virtual int DrawChar(S_WORD x, S_WORD y, char ch, C_HGUIBMP *pBMP);
+	virtual int DrawFont(S_WORD x, S_WORD y, S_WORD ch, C_HGUIBMP *pBMP);
+
+private:
+	int GetFontMold(S_WORD font, S_BYTE *pFontBuf);
+
+private:
+	FILE *m_fpFont;
+};
+
 #endif //__HGUI_FONT_H__
 

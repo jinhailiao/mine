@@ -17,6 +17,7 @@
 #define FONT16X16	"font1616.bin"
 #define SYM16X16	"sym1616.bin"
 #define SYM08X16	"sym0816.bin"
+#define SYM12X12	"sym1212.bin"
 
 extern char g_HGui_ResourcePath[CFG_PATH_FILE_MAX_LEN];
 
@@ -74,13 +75,6 @@ int C_HGUIF12x12::DrawChar(S_WORD x, S_WORD y, char ch, C_HGUIBMP *pBMP)
 		DrawPixel(x + 3, y + i, font>>4, pBMP);
 		DrawPixel(x + 4, y + i, font>>3, pBMP);
 		DrawPixel(x + 5, y + i, font>>2, pBMP);
-/*
-		pBMP->SetPixel(x + 0, y + i, font>>7);
-		pBMP->SetPixel(x + 1, y + i, font>>6);
-		pBMP->SetPixel(x + 2, y + i, font>>5);
-		pBMP->SetPixel(x + 3, y + i, font>>4);
-		pBMP->SetPixel(x + 4, y + i, font>>3);
-		pBMP->SetPixel(x + 5, y + i, font>>2);*/
 	}
 
 	return 0;
@@ -103,24 +97,12 @@ int C_HGUIF12x12::DrawFont(S_WORD x, S_WORD y, S_WORD ch, C_HGUIBMP *pBMP)
 		DrawPixel(x + 5, y + i, font>>2, pBMP);
 		DrawPixel(x + 6, y + i, font>>1, pBMP);
 		DrawPixel(x + 7, y + i, font>>0, pBMP);
-/*
-		pBMP->SetPixel(x + 0, y + i, font>>7);
-		pBMP->SetPixel(x + 1, y + i, font>>6);
-		pBMP->SetPixel(x + 2, y + i, font>>5);
-		pBMP->SetPixel(x + 3, y + i, font>>4);
-		pBMP->SetPixel(x + 4, y + i, font>>3);
-		pBMP->SetPixel(x + 5, y + i, font>>2);
-		pBMP->SetPixel(x + 6, y + i, font>>1);
-		pBMP->SetPixel(x + 7, y + i, font>>0);*/
+
 		font = mod[i*2+1];
 		DrawPixel(x + 8, y + i, font>>7, pBMP);
 		DrawPixel(x + 9, y + i, font>>6, pBMP);
 		DrawPixel(x + 10, y + i, font>>5, pBMP);
 		DrawPixel(x + 11, y + i, font>>4, pBMP);
-/*		pBMP->SetPixel(x + 8, y + i, font>>7);
-		pBMP->SetPixel(x + 9, y + i, font>>6);
-		pBMP->SetPixel(x + 10, y + i, font>>5);
-		pBMP->SetPixel(x + 11, y + i, font>>4);*/
 	}
 
 	return 0;
@@ -192,15 +174,6 @@ int C_HGUIF16x16::DrawChar(S_WORD x, S_WORD y, char ch, C_HGUIBMP *pBMP)
 		DrawPixel(x + 5, y + i, font>>2, pBMP);
 		DrawPixel(x + 6, y + i, font>>1, pBMP);
 		DrawPixel(x + 7, y + i, font>>0, pBMP);
-
-/*		pBMP->SetPixel(x + 0, y + i, font>>7);
-		pBMP->SetPixel(x + 1, y + i, font>>6);
-		pBMP->SetPixel(x + 2, y + i, font>>5);
-		pBMP->SetPixel(x + 3, y + i, font>>4);
-		pBMP->SetPixel(x + 4, y + i, font>>3);
-		pBMP->SetPixel(x + 5, y + i, font>>2);
-		pBMP->SetPixel(x + 6, y + i, font>>1);
-		pBMP->SetPixel(x + 7, y + i, font>>0);*/
 	}
 
 	return 0;
@@ -223,14 +196,7 @@ int C_HGUIF16x16::DrawFont(S_WORD x, S_WORD y, S_WORD ch, C_HGUIBMP *pBMP)
 		DrawPixel(x + 5, y + i, font>>2, pBMP);
 		DrawPixel(x + 6, y + i, font>>1, pBMP);
 		DrawPixel(x + 7, y + i, font>>0, pBMP);
-/*		pBMP->SetPixel(x + 0, y + i, font>>7);
-		pBMP->SetPixel(x + 1, y + i, font>>6);
-		pBMP->SetPixel(x + 2, y + i, font>>5);
-		pBMP->SetPixel(x + 3, y + i, font>>4);
-		pBMP->SetPixel(x + 4, y + i, font>>3);
-		pBMP->SetPixel(x + 5, y + i, font>>2);
-		pBMP->SetPixel(x + 6, y + i, font>>1);
-		pBMP->SetPixel(x + 7, y + i, font>>0);*/
+
 		font = mod[i*2+1];
 		DrawPixel(x + 8, y + i, font>>7, pBMP);
 		DrawPixel(x + 9, y + i, font>>6, pBMP);
@@ -240,14 +206,6 @@ int C_HGUIF16x16::DrawFont(S_WORD x, S_WORD y, S_WORD ch, C_HGUIBMP *pBMP)
 		DrawPixel(x + 13, y + i, font>>2, pBMP);
 		DrawPixel(x + 14, y + i, font>>1, pBMP);
 		DrawPixel(x + 15, y + i, font>>0, pBMP);
-/*		pBMP->SetPixel(x + 8, y + i, font>>7);
-		pBMP->SetPixel(x + 9, y + i, font>>6);
-		pBMP->SetPixel(x + 10, y + i, font>>5);
-		pBMP->SetPixel(x + 11, y + i, font>>4);
-		pBMP->SetPixel(x + 12, y + i, font>>3);
-		pBMP->SetPixel(x + 13, y + i, font>>2);
-		pBMP->SetPixel(x + 14, y + i, font>>1);
-		pBMP->SetPixel(x + 15, y + i, font>>0);*/
 	}
 
 	return 0;
@@ -509,14 +467,6 @@ int C_HGUIE5x8::DrawChar(S_WORD x, S_WORD y, char ch, C_HGUIBMP *pBMP)
 		DrawPixel(x + 2, y + i, font>>5, pBMP);
 		DrawPixel(x + 3, y + i, font>>4, pBMP);
 		DrawPixel(x + 4, y + i, font>>3, pBMP);
-/*		DrawPixel(x + 5, y + i, font>>2, pBMP);
-		DrawPixel(x + 6, y + i, font>>1, pBMP);
-		DrawPixel(x + 7, y + i, font>>0, pBMP);
-		pBMP->SetPixel(x + 0, y + i, font>>7);
-		pBMP->SetPixel(x + 1, y + i, font>>6);
-		pBMP->SetPixel(x + 2, y + i, font>>5);
-		pBMP->SetPixel(x + 3, y + i, font>>4);
-		pBMP->SetPixel(x + 4, y + i, font>>3);*/
 	}
 
 	return 0;
@@ -581,14 +531,7 @@ int C_HGUISYM16x16::DrawChar(S_WORD x, S_WORD y, char ch, C_HGUIBMP *pBMP)
 		DrawPixel(x + 5, y + i, font>>2, pBMP);
 		DrawPixel(x + 6, y + i, font>>1, pBMP);
 		DrawPixel(x + 7, y + i, font>>0, pBMP);
-/*		pBMP->SetPixel(x + 0, y + i, font>>7);
-		pBMP->SetPixel(x + 1, y + i, font>>6);
-		pBMP->SetPixel(x + 2, y + i, font>>5);
-		pBMP->SetPixel(x + 3, y + i, font>>4);
-		pBMP->SetPixel(x + 4, y + i, font>>3);
-		pBMP->SetPixel(x + 5, y + i, font>>2);
-		pBMP->SetPixel(x + 6, y + i, font>>1);
-		pBMP->SetPixel(x + 7, y + i, font>>0);*/
+
 		font = mod[i*2+1];
 		DrawPixel(x + 8, y + i, font>>7, pBMP);
 		DrawPixel(x + 9, y + i, font>>6, pBMP);
@@ -598,14 +541,6 @@ int C_HGUISYM16x16::DrawChar(S_WORD x, S_WORD y, char ch, C_HGUIBMP *pBMP)
 		DrawPixel(x + 13, y + i, font>>2, pBMP);
 		DrawPixel(x + 14, y + i, font>>1, pBMP);
 		DrawPixel(x + 15, y + i, font>>0, pBMP);
-/*		pBMP->SetPixel(x + 8, y + i, font>>7);
-		pBMP->SetPixel(x + 9, y + i, font>>6);
-		pBMP->SetPixel(x + 10, y + i, font>>5);
-		pBMP->SetPixel(x + 11, y + i, font>>4);
-		pBMP->SetPixel(x + 12, y + i, font>>3);
-		pBMP->SetPixel(x + 13, y + i, font>>2);
-		pBMP->SetPixel(x + 14, y + i, font>>1);
-		pBMP->SetPixel(x + 15, y + i, font>>0);*/
 	}
 
 	return 0;
@@ -672,14 +607,6 @@ int C_HGUISYM08x16::DrawChar(S_WORD x, S_WORD y, char ch, C_HGUIBMP *pBMP)
 		DrawPixel(x + 5, y + i, font>>2, pBMP);
 		DrawPixel(x + 6, y + i, font>>1, pBMP);
 		DrawPixel(x + 7, y + i, font>>0, pBMP);
-/*		pBMP->SetPixel(x + 0, y + i, font>>7);
-		pBMP->SetPixel(x + 1, y + i, font>>6);
-		pBMP->SetPixel(x + 2, y + i, font>>5);
-		pBMP->SetPixel(x + 3, y + i, font>>4);
-		pBMP->SetPixel(x + 4, y + i, font>>3);
-		pBMP->SetPixel(x + 5, y + i, font>>2);
-		pBMP->SetPixel(x + 6, y + i, font>>1);
-		pBMP->SetPixel(x + 7, y + i, font>>0);*/
 	}
 
 	return 0;
@@ -704,5 +631,76 @@ int C_HGUISYM08x16::GetFontMold(S_WORD font, S_BYTE *pFontBuf)
 	return 0;
 }
 
+/** @brief symbol 12x12
+ */
+C_HGUISYM12x12::C_HGUISYM12x12(void)
+{
+	string strFontFile(g_HGui_ResourcePath);
+	strFontFile.append("font//").append(SYM12X12);
+	m_fpFont = fopen(strFontFile.c_str(), "rb");
+}
+
+C_HGUISYM12x12::~C_HGUISYM12x12()
+{
+	if (m_fpFont)
+		fclose(m_fpFont);
+}
+
+int C_HGUISYM12x12::GetWidth(S_WORD font)
+{
+	return 12;
+}
+
+int C_HGUISYM12x12::GetHeight(S_WORD font)
+{
+	return 12;
+}
+
+int C_HGUISYM12x12::DrawChar(S_WORD x, S_WORD y, char ch, C_HGUIBMP *pBMP)
+{
+	S_BYTE font, mod[32];
+	memset(mod, 0x00, sizeof(mod));
+	GetFontMold(ch, mod);
+	
+	for (int i = 0; i < 12; ++i)
+	{
+		font = mod[i*2+0];
+		DrawPixel(x + 0, y + i, font>>7, pBMP);
+		DrawPixel(x + 1, y + i, font>>6, pBMP);
+		DrawPixel(x + 2, y + i, font>>5, pBMP);
+		DrawPixel(x + 3, y + i, font>>4, pBMP);
+		DrawPixel(x + 4, y + i, font>>3, pBMP);
+		DrawPixel(x + 5, y + i, font>>2, pBMP);
+		DrawPixel(x + 6, y + i, font>>1, pBMP);
+		DrawPixel(x + 7, y + i, font>>0, pBMP);
+
+		font = mod[i*2+1];
+		DrawPixel(x + 8, y + i, font>>7, pBMP);
+		DrawPixel(x + 9, y + i, font>>6, pBMP);
+		DrawPixel(x + 10, y + i, font>>5, pBMP);
+		DrawPixel(x + 11, y + i, font>>4, pBMP);
+	}
+
+	return 0;
+}
+
+int C_HGUISYM12x12::DrawFont(S_WORD x, S_WORD y, S_WORD ch, C_HGUIBMP *pBMP)
+{
+	return DrawChar(x, y, (char)ch, pBMP);
+}
+
+int C_HGUISYM12x12::GetFontMold(S_WORD font, S_BYTE *pFontBuf)
+{
+	if (m_fpFont == NULL)
+		return -1;
+	if (font >= 0x20 && font < 0x7F)
+	{
+		fseek(m_fpFont, (font-0x20) * 24, SEEK_SET);
+		fread(pFontBuf, 24, 1, m_fpFont);
+
+		return 32;
+	}
+	return 0;
+}
 
 
