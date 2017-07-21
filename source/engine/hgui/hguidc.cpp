@@ -30,7 +30,7 @@ C_HGUIDC::C_HGUIDC(C_WNDBASE *pWnd):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_DC)
 	m_ColorKey	= 0;
 	m_TextColor	= HGUI_COLOR_BLACK;
 	m_BkColor	= HGUI_COLOR_WHITE;
-	m_BkMode	= HGUI_BKM_OPAQUE;
+	m_BkMode	= HGUI_BKM_TRANSPARENT;
 	m_Alpha		= 255;
 
 	m_pWnd  = pWnd;
@@ -367,20 +367,22 @@ bool C_HGUIDC::_DrawBox(S_WORD x, S_WORD y, S_WORD w, S_WORD h, bool fDown)
 	if (y > m_Rect.h) y = m_Rect.h - 1;
 	if (w+x > m_Rect.w) w = m_Rect.w - x;
 	if (h+y > m_Rect.h) h = m_Rect.h - y;
-	if (w <= 3 || h <= 3)
+	if (w <= 6 || h <= 6)
 		return false;
 
 	C_HGUIPEN Pen(HGUI_COLOR_LIGRAY);
 	SelectObject(&Pen);
-	BitBlt(x+1, y+1, w-2, h-2, NULL, 0, 0, HGUI_PATCOPY);
+	BitBlt(x+2, y+2, w-4, h-4, NULL, 0, 0, HGUI_PATCOPY);
 
 	if (fDown == false)
 		Pen.SetColor(HGUI_COLOR_LIGHT);
 	else
 		Pen.SetColor(HGUI_COLOR_LIDARK);
 	SelectObject(&Pen);
-	DrawHLine(x, y, w-1);
+	DrawHLine(x, y, w);
+	DrawHLine(x, y+1, w-1);
 	DrawVLine(x, y, h);
+	DrawVLine(x+1, y+1, h-2);
 
 	if (fDown == false)
 		Pen.SetColor(HGUI_COLOR_LIDARK);
@@ -388,7 +390,9 @@ bool C_HGUIDC::_DrawBox(S_WORD x, S_WORD y, S_WORD w, S_WORD h, bool fDown)
 		Pen.SetColor(HGUI_COLOR_LIGHT);
 	SelectObject(&Pen);
 	DrawHLine(x, y+h-1, w);
-	DrawVLine(x+w-1, y, h-1);
+	DrawHLine(x+1, y+h-2, w-2);
+	DrawVLine(x+w, y, h);
+	DrawVLine(x+w-1, y+1, h-2);
 	return true;
 }
 

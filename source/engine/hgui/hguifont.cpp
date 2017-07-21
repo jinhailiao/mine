@@ -24,7 +24,7 @@ extern char g_HGui_ResourcePath[CFG_PATH_FILE_MAX_LEN];
 C_HGUIFONT::C_HGUIFONT(void):C_HGUIOBJ(C_HGUIOBJ::OBJ_T_FONT)
 {
 	m_style = 0;
-	m_BkMode = HGUI_BKM_OPAQUE;
+	m_BkMode = HGUI_BKM_TRANSPARENT;
 	m_TextColor = HGUI_COLOR_BLACK;
 	m_BkColor = HGUI_COLOR_WHITE;
 }

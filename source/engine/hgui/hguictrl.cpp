@@ -953,7 +953,7 @@ S_WORD C_ButtonEx::DrawText(C_HGUIDC &dc, const string &strText)
 		return 0;
 
 	S_WORD x = 0, y = 0;
-	S_BYTE bkmode = HGUI_BKM_TRANSPARENT;
+	S_BYTE bkmode = dc.GetBkMode();
 	S_DWORD textcolor = dc.GetTextColor();
 	S_WORD h = dc.GetFontHeight(' ');
 	S_WORD w = (S_WORD)dc.GetStringExtent(strText.c_str());
