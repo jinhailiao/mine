@@ -76,6 +76,8 @@ static int lua_DrawText(lua_State *L)
 {
 	int offset = 0;
 	C_HGUIDC dc(NULL);
+	dc.SelectObject(dc.GetStockGuiObj(HGUI_OBJ_F12x12));
+
 	S_WORD x = (S_WORD)lua_tonumber(L, 1);
 	S_WORD y = (S_WORD)lua_tonumber(L, 2);
 	const char *pString = lua_tostring(L, 3);
