@@ -7,17 +7,12 @@
 * Õª    Òª£º·ÂWINDOWSÖĞµÄÉ¨À×µÄÓÎÏ·
 
 * µ±Ç°°æ±¾: 2.0
-* ×÷    Õß: ÁÎ½ğº£
+* ×÷    Õß: jinhailiao@163.com,QQ6033653
 * Íê³ÉÈÕÆÚ: 2016.11.1
 ***************************************************************************
 --]]
 
 ---------------------------[[ const define ]]----------------------------
-BtnColor = {}
-BtnColor.BTNFACE = 0xC0C0C0
-BtnColor.BTNHIGHLIGHT = 0xFFFFFF
-BtnColor.BTNSHADOW = 0x808080
-
 GRIDWIDTH = 17
 
 --ÓÎÏ·×´Ì¬
@@ -54,11 +49,10 @@ MS_ERROR = 7
 g =
 {
 	GameLevel = 3,
-	--[[
-	struct GRID             /* ·½¸ñµÄÊı¾İ½á¹¹ */
+	--[[ À×ÇøµÄÊı¾İ½á¹¹
 	{
-    	int mine;           /* -1£ºÓĞÀ×£» 0-8£ºÖÜÎ§°Ë¸ñÀ×µÄÇé¿ö */
-    	int status;         /* 1£º³õÊ¼»¯£»2£ºÒÑÅÅÀ×£»3£º±êÀ×£»4£º»³ÒÉ£»0£º²ÈÀ×; 5:ÏÔÊ¾À×; 6: ±êÀ×´íÎó*/
+    	mine;            -1£ºÓĞÀ×£» 0-8£ºÖÜÎ§°Ë¸ñÀ×µÄÇé¿ö
+    	status;          MS_INIT:³õÊ¼»¯;MS_CLEAR:ÒÑÅÅÀ×;MS_MARK:±êÀ×;MS_DOUBT:»³ÒÉ;MS_BOMB:²ÈÀ×;MS_SHOW:ÏÔÊ¾À×;MS_ERROR:±êÀ×´íÎó
 	};
 	--]]
 	GameBoard = {}, --À×ÇøÊı¾İ
@@ -69,11 +63,11 @@ g =
 --TCHAR MineStr[3][6]  = {TEXT("15"),TEXT("40"),TEXT("80")};
 --TCHAR LevelStr[3][6] = {TEXT("µÍ¼¶"), TEXT("ÖĞ¼¶"), TEXT("¸ß¼¶")};
 
---struct GRID board[20][20];        /* À×Çø: 20*20; */
---struct USER player, players[10];  /* playerÎªµ±Ç°Íæ¼Ò£¬playersÎª´¢´æµÄÍæ¼Ò*/
---struct HERO hero[3];              /* heroÎªÉ¨À×Ó¢ĞÛÅÅĞĞ°ñ */
---int    gamestart, gametime, timestart;		  /* gamestart:ÓÎÏ·¿ªÊ¼£» gametime:ÓÎÏ·ÓÃÊ±£»*/
-	MineRestNum = 0,               --/* Ê£ÓàÀ×µÄÊıÄ¿ */
+--struct GRID board[20][20];         À×Çø: 20*20;
+--struct USER player, players[10];   playerÎªµ±Ç°Íæ¼Ò£¬playersÎª´¢´æµÄÍæ¼Ò
+--struct HERO hero[3];               heroÎªÉ¨À×Ó¢ĞÛÅÅĞĞ°ñ
+--int    gamestart, gametime, timestart;		   gamestart:ÓÎÏ·¿ªÊ¼£» gametime:ÓÎÏ·ÓÃÊ±£»
+	MineRestNum = 0,               -- Ê£ÓàÀ×µÄÊıÄ¿
 }
 
 function GameInit()
@@ -99,9 +93,9 @@ end
 
 --[[ Êı¾İË¢ĞÂº¯Êı¼¯ºÏ
 --]]
---/* ³õÊ¼»¯Îªlevel¼¶±ğµÄÊı¾İ */
+-- ³õÊ¼»¯Îªlevel¼¶±ğµÄÊı¾İ
 function DataInit()
-	local gridnum = GRID_LINE[g.GameLevel]				--/* ¸ù¾İlevel¾ö¶¨ĞĞÁĞ¸ñ×ÓÊıºÍÀ×Êı */
+	local gridnum = GRID_LINE[g.GameLevel]				-- ¸ù¾İlevel¾ö¶¨ĞĞÁĞ¸ñ×ÓÊıºÍÀ×Êı
 	g.MineRestNum = MINE_NUM[g.GameLevel]
 
 	g.GameTime  = 0
@@ -109,7 +103,7 @@ function DataInit()
 	g.GameState = GAMESTART
 
 	g.GameBoard = {}
-	for i = 1,gridnum do        --/* ·½¸ñµÄ³õÊ¼¸÷Öµ */
+	for i = 1,gridnum do        -- ·½¸ñµÄ³õÊ¼¸÷Öµ
 		g.GameBoard[i] = {}
 		for j = 1,gridnum do
         	g.GameBoard[i][j] = {status = MS_INIT, mine = 0}
@@ -127,10 +121,10 @@ function DataInit()
 		end
 	end
 
-	for i = 1,gridnum do        --/* ÎŞÀ×¸ñ¼ÇÂ¼ÖÜÎ§µÄ°Ë¸ö¸ñ×ÓµÄÀ×Êı */
+	for i = 1,gridnum do        -- ÎŞÀ×¸ñ¼ÇÂ¼ÖÜÎ§µÄ°Ë¸ö¸ñ×ÓµÄÀ×Êı
 		for j = 1,gridnum do
 			if g.GameBoard[i][j].mine ~= -1 then
-				CountMine(i, j, gridnum)
+				CountMineOn9Grid(i, j, gridnum)
 			end
         end
 	end
@@ -138,7 +132,7 @@ function DataInit()
 end
 
 --Í³¼ÆÖÜÎ§8¸ñµÄÀ×µÄÊıÁ¿
-function CountMine(i, j, gridnum)
+function CountMineOn9Grid(i, j, gridnum)
 	for m = i-1,i+1 do
 		if m>0 and m<=gridnum then
 			for n = j-1,j+1 do
@@ -152,16 +146,127 @@ function CountMine(i, j, gridnum)
 	end
 end
 
+function CountMine(val)
+	g.MineRestNum = g.MineRestNum + val
+	if g.MineRestNum < 0 then
+		g.MineRestNum = 0
+	elseif g.MineRestNum > MINE_NUM[g.GameLevel] then
+		g.MineRestNum = MINE_NUM[g.GameLevel]
+	end
+end
+
+-- ¼ì²éÓÎÏ·ÊÇ·ñ½áÊø
+function CheckOver()
+	local gridnum = GRID_LINE[g.GameLevel]
+	for i = 1,gridnum do
+		for j = 1,gridnum do
+        	if g.GameBoard[i][j].status == MS_INIT or g.GameBoard[i][j].status == MS_DOUBT then
+				return false,false -- over,win
+			end
+        	if g.GameBoard[i][j].status == MS_BOMB then
+				return true,false -- over,win
+			end
+        end
+	end
+	return true,true -- over,win
+end
+
+function ChangeGridStateAfterOver()
+	local gridnum = GRID_LINE[g.GameLevel]
+	for i = 1,gridnum do
+		for j = 1,gridnum do
+        	if g.GameBoard[i][j].status == MS_INIT and g.GameBoard[i][j].mine == -1 then
+				g.GameBoard[i][j].status = MS_SHOW
+			end
+        	if g.GameBoard[i][j].status == MS_MARK and g.GameBoard[i][j].mine >= 0 then
+				g.GameBoard[i][j].status = MS_ERROR
+			end
+        	if g.GameBoard[i][j].status == MS_DOUBT and g.GameBoard[i][j].mine >= 0 then
+				g.GameBoard[i][j].status = MS_ERROR
+			end
+        end
+	end
+end
+
+function HandleOver(over, win)
+	if over == false then
+		over, win = CheckOver()
+	end
+
+	if over == true then
+		g.TimeStart = false
+		g.GameState = GAMEOVER
+	else
+		return
+	end
+	if win == false then
+		ChangeGridStateAfterOver()
+	end
+end
+
 --¸ù¾İ×ø±ê¼ÆËã¸ñ×Ó
 function GetGridWithCoordinate(x, y)
 	local startx = FACE_PLATE[g.GameLevel].x
 	local starty = FACE_PLATE[g.GameLevel].y
-	local i = (x - startx) / (GRIDWIDTH+1) --/* Êó±êÖ¸Ïò¸ñ×ÓµÄĞĞÁĞÏÂ±êÖµ */
+	local i = (x - startx) / (GRIDWIDTH+1) -- Êó±êÖ¸Ïò¸ñ×ÓµÄĞĞÁĞÏÂ±êÖµ
 	local j = (y - starty) / (GRIDWIDTH+1)
 	i = math.floor(i)
 	j = math.floor(j)
 
 	return i+1,j+1 --×ø±ê´Ó1¿ªÊ¼
+end
+
+-- Èç¹û×ó»÷·½¸ñµÄÖÜÎ§°Ë¸ö·½¸ñÎŞÀ×£¬ÔòÈ«´ò¿ª£¬µİ¹é¡£i,jÎªµ±Ç°¸ñµÄ×ø±ê
+function OpenGrid(i, j)
+	if g.GameBoard[i][j].mine ~= 0 then  --  ×ó»÷µÄ·½¸ñÖµ²»Îª0£¬Ôò·µ»Ø
+		return
+	end
+
+	local gridnum = GRID_LINE[g.GameLevel]
+	for x = i-1, i+1 do -- ´ò¿ªÖÜÎ§°Ë¸ñ
+		if x > 0 and x <= gridnum then
+			for y = j-1, j+1 do
+				if y > 0 and y <= gridnum then
+					if g.GameBoard[x][y].mine ~= 0 then          -- ÖÜÎ§°Ë¸ñÓĞÀ×µÄÇé¿ö
+						if g.GameBoard[x][y].status == MS_MARK or g.GameBoard[x][y].status == MS_DOUBT then -- Èç±êÀ×Ôò´íÎó£¬À×Êı¼Ó1
+							CountMine(1)
+						end
+						g.GameBoard[x][y].status = MS_CLEAR
+					elseif g.GameBoard[x][y].status ~= MS_CLEAR then --ÖÜÎ§°Ë¸ñÎŞÀ×µÄÇé¿ö£¬ÇÒÃ»´ò¿ª
+						if g.GameBoard[x][y].status == MS_MARK or g.GameBoard[x][y].status == MS_DOUBT then -- Èç±êÀ×Ôò´íÎó£¬À×Êı¼Ó1
+							CountMine(1)
+						end
+						g.GameBoard[x][y].status = MS_CLEAR
+						OpenGrid(x, y);  --  µİ¹éµ÷ÓÃ
+					end
+				end
+			end
+		end
+	end
+end
+
+-- Ë«»÷´ò¿ªµÄ¸ñ×Ó£¬ÔòÊ£ÓàµÄ¿Õ¸ñ´ò¿ª
+function OpenGridWithMS_CLEAR(i, j)
+	local gridnum = GRID_LINE[g.GameLevel]
+	for x = i-1, i+1 do  --´ò¿ªÖÜÎ§°Ë¸ñ
+		if x > 0 and x <= gridnum then
+			for y = j-1,j+1 do
+				if y > 0 and y <= gridnum then
+					if g.GameBoard[x][y].status == MS_INIT then
+						if g.GameBoard[x][y].mine == -1 then
+							g.GameBoard[x][y].status = MS_BOMB
+							return true, false -- over, win
+						end
+						g.GameBoard[x][y].status = MS_CLEAR
+						if g.GameBoard[x][y].mine == 0 then
+							OpenGrid(x, y);
+						end
+					end
+				end
+			end
+		end
+	end
+	return false, false -- over,win
 end
 
 function HandleMouseEvent()
@@ -181,11 +286,12 @@ function HandleMouseClick(x, y)
 		local i,j=GetGridWithCoordinate(x,y)
 		local status = g.GameBoard[i][j].status
 		if status == MS_INIT then
-			g.GameBoard[i][j].status = MS_MARK
+			g.GameBoard[i][j].status = MS_MARK;CountMine(-1)
+			HandleOver(false, false)
 		elseif status == MS_MARK then
 			g.GameBoard[i][j].status = MS_DOUBT
 		elseif status == MS_DOUBT then
-			g.GameBoard[i][j].status = MS_INIT
+			g.GameBoard[i][j].status = MS_INIT;CountMine(1)
 		end
 	end
 end
@@ -197,13 +303,19 @@ function HandleMouseDoubleClick(x, y)
 	if x>boardX and x<boardX+boardW and y>boardY and y<boardY+boardW then --×ø±êÊÇ·ñÔÚÀ×Çø
 		local i,j=GetGridWithCoordinate(x,y)
 		local status = g.GameBoard[i][j].status
---		if status == MS_CLEAR then
---			g.GameBoard[i][j].status = MS_CLEAR --´ò¿ªÖÜÎ§8¸ñÎ´´ò¿ªµÄ¸ñ×Ó
---		else
-		if status == MS_MARK then
-			g.GameBoard[i][j].status = MS_CLEAR --windowsÏµÍ³Ë«»÷»áÊÕµ½µ¥»÷ÏûÏ¢
+		if status == MS_MARK then --windowsÏµÍ³Ë«»÷»áÊÕµ½µ¥»÷ÏûÏ¢
+			if g.GameBoard[i][j].mine == -1 then
+				g.GameBoard[i][j].status = MS_BOMB
+				HandleOver(true, false)
+			else
+				g.GameBoard[i][j].status = MS_CLEAR;CountMine(1)
+				OpenGrid(i, j);HandleOver(false, false)
+			end
 		elseif status == MS_DOUBT then
-			g.GameBoard[i][j].status = MS_INIT
+			g.GameBoard[i][j].status = MS_INIT;CountMine(1)
+		elseif status == MS_CLEAR then
+			local over,win = OpenGridWithMS_CLEAR(i, j) --´ò¿ªÖÜÎ§8¸ñÎ´´ò¿ªµÄ¸ñ×Ó
+			HandleOver(over, win)
 		end
 	end
 end
@@ -222,7 +334,7 @@ function DrawGrid(x, y, GridCnt)
 end
 
 function ShowMineArea()
-	local gridnum = GRID_LINE[g.GameLevel]				--/* ¸ù¾İlevel¾ö¶¨ĞĞÁĞ¸ñ×ÓÊıºÍÀ×Êı */
+	local gridnum = GRID_LINE[g.GameLevel]				-- ¸ù¾İlevel¾ö¶¨ĞĞÁĞ¸ñ×ÓÊıºÍÀ×Êı
 
 	for i=1,gridnum do
 		for j=1,gridnum do
@@ -269,19 +381,19 @@ end
 
 
 --[[
-/************************* data structure **********************************/
+************************ data structure *********************************
 
 
-struct USER             /* Íæ¼ÒµÄÊı¾İ½á¹¹ */
+struct USER              Íæ¼ÒµÄÊı¾İ½á¹¹
 {
-	TCHAR name[12];        /* ĞÕÃû */
-	int  time[3];        /* ²»Í¬¼¶±ğµÄ×îÉÙÊ±¼ä */
+	TCHAR name[12];         ĞÕÃû
+	int  time[3];         ²»Í¬¼¶±ğµÄ×îÉÙÊ±¼ä
 };
 
-struct HERO             /* É¨À×Ó¢ĞÛµÄÊı¾İ½á¹¹ */
+struct HERO              É¨À×Ó¢ĞÛµÄÊı¾İ½á¹¹
 {
-    TCHAR name[12];       /* É¨À×Ó¢ĞÛµÄĞÕÃû */
-    int time;           /* É¨À×Ó¢ĞÛËùÓÃµÄ×îÉÙÊ±¼ä */
+    TCHAR name[12];        É¨À×Ó¢ĞÛµÄĞÕÃû
+    int time;            É¨À×Ó¢ĞÛËùÓÃµÄ×îÉÙÊ±¼ä
 };
 
 struct FACEPLATE
@@ -291,7 +403,7 @@ struct FACEPLATE
 	WORD w;
 };
 
-/************************ function prototype *******************************/
+*********************** function prototype ******************************
 BOOL Draw3DRect(HDC hDC, WORD x, WORD y, WORD cx, WORD cy, BOOL IsUp);
 BOOL DrawGridding(HDC hDC, WORD x, WORD y, WORD GridCnt);
 void DrawMine(HDC hDC, WORD x, WORD y);
@@ -301,19 +413,19 @@ void DataInit(void);
 int  Win(int gridnum);
 int  PlayGameL(HDC hDC, int startx, int starty, int x, int y, int gridnum);
 int  PlayGameLDblClk(HDC hDC, int startx, int starty, int x, int y, int gridnum);
-void PlayGameR(HDC hDC, int startx, int starty, int x, int y);   /* ÓÒ»÷·½¸ñµÄ´¦Àí */
+void PlayGameR(HDC hDC, int startx, int starty, int x, int y);    ÓÒ»÷·½¸ñµÄ´¦Àí
 void OpenGrid(HDC hDC, int startx, int starty, int i, int j, int gridnum);
 void DisplayOperateResult(HDC hDC, int status, int boardX, int boardY, int i, int j);
 void GameOver(int gridnum);
 void PlayerInit(void);
-void CountMine(int flag);/* ÔËËãÊ£ÓàÀ×Êı£ºflag=-1±êÁËÒ»¸öÀ×,flag=1±êÁËÒ»ÎÊºÅ */
-void WriteDisk(void);        /* ÓÎÏ·½áÊø£¬Êı¾İĞ´ÅÌ */
-void Record(int level);  /* ¼ÇÂ¼³É¼¨ */
+void CountMine(int flag); ÔËËãÊ£ÓàÀ×Êı£ºflag=-1±êÁËÒ»¸öÀ×,flag=1±êÁËÒ»ÎÊºÅ
+void WriteDisk(void);         ÓÎÏ·½áÊø£¬Êı¾İĞ´ÅÌ
+void Record(int level);   ¼ÇÂ¼³É¼¨
 void GameMenu(HWND hwnd, int x, int y);
 void NameInputOver(void);
 void SelectPlayer(void);
 
-/************************** main function **********************************/
+************************* main function *********************************
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int i, j;
@@ -468,20 +580,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				timestart = 1;
 				operate = PlayGameL(hDC, boardX, boardY, x, y, GridLine[Level]);
-				if (operate)           /* ×ó»÷ÕıÈ· */
+				if (operate)            ×ó»÷ÕıÈ·
 				{
-					if (Win(GridLine[Level]))   /* ÅĞ¶ÏÒ»ÏÂÊÇ·ñÓ®ÁË */
+					if (Win(GridLine[Level]))    ÅĞ¶ÏÒ»ÏÂÊÇ·ñÓ®ÁË
 					{
-						gamestart = 0;       /* Îª0£¬ÓÎÏ·¼ÆÊ±Í£Ö¹ */
+						gamestart = 0;        Îª0£¬ÓÎÏ·¼ÆÊ±Í£Ö¹
 						timestart = 0;
-						Record(Level);/* ÅĞ¶ÏÊÇ·ñÆÆ¼ÍÂ¼ */
+						Record(Level); ÅĞ¶ÏÊÇ·ñÆÆ¼ÍÂ¼
 					}
 				}
-				else         /* ÓÎÏ·Ê§°ÜµÄ´¦Àí */
+				else          ÓÎÏ·Ê§°ÜµÄ´¦Àí
 				{
-					gamestart = 0;   /* ¼ÇÊ±Í£Ö¹ */
+					gamestart = 0;    ¼ÇÊ±Í£Ö¹
 					timestart = 0;
-					GameOver(GridLine[Level]);/* ´ò¿ªÊ£Óà¸ñ×Ó */
+					GameOver(GridLine[Level]); ´ò¿ªÊ£Óà¸ñ×Ó
 					InvalidateRect(hWnd, NULL, TRUE);
 				}
 			}
@@ -503,12 +615,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (x > boardX && x < boardX + FacePlate[Level].w && y > boardY && y < boardY+ FacePlate[Level].w)
 			{
 				timestart = 1;
-				PlayGameR(hDC, boardX, boardY, x, y);   /* ÓÒ»÷·½¸ñµÄ´¦Àí */
-				if (Win(GridLine[Level]))                 /* ÅĞ¶ÏÊÇ·ñÓ® */
+				PlayGameR(hDC, boardX, boardY, x, y);    ÓÒ»÷·½¸ñµÄ´¦Àí
+				if (Win(GridLine[Level]))                  ÅĞ¶ÏÊÇ·ñÓ®
 				{
-					gamestart = 0;                     /* ÔİÍ£¼ÇÊ± */
+					gamestart = 0;                      ÔİÍ£¼ÇÊ±
 					timestart = 0;
-					Record(Level);    /* ÊÇ·ñÆÆ¼ÍÂ¼ */
+					Record(Level);     ÊÇ·ñÆÆ¼ÍÂ¼
 				}
 			}
 			ReleaseDC(hWnd, hDC);
@@ -521,26 +633,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			x = LOWORD(lParam); y = HIWORD(lParam);
 			if (x > boardX && x < boardX + FacePlate[Level].w && y > boardY && y < boardY+ FacePlate[Level].w)
 			{
-				i = (x - boardX) / (GRIDWIDTH+1); /* Êó±êÖ¸Ïò¸ñ×ÓµÄĞĞÁĞÏÂ±êÖµ */
+				i = (x - boardX) / (GRIDWIDTH+1);  Êó±êÖ¸Ïò¸ñ×ÓµÄĞĞÁĞÏÂ±êÖµ
 				j = (y - boardY) / (GRIDWIDTH+1);
 
 				if (board[i][j].status == 2)
 				{
 					operate = PlayGameLDblClk(hDC, boardX, boardY, x, y, GridLine[Level]);
-					if (operate)           /* Ë«»÷ÕıÈ· */
+					if (operate)            Ë«»÷ÕıÈ·
 					{
-						if (Win(GridLine[Level]))   /* ÅĞ¶ÏÒ»ÏÂÊÇ·ñÓ®ÁË */
+						if (Win(GridLine[Level]))    ÅĞ¶ÏÒ»ÏÂÊÇ·ñÓ®ÁË
 						{
-							gamestart = 0;       /* Îª0£¬ÓÎÏ·¼ÆÊ±Í£Ö¹ */
+							gamestart = 0;        Îª0£¬ÓÎÏ·¼ÆÊ±Í£Ö¹
 							timestart = 0;
-							Record(Level);/* ÅĞ¶ÏÊÇ·ñÆÆ¼ÍÂ¼ */
+							Record(Level); ÅĞ¶ÏÊÇ·ñÆÆ¼ÍÂ¼
 						}
 					}
-					else         /* ÓÎÏ·Ê§°ÜµÄ´¦Àí */
+					else          ÓÎÏ·Ê§°ÜµÄ´¦Àí
 					{
-						gamestart = 0;   /* ¼ÇÊ±Í£Ö¹ */
+						gamestart = 0;    ¼ÇÊ±Í£Ö¹
 						timestart = 0;
-						GameOver(GridLine[Level]);/* ´ò¿ªÊ£Óà¸ñ×Ó */
+						GameOver(GridLine[Level]); ´ò¿ªÊ£Óà¸ñ×Ó
 						InvalidateRect(hWnd, NULL, TRUE);
 					}
 				}
@@ -693,36 +805,36 @@ BOOL DrawGridding(HDC hDC, WORD x, WORD y, WORD GridCnt)
 
 
 
-/* Èç¹û×ó»÷·½¸ñµÄÖÜÎ§°Ë¸ö·½¸ñÎŞÀ×£¬ÔòÈ«´ò¿ª£¬µİ¹é¡£i,jÎªµ±Ç°¸ñµÄ×ø±ê*/
+ Èç¹û×ó»÷·½¸ñµÄÖÜÎ§°Ë¸ö·½¸ñÎŞÀ×£¬ÔòÈ«´ò¿ª£¬µİ¹é¡£i,jÎªµ±Ç°¸ñµÄ×ø±ê
 void OpenGrid(HDC hDC, int startx, int starty, int i, int j, int gridnum)
 {
 	TCHAR num[2] = {0,0};
 	int x, y;
 
-	if (board[i][j].mine != 0)  /* ×ó»÷µÄ·½¸ñÖµ²»Îª0£¬Ôò·µ»Ø */
+	if (board[i][j].mine != 0)   ×ó»÷µÄ·½¸ñÖµ²»Îª0£¬Ôò·µ»Ø
 	{
 		return;
 	}
 
-	for (x = i-1; x <= i+1; x++) /* ´ò¿ªÖÜÎ§°Ë¸ñ */
+	for (x = i-1; x <= i+1; x++)  ´ò¿ªÖÜÎ§°Ë¸ñ
 	{
-		if ((x < 0) || (x >= gridnum))   /* xÏÂ±êÔ½½ç¼ÌĞø */
+		if ((x < 0) || (x >= gridnum))    xÏÂ±êÔ½½ç¼ÌĞø
 		{
 			continue;
 		}
 
 		for (y = j-1; y <= j+1; y++)
 		{
-			if ((y < 0) || (y >= gridnum))  /* yÏÂ±êÔ½½ç¼ÌĞø */
+			if ((y < 0) || (y >= gridnum))   yÏÂ±êÔ½½ç¼ÌĞø
 			{
 				continue;
 			}
 
-			if (board[x][y].mine != 0)          /* ÖÜÎ§°Ë¸ñÓĞÀ×µÄÇé¿ö */
+			if (board[x][y].mine != 0)           ÖÜÎ§°Ë¸ñÓĞÀ×µÄÇé¿ö
 			{
 				if (board[x][y].status == 2)
 					continue;
-				if (board[x][y].status == 3)   /* Èç±êÀ×Ôò´íÎó£¬À×Êı¼Ó1 */
+				if (board[x][y].status == 3)    Èç±êÀ×Ôò´íÎó£¬À×Êı¼Ó1
 				{
 					MineRestNum++;
 				}
@@ -731,36 +843,36 @@ void OpenGrid(HDC hDC, int startx, int starty, int i, int j, int gridnum)
 				DisplayOperateResult(hDC, board[x][y].status, startx, starty, x, y);
 			}
 
-			else if (board[x][y].status != 2)/*ÖÜÎ§°Ë¸ñÎŞÀ×µÄÇé¿ö£¬ÇÒÃ»´ò¿ª*/
+			else if (board[x][y].status != 2)ÖÜÎ§°Ë¸ñÎŞÀ×µÄÇé¿ö£¬ÇÒÃ»´ò¿ª
 			{
-				if (board[x][y].status == 3)/* Èç±êÀ×Ôò´íÎó£¬À×Êı¼Ó1 */
+				if (board[x][y].status == 3) Èç±êÀ×Ôò´íÎó£¬À×Êı¼Ó1
 				{
 					MineRestNum++;
 				}
 				board[x][y].status = 2;
 				board[x][y].check = 1;
 				DisplayOperateResult(hDC, board[x][y].status, startx, starty, x, y);
-				OpenGrid(hDC, startx, starty, x, y, gridnum);     /* µİ¹éµ÷ÓÃ */
+				OpenGrid(hDC, startx, starty, x, y, gridnum);      µİ¹éµ÷ÓÃ
 			}
 		}
 	}
 	CountMine(0);
 }
 
-/* ×ó»÷À×Çø½øĞĞµÄ´¦Àí */
+ ×ó»÷À×Çø½øĞĞµÄ´¦Àí
 int PlayGameL(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 {
 	TCHAR num[4];
 	int i, j;
 
-	i = (x - startx) / (GRIDWIDTH+1); /* Êó±êÖ¸Ïò¸ñ×ÓµÄĞĞÁĞÏÂ±êÖµ */
+	i = (x - startx) / (GRIDWIDTH+1);  Êó±êÖ¸Ïò¸ñ×ÓµÄĞĞÁĞÏÂ±êÖµ
 	j = (y - starty) / (GRIDWIDTH+1);
 
-	if (board[i][j].status == 1)              /* Ö¸Ïò³õÊ¼×´Ì¬µÄ¸ñ×Ó */
+	if (board[i][j].status == 1)               Ö¸Ïò³õÊ¼×´Ì¬µÄ¸ñ×Ó
 	{
-		if (board[i][j].mine != -1)          /* Ö¸ÏòÎŞÀ×¸ñ */
+		if (board[i][j].mine != -1)           Ö¸ÏòÎŞÀ×¸ñ
 		{
-			if (board[i][j].mine != 0) /*ÖÜÎ§°Ë¸ñÓĞÈô¸É¸öÀ×µÄÇé¿ö,´ò¿ª±¾Éí*/
+			if (board[i][j].mine != 0) ÖÜÎ§°Ë¸ñÓĞÈô¸É¸öÀ×µÄÇé¿ö,´ò¿ª±¾Éí
 			{
 				board[i][j].status = 2;
 				board[i][j].check = 1;
@@ -770,21 +882,21 @@ int PlayGameL(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 				SetBkMode(hDC, TRANSPARENT);
 				TextOut(hDC, startx+7+i*(GRIDWIDTH+1), starty+3+j*(GRIDWIDTH+1), num, lstrlen(num));
 			}
-			else                    /* ÖÜÎ§°Ë¸ñÎŞÀ×£¬´ò¿ª±¾ÉíºÍÖÜÎ§°Ë¸ö¸ñ */
-			{                    /* µİ¹é */
+			else                     ÖÜÎ§°Ë¸ñÎŞÀ×£¬´ò¿ª±¾ÉíºÍÖÜÎ§°Ë¸ö¸ñ
+			{                     µİ¹é
 				OpenGrid(hDC, startx, starty, i, j, gridnum);
 			}
 
 			return 1;
 		}
-		else                        /* ×ó»÷´íÎó£¬±ê¼ÇÓĞÀ×£¬·µ»Ø0 */
+		else                         ×ó»÷´íÎó£¬±ê¼ÇÓĞÀ×£¬·µ»Ø0
 		{
 			board[i][j].status = 0;
 			board[i][j].check = 0;
 			return 0;
 		}
 	}
-	else        /* ÆäËü¸ñ */
+	else         ÆäËü¸ñ
 	{
 		return 1;
 	}
@@ -795,19 +907,19 @@ int PlayGameLDblClk(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 	//	TCHAR num[4];
 	int i, j;
 
-	i = (x - startx) / (GRIDWIDTH+1); /* Êó±êÖ¸Ïò¸ñ×ÓµÄĞĞÁĞÏÂ±êÖµ */
+	i = (x - startx) / (GRIDWIDTH+1);  Êó±êÖ¸Ïò¸ñ×ÓµÄĞĞÁĞÏÂ±êÖµ
 	j = (y - starty) / (GRIDWIDTH+1);
 
-	for (x = i-1; x <= i+1; x++) /* ´ò¿ªÖÜÎ§°Ë¸ñ */
+	for (x = i-1; x <= i+1; x++)  ´ò¿ªÖÜÎ§°Ë¸ñ
 	{
-		if ((x < 0) || (x >= gridnum))   /* xÏÂ±êÔ½½ç¼ÌĞø */
+		if ((x < 0) || (x >= gridnum))    xÏÂ±êÔ½½ç¼ÌĞø
 		{
 			continue;
 		}
 
 		for (y = j-1; y <= j+1; y++)
 		{
-			if ((y < 0) || (y >= gridnum))  /* yÏÂ±êÔ½½ç¼ÌĞø */
+			if ((y < 0) || (y >= gridnum))   yÏÂ±êÔ½½ç¼ÌĞø
 			{
 				continue;
 			}
@@ -831,14 +943,14 @@ int PlayGameLDblClk(HDC hDC, int startx, int starty, int x, int y, int gridnum)
 	return 1;
 }
 
-void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦Àí */
+void PlayGameR(HDC hDC, int startx, int starty, int x, int y)    ÓÒ»÷·½¸ñµÄ´¦Àí
 {
 	int i, j;
 
-	i = (x - startx) / (GRIDWIDTH+1);  /* Êó±êÖ¸Ïò·½¸ñµÄ×ø±ê */
+	i = (x - startx) / (GRIDWIDTH+1);   Êó±êÖ¸Ïò·½¸ñµÄ×ø±ê
 	j = (y - starty) / (GRIDWIDTH+1);
 
-	if (board[i][j].status == 1)     /* ±êÀ× */
+	if (board[i][j].status == 1)      ±êÀ×
 	{
 		board[i][j].status = 3;
 		if (board[i][j].mine == -1)
@@ -850,7 +962,7 @@ void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦À
 		return;
 	}
 
-	if (board[i][j].status == 3)    /* ±ê£¿£º±íÊ¾´Ë¸ñÓĞÒÉÎÊ */
+	if (board[i][j].status == 3)     ±ê£¿£º±íÊ¾´Ë¸ñÓĞÒÉÎÊ
 	{
 		board[i][j].status = 4;
 		board[i][j].check = 0;
@@ -860,7 +972,7 @@ void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦À
 		return;
 	}
 
-	if (board[i][j].status == 4)    /* ½â³ı£¿ºÅ */
+	if (board[i][j].status == 4)     ½â³ı£¿ºÅ
 	{
 		HPEN   hPen;
 		HBRUSH hBrush;
@@ -880,7 +992,7 @@ void PlayGameR(HDC hDC, int startx, int starty, int x, int y)   /* ÓÒ»÷·½¸ñµÄ´¦À
 	}
 }
 
-int Win(int gridnum)   /* ¼ì²âÒ»ÏÂÊÇ·ñÓ®ÁË */
+int Win(int gridnum)    ¼ì²âÒ»ÏÂÊÇ·ñÓ®ÁË
 {
 	int i, j;
 
@@ -896,7 +1008,7 @@ int Win(int gridnum)   /* ¼ì²âÒ»ÏÂÊÇ·ñÓ®ÁË */
 	return 1;
 }
 
-void GameOver(int gridnum)  /* ÓÎÏ·Ê§°ÜµÄ´¦Àí */
+void GameOver(int gridnum)   ÓÎÏ·Ê§°ÜµÄ´¦Àí
 {
 	int i, j;
 
@@ -905,11 +1017,11 @@ void GameOver(int gridnum)  /* ÓÎÏ·Ê§°ÜµÄ´¦Àí */
 		for (j = 0; j < gridnum; j++)
 		{
 			if ((board[i][j].mine == -1) && (board[i][j].status == 1))
-            {                              /* Î´±êÊ¾ÎªÀ×µÄ·½¸ñÏÔÊ¾À× */
+            {                               Î´±êÊ¾ÎªÀ×µÄ·½¸ñÏÔÊ¾À×
 				board[i][j].status = 5;
 			}
 			else if ((board[i][j].mine != -1) && (board[i][j].status == 3))
-			{                         /* ±ê´íÁËµÄ»­ X */
+			{                          ±ê´íÁËµÄ»­ X
 				board[i][j].status = 6;
 			}
 		}
@@ -922,15 +1034,15 @@ void PlayerInit(void)
 	int m = 0, n = 0;
 	FILE *fp;
 
-	lstrcpy(player.name, TEXT("ÎŞÃû"));            /* µ±Ç°Íæ¼ÒÈ±Ê¡Îªnoname */
+	lstrcpy(player.name, TEXT("ÎŞÃû"));             µ±Ç°Íæ¼ÒÈ±Ê¡Îªnoname
 	player.time[0] = player.time[1] = player.time[2] = 999;
 
-	if ((fp = fopen("c:\\windows\\profile.epl", "rb")) != NULL)/*¶ÁÒÑ´æµÄÍæ¼Ò*/
+	if ((fp = fopen("c:\\windows\\profile.epl", "rb")) != NULL)¶ÁÒÑ´æµÄÍæ¼Ò
 	{
 		m = fread(hero, sizeof(hero[0]), 3, fp);
 		n = fread(players, sizeof(player), 10, fp);
 
-		for (i = 0; i < 3; i++)       /* ÒÔÏÂÎªÑéÖ¤¶ÁÈëÊı¾İµÄÕıÈ·ĞÔºÍÍêÕûĞÔ */
+		for (i = 0; i < 3; i++)        ÒÔÏÂÎªÑéÖ¤¶ÁÈëÊı¾İµÄÕıÈ·ĞÔºÍÍêÕûĞÔ
 		{
 			hero[i].name[10] = 0;
 			if ((hero[i].time <= 0) || (hero[i].time > 999))
@@ -952,7 +1064,7 @@ void PlayerInit(void)
 		fclose(fp);
 	}
 
-	if ((m != 3) || (n != 10))   /* ¶ÁÈë´íÎó, ¾ÍÖØĞ´ */
+	if ((m != 3) || (n != 10))    ¶ÁÈë´íÎó, ¾ÍÖØĞ´
 	{
 		for (i = 0; i < 3; i++)
 		{
@@ -966,7 +1078,7 @@ void PlayerInit(void)
 	}
 }
 
-void CountMine(int flag)/* ÔËËãÊ£ÓàÀ×Êı£ºflag=-1±êÁËÒ»¸öÀ×,flag=1±êÁËÒ»ÎÊºÅ */
+void CountMine(int flag) ÔËËãÊ£ÓàÀ×Êı£ºflag=-1±êÁËÒ»¸öÀ×,flag=1±êÁËÒ»ÎÊºÅ
 {
 	int temp;
 	TCHAR mnum[8];
@@ -980,7 +1092,7 @@ void CountMine(int flag)/* ÔËËãÊ£ÓàÀ×Êı£ºflag=-1±êÁËÒ»¸öÀ×,flag=1±êÁËÒ»ÎÊºÅ */
 		MineRestNum--;
 	}
 
-	if (MineRestNum < 0)   /* ±êµÄÀ×±ÈÊµ¼ÊÀ×¶àµÄÇé¿ö */
+	if (MineRestNum < 0)    ±êµÄÀ×±ÈÊµ¼ÊÀ×¶àµÄÇé¿ö
 	{
 		temp = 0;
 	}
@@ -993,7 +1105,7 @@ void CountMine(int flag)/* ÔËËãÊ£ÓàÀ×Êı£ºflag=-1±êÁËÒ»¸öÀ×,flag=1±êÁËÒ»ÎÊºÅ */
 	SetWindowText(hwndmine, mnum);
 }
 
-void WriteDisk(void)        /* ÓÎÏ·½áÊø£¬Êı¾İĞ´ÅÌ */
+void WriteDisk(void)         ÓÎÏ·½áÊø£¬Êı¾İĞ´ÅÌ
 {
 	int i;
 	FILE *fp;
@@ -1031,12 +1143,12 @@ LRESULT CALLBACK RecardProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPara
 	return FALSE;
 }
 
-void Record(int level)  /* ¼ÇÂ¼³É¼¨ */
+void Record(int level)   ¼ÇÂ¼³É¼¨
 {
 	int i;
 	TCHAR  str[8];
 
-	if (player.time[level] > gametime)    /* ¼ÇÂ¼×îÉÙµÄÃëÊı */
+	if (player.time[level] > gametime)     ¼ÇÂ¼×îÉÙµÄÃëÊı
 	{
 		player.time[level] = gametime;
 		for (i = 0; i < 10; i++)
@@ -1051,9 +1163,9 @@ void Record(int level)  /* ¼ÇÂ¼³É¼¨ */
 		SetWindowText(hwndscore2, str);
 	}
 
-	if (hero[level].time > gametime)               /* ÆÆ¼ÍÂ¼ */
+	if (hero[level].time > gametime)                ÆÆ¼ÍÂ¼
 	{
-		hero[level].time = gametime;              /* ¸üĞÂ¼ÍÂ¼ */
+		hero[level].time = gametime;               ¸üĞÂ¼ÍÂ¼
 		lstrcpy(hero[level].name, player.name);
 		DialogBox(hInst, (LPCTSTR)IDD_RECARD, hWND, (DLGPROC)RecardProc);
 	}
@@ -1099,7 +1211,7 @@ LRESULT CALLBACK HeroProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 LRESULT CALLBACK EditProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (message == WM_CHAR && (wParam == '\r' || wParam == 27/*ESC*/))
+	if (message == WM_CHAR && (wParam == '\r' || wParam == 27ESC))
 	{
 		if (wParam == '\r')
 			SendMessage(hWND, WM_COMMAND, EB_PRESSENTER<<16|2, lParam);
@@ -1252,17 +1364,17 @@ void NameInputOver(void)
 			if (!lstrcmp(players[i].name, str))
 				break;
 		}
-		if (i == 10)                         /* ÎŞÍ¬Ãû */
+		if (i == 10)                          ÎŞÍ¬Ãû
 		{
-			for (i = 9; i > 0; i--)          /* È¥µô×îºóÒ»¸ö */
+			for (i = 9; i > 0; i--)           È¥µô×îºóÒ»¸ö
 			{
 				players[i] = players[i-1];
 			}
-			/* ĞÂÃû·ÅÈë0ºÅÎ»ÖÃ */
+			 ĞÂÃû·ÅÈë0ºÅÎ»ÖÃ
 			player.time[0] = player.time[1] = player.time[2] = 999;
 			players[0] = player;
 		}
-		else                                 /* Í¬ÃûÊÓÎª²éÕÒ */
+		else                                  Í¬ÃûÊÓÎª²éÕÒ
 		{
 			player     = players[i];
 			players[i] = players[0];
