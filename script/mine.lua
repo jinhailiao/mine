@@ -71,6 +71,7 @@ g =
 }
 
 function GameInit()
+	GuiInit()
 	DataInit()
 end
 
@@ -91,8 +92,32 @@ function GameDraw()
 	ShowMineArea();
 end
 
---[[ 数据刷新函数集合
+--[[ 数据初始化函数
 --]]
+-- 创建GUI控件
+function GuiInit()
+	mine.CreateButton("玩家", 14, 24, 40, 24, "OnButtonPlayer")
+	mine.CreateButton("级别", 140, 12, 40, 24, "OnButtonGrade");
+	mine.CreateButton("英雄榜", 228, 12, 60, 24, "OnButtonHero");
+	mine.CreateButton("重置", 290, 12, 40, 24, "OnButtonReset");
+	mine.CreateButton("关于", 332, 12, 40, 24, "OnButtonAbout");
+end
+
+function OnButtonPlayer()
+end
+
+function OnButtonGrade()
+end
+
+function OnButtonHero()
+end
+
+function OnButtonReset()
+end
+
+function OnButtonAbout()
+end
+
 -- 初始化为level级别的数据
 function DataInit()
 	local gridnum = GRID_LINE[g.GameLevel]				-- 根据level决定行列格子数和雷数
@@ -145,6 +170,9 @@ function CountMineOn9Grid(i, j, gridnum)
 		end
 	end
 end
+
+--[[ 数据刷新函数集合
+--]]
 
 function CountMine(val)
 	g.MineRestNum = g.MineRestNum + val

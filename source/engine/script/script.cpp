@@ -104,6 +104,11 @@ static int lua_MouseState(lua_State *L)
 	return 3;
 }
 
+static int lua_CreateButton(lua_State *L)
+{
+	return 0;
+}
+
 static int lua_debug(lua_State *L)
 {
 	string strInfo;
@@ -175,7 +180,7 @@ int C_LuaScript::RegisterAPI(void)
 		{"DrawText", lua_DrawText},
 		{"DrawMine", lua_DrawMine},
 		{"MouseState", lua_MouseState},
-//		{ "key_down", L_key_down_by_name },
+		{"CreateButton", lua_CreateButton},
 //		{ "key_up", L_key_up_by_name },
 //		{ "music_play", L_play_music },
 //		{ "music_pause", L_pause_music },
