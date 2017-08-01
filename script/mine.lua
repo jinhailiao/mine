@@ -31,6 +31,7 @@ FACE_PLATE =
 --游戏数据
 GRID_LINE = {10, 16, 20}
 MINE_NUM = {15, 40, 80}
+LEVEL_NAME = {"初级", "中级", "高级"}
 
 --[[状态转换：
 单击，MS_INIT->MS_MARK;MS_MARK->MS_DOUBT;MS_DOUBT->MS_INIT
@@ -60,6 +61,7 @@ g =
 	GameTime = 0, --游戏用时
 	TimeStart = false, --计时开始
 
+	Player = "unknow",
 --TCHAR MineStr[3][6]  = {TEXT("15"),TEXT("40"),TEXT("80")};
 --TCHAR LevelStr[3][6] = {TEXT("低级"), TEXT("中级"), TEXT("高级")};
 
@@ -88,6 +90,7 @@ function GameDraw()
 	mine.DrawBoxDn(10, 10, 363, 50);
 	mine.DrawBoxDn(boardX, boardY, boardW, boardW);
 
+	DrawGui()
 	DrawGrid(boardX+2, boardY+2, GRID_LINE[g.GameLevel]);
 	ShowMineArea();
 end
@@ -350,6 +353,25 @@ end
 
 --[[ 绘图函数集合
 --]]
+function DrawGui()
+	mine.DrawRect(58, 24, 80, 24, 0xFF000000)
+	mine.DrawText(58, 24, g.Player)
+
+	mine.DrawRect(182, 14, 44, 20, 0xFF000000)
+	mine.DrawText(182, 14, LEVEL_NAME[g.GameLevel])
+
+	mine.DrawRect(140, 38, 40, 20, 0xFF000000)
+	mine.DrawText(140, 38, "成绩")
+
+	mine.DrawRect(182, 38, 60, 20, 0xFF000000)
+	mine.DrawText(182, 38, "999秒")
+
+	mine.DrawRect(264, 38, 40, 20, 0xFF000000)
+	mine.DrawText(264, 38, MINE_NUM[g.GameLevel])
+
+	mine.DrawRect(264, 38, 40, 20, 0xFF000000)
+	mine.DrawText(264, 38, g.GameTime)
+end
 
 function DrawGrid(x, y, GridCnt)
 	for i = 0,GridCnt+1 do

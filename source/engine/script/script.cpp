@@ -93,6 +93,16 @@ static int lua_DrawMine(lua_State *L)
 	return 1;
 }
 
+static int lua_DrawRect(lua_State *L)
+{
+	return 0;
+}
+
+static int lua_CreateButton(lua_State *L)
+{
+	return 0;
+}
+
 static int lua_MouseState(lua_State *L)
 {
 	S_DWORD position = 0;
@@ -102,11 +112,6 @@ static int lua_MouseState(lua_State *L)
 	lua_pushnumber(L, HAI_GETLOWORD(position)); // x
 	lua_pushnumber(L, HAI_GETHIWORD(position)); // y
 	return 3;
-}
-
-static int lua_CreateButton(lua_State *L)
-{
-	return 0;
 }
 
 static int lua_debug(lua_State *L)
@@ -179,12 +184,9 @@ int C_LuaScript::RegisterAPI(void)
 		{"DrawFlag", lua_DrawFlag},
 		{"DrawText", lua_DrawText},
 		{"DrawMine", lua_DrawMine},
-		{"MouseState", lua_MouseState},
+		{"DrawRect", lua_DrawRect},
 		{"CreateButton", lua_CreateButton},
-//		{ "key_up", L_key_up_by_name },
-//		{ "music_play", L_play_music },
-//		{ "music_pause", L_pause_music },
-//		{ "music_proceed", L_proceed_music },
+		{"MouseState", lua_MouseState},
 
 		{"msg", lua_debug},
 		{"quit", lua_quit},
