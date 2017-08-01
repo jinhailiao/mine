@@ -28,6 +28,9 @@
     <Filter Include="源文件\input">
       <UniqueIdentifier>{ad93fdf4-0a2b-466c-a883-a2250eb284a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\luactrl">
+      <UniqueIdentifier>{8609cc1b-d385-4fba-b10a-2ce9dc7aa143}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\engine\base\haialgo.cpp">
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="..\..\source\engine\input\input.cpp">
       <Filter>源文件\input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\engine\luactrl\luactrl.cpp">
+      <Filter>源文件\luactrl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="..\..\source\engine\input\input.h">
       <Filter>源文件\input</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\engine\luactrl\luactrl.h">
+      <Filter>源文件\luactrl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

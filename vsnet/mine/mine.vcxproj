@@ -49,7 +49,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\source\engine\base;..\..\source\engine\hgui;..\..\source\engine\script;..\..\source\lua;..\..\source\engine\input;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\source\engine\base;..\..\source\engine\hgui;..\..\source\engine\script;..\..\source\lua;..\..\source\engine\input;..\..\source\engine\luactrl;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -97,6 +97,7 @@
     <ClCompile Include="..\..\source\engine\hgui\hguirect.cpp" />
     <ClCompile Include="..\..\source\engine\hgui\hguiwnd.cpp" />
     <ClCompile Include="..\..\source\engine\input\input.cpp" />
+    <ClCompile Include="..\..\source\engine\luactrl\luactrl.cpp" />
     <ClCompile Include="..\..\source\engine\script\script.cpp" />
     <ClCompile Include="..\..\source\main\demoapp.cpp" />
     <ClCompile Include="..\..\source\main\engineapp.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="..\..\source\engine\hgui\hguirect.h" />
     <ClInclude Include="..\..\source\engine\hgui\hguiwnd.h" />
     <ClInclude Include="..\..\source\engine\input\input.h" />
+    <ClInclude Include="..\..\source\engine\luactrl\luactrl.h" />
     <ClInclude Include="..\..\source\engine\script\script.h" />
     <ClInclude Include="..\..\source\main\demoapp.h" />
     <ClInclude Include="..\..\source\main\engineapp.h" />

@@ -8,6 +8,8 @@
 #include "hguicfg.h"
 #include "input.h"
 #include "script.h"
+#include "luactrl.h"
+#include "hguictrl.h"
 
 #define LCD_WIDTH HGUI_LCD_WIDTH
 #define LCD_HEIGHT HGUI_LCD_HEIGHT
@@ -26,7 +28,10 @@ int C_MINEAPP::GuiAppRun(void)
 {
 	S_GUIEVT aEvt = PeekGuiEvt();
 	if (aEvt.Evt == EVT_NULL)
+	{
+		aEvt.pWnd = m_pCurWnd;
 		aEvt.Evt = EVT_GAME_UPDATE;
+	}
 	TranslateEvt(aEvt);
 	DispatchGuiEvt(aEvt);
 
@@ -42,6 +47,8 @@ int C_MINEWND::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		LuaScript.Init();
 		LuaScript.loadScritp("..\\..\\script\\mine.lua");
 		LuaScript.call("GameInit");
+		C_LuaCtrl &LuaCtrl = C_LuaCtrl::GetInstance();
+		LuaCtrl.CreateCtrl(this);
 		}break;
 	case EVT_PAINT:{
 		C_HGUIDC *pDC = BeginPaint();
@@ -63,6 +70,15 @@ int C_MINEWND::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		C_LuaScript &LuaScript = C_LuaScript::GetInstance();
 		LuaScript.call("GameUpdate");
 		SendWndEvt(EVT_PAINT, 0, 0);
+		}break;
+	case EVT_COMMAND:{
+		if (lParam != HGUI_BS_PUSHBTN_UP)
+			break;
+		C_LuaCtrl &LuaCtrl = C_LuaCtrl::GetInstance();
+		C_LuaScript &LuaScript = C_LuaScript::GetInstance();
+		string strFunction = LuaCtrl.GetFunctionWithID(wParam);
+		if (strFunction.empty() == false)
+			LuaScript.call(strFunction.c_str());
 		}break;
 	default:
 		return DefWndProcess(msg, wParam, lParam);

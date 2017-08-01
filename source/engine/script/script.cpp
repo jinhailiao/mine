@@ -9,6 +9,7 @@
 #include "hstrings.h"
 #include "hguidc.h"
 #include "input.h"
+#include "luactrl.h"
 
 /****************Lua API ******************/
 static int lua_DrawBoxUp(lua_State *L)
@@ -100,6 +101,15 @@ static int lua_DrawRect(lua_State *L)
 
 static int lua_CreateButton(lua_State *L)
 {
+	const char *pTitle = lua_tostring(L, 1);
+	S_WORD x = (S_WORD)lua_tonumber(L, 2);
+	S_WORD y = (S_WORD)lua_tonumber(L, 3);
+	S_WORD w = (S_WORD)lua_tonumber(L, 4);
+	S_WORD h = (S_WORD)lua_tonumber(L, 5);
+	const char *pFunction = lua_tostring(L, 6);
+
+	C_LuaCtrl &LuaCtrl = C_LuaCtrl::GetInstance();
+	LuaCtrl.PushButton(pTitle, x, y, w, h, pFunction);
 	return 0;
 }
 
