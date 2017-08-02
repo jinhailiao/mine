@@ -59,7 +59,7 @@ g =
 	GameBoard = {}, --雷区数据
 	GameState = GAMESTART,
 	GameTime = 0, --游戏用时
-	TimeStart = false, --计时开始
+	TimeStart = 0, --计时开始
 
 	Player = "unknow",
 --TCHAR MineStr[3][6]  = {TEXT("15"),TEXT("40"),TEXT("80")};
@@ -78,7 +78,10 @@ function GameInit()
 end
 
 function GameUpdate()
-	HandleMouseEvent()
+	if g.GameState == GAMESTART then
+		HandleGameTime()
+		HandleMouseEvent()
+	end
 end
 
 function GameDraw()
@@ -133,7 +136,7 @@ function DataInit()
 	g.MineRestNum = MINE_NUM[g.GameLevel]
 
 	g.GameTime  = 0
-	g.TimeStart = false
+	g.TimeStart = os.time()
 	g.GameState = GAMESTART
 
 	g.GameBoard = {}
@@ -182,6 +185,22 @@ end
 
 --[[ 数据刷新函数集合
 --]]
+function HandleGameTime()
+	if g.TimeStart == 0 then
+		return
+	end
+
+	local TimeNow = os.time()
+	if g.TimeStart == TimeNow then
+		return
+	end
+
+	g.TimeStart = TimeNow
+	g.GameTime = g.GameTime + 1
+	if g.GameTime > 999 then
+		g.GameTime = 999
+	end
+end
 
 function CountMine(val)
 	g.MineRestNum = g.MineRestNum + val
@@ -231,7 +250,7 @@ function HandleOver(over, win)
 	end
 
 	if over == true then
-		g.TimeStart = false
+		g.TimeStart = 0
 		g.GameState = GAMEOVER
 	else
 		return
