@@ -96,7 +96,19 @@ static int lua_DrawMine(lua_State *L)
 
 static int lua_DrawRect(lua_State *L)
 {
-	return 0;
+	S_RECT Rect;
+	Rect.x = (S_WORD)lua_tonumber(L, 1);
+	Rect.y = (S_WORD)lua_tonumber(L, 2);
+	Rect.w = (S_WORD)lua_tonumber(L, 3);
+	Rect.h = (S_WORD)lua_tonumber(L, 4);
+	S_DWORD c = (S_DWORD)lua_tonumber(L, 5);
+
+	C_HGUIPEN Pen(c);
+	C_HGUIDC dc(NULL);
+	dc.SelectObject(&Pen);
+	int ok = dc.FillRect(Rect);
+	lua_pushboolean(L, ok);
+	return 1;
 }
 
 static int lua_CreateButton(lua_State *L)
