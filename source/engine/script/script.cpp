@@ -210,7 +210,7 @@ int C_LuaScript::RegisterAPI(void)
 		{"CreateButton", lua_CreateButton},
 		{"MouseState", lua_MouseState},
 
-		{"msg", lua_debug},
+		{"log", lua_debug},
 		{"quit", lua_quit},
 
 		{NULL, NULL},

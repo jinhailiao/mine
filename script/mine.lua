@@ -443,7 +443,7 @@ function ShowMine(i, j)
 	local status = g.GameBoard[i][j].status
 	local mineNum = g.GameBoard[i][j].mine
 
---	mine.msg("i=",i,",j=",j,",status=",status,",mine=",mineNum)
+--	mine.log("i=",i,",j=",j,",status=",status,",mine=",mineNum)
 
 	i = i-1; j = j-1
 	if status == MS_INIT then
