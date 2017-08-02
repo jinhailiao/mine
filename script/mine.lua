@@ -251,17 +251,20 @@ end
 
 function HandleOver(over, win)
 	if over == false then
-		over, win = CheckOver()
+		over, win = CheckOver() -- 判断是否游戏结束
 	end
 
-	if over == true then
+	if over == true then -- 游戏结束处理
 		g.TimeStart = 0
 		g.GameState = GAMEOVER
 	else
 		return
 	end
+
 	if win == false then
 		ChangeGridStateAfterOver()
+	else
+		PlayerInfoSave()
 	end
 end
 
@@ -470,6 +473,14 @@ function ShowMine(i, j)
 	end
 end
 
+--[[ 游戏玩家信息处理
+--]]
+function PlayerInfoSave()
+	if g.GameTime > g.Player.score[g.GameLevel] then
+		return
+	end
+	g.Player.score[g.GameLevel] = g.GameTime
+end
 
 --[[
 ************************ data structure *********************************
