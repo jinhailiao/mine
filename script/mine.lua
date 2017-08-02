@@ -49,7 +49,7 @@ MS_ERROR = 7
 ---------------------------[[ global define ]]----------------------------
 g =
 {
-	GameLevel = 3,
+	GameLevel = 1,
 	--[[ 雷区的数据结构
 	{
     	mine;            -1：有雷； 0-8：周围八格雷的情况
@@ -87,7 +87,7 @@ function GameDraw()
 	local boardW = FACE_PLATE[g.GameLevel].w
 
 	mine.DrawBoxUp(1, 1, 382, 446);
-	mine.DrawBoxDn(10, 10, 363, 50);
+	mine.DrawBoxDn(10, 10, 363, 54);
 	mine.DrawBoxDn(boardX, boardY, boardW, boardW);
 
 	DrawGui()
@@ -100,22 +100,28 @@ end
 -- 创建GUI控件
 function GuiInit()
 	mine.CreateButton("玩家", 14, 24, 40, 24, "OnButtonPlayer")
-	mine.CreateButton("级别", 140, 12, 40, 24, "OnButtonGrade");
-	mine.CreateButton("英雄榜", 228, 12, 60, 24, "OnButtonHero");
-	mine.CreateButton("重置", 290, 12, 40, 24, "OnButtonReset");
-	mine.CreateButton("关于", 332, 12, 40, 24, "OnButtonAbout");
+	mine.CreateButton("级别", 138, 14, 40, 24, "OnButtonGrade");
+	mine.CreateButton("英雄榜", 226, 14, 60, 24, "OnButtonHero");
+	mine.CreateButton("重置", 288, 14, 40, 24, "OnButtonReset");
+	mine.CreateButton("关于", 330, 14, 40, 24, "OnButtonAbout");
 end
 
 function OnButtonPlayer()
 end
 
 function OnButtonGrade()
+	g.GameLevel = g.GameLevel + 1
+	if g.GameLevel > 3 then
+		g.GameLevel = 1
+	end
+	DataInit()
 end
 
 function OnButtonHero()
 end
 
 function OnButtonReset()
+	DataInit()
 end
 
 function OnButtonAbout()
@@ -354,31 +360,34 @@ end
 --[[ 绘图函数集合
 --]]
 function DrawGui()
-	mine.DrawRect(58, 24, 80, 24, 0xFF000000)
-	mine.DrawText(58, 24, g.Player)
+	local MineRest = string.format("%03d", g.MineRestNum)
+	local GameTime = string.format("%03d秒", g.GameTime)
 
-	mine.DrawRect(182, 14, 44, 20, 0xFF000000)
-	mine.DrawText(182, 14, LEVEL_NAME[g.GameLevel])
+	mine.DrawRect(56, 24, 80, 24, 0xF0F0F0)
+	mine.DrawText(58, 30, g.Player)
 
-	mine.DrawRect(140, 38, 40, 20, 0xFF000000)
-	mine.DrawText(140, 38, "成绩")
+	mine.DrawRect(180, 16, 44, 20, 0xF0F0F0)
+	mine.DrawText(190, 20, LEVEL_NAME[g.GameLevel])
 
-	mine.DrawRect(182, 38, 60, 20, 0xFF000000)
-	mine.DrawText(182, 38, "999秒")
+	mine.DrawRect(138, 40, 40, 20, 0xF0F0F0)
+	mine.DrawText(146, 44, "成绩")
 
-	mine.DrawRect(264, 38, 40, 20, 0xFF000000)
-	mine.DrawText(264, 38, MINE_NUM[g.GameLevel])
+	mine.DrawRect(180, 40, 60, 20, 0xF0F0F0)
+	mine.DrawText(194, 44, "999秒")
 
-	mine.DrawRect(264, 38, 40, 20, 0xFF000000)
-	mine.DrawText(264, 38, g.GameTime)
+	mine.DrawRect(262, 40, 40, 20, 0xFF0000)
+	mine.DrawText(272, 44, MineRest)
+
+	mine.DrawRect(318, 40, 40, 20, 0xFF0000)
+	mine.DrawText(324, 44, GameTime)
 end
 
 function DrawGrid(x, y, GridCnt)
-	for i = 0,GridCnt+1 do
+	for i = 0,GridCnt do
 		mine.DrawLine(x-1+i*(GRIDWIDTH+1), y, x-1+i*(GRIDWIDTH+1), y-1+GridCnt*(GRIDWIDTH+1));
 	end
 
-	for i = 0,GridCnt+1 do
+	for i = 0,GridCnt do
 		mine.DrawLine(x, y-1+i*(GRIDWIDTH+1), x-1+GridCnt*(GRIDWIDTH+1), y-1+i*(GRIDWIDTH+1));
 	end
 end
