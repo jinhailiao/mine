@@ -61,7 +61,7 @@ g =
 	GameTime = 0, --游戏用时
 	TimeStart = 0, --计时开始
 
-	Player = "unknow",
+	Player = {name = "unknow", score = {999,999,999}},
 --TCHAR MineStr[3][6]  = {TEXT("15"),TEXT("40"),TEXT("80")};
 --TCHAR LevelStr[3][6] = {TEXT("低级"), TEXT("中级"), TEXT("高级")};
 
@@ -216,10 +216,13 @@ function CheckOver()
 	local gridnum = GRID_LINE[g.GameLevel]
 	for i = 1,gridnum do
 		for j = 1,gridnum do
-        	if g.GameBoard[i][j].status == MS_INIT or g.GameBoard[i][j].status == MS_DOUBT then
+        	if g.GameBoard[i][j].status == MS_INIT or g.GameBoard[i][j].status == MS_DOUBT then -- 未完成
 				return false,false -- over,win
 			end
-        	if g.GameBoard[i][j].status == MS_BOMB then
+        	if g.GameBoard[i][j].status == MS_MARK and g.GameBoard[i][j].mine ~= -1 then -- 标记错误
+				return false,false -- over,win
+			end
+        	if g.GameBoard[i][j].status == MS_BOMB then -- 炸了
 				return true,false -- over,win
 			end
         end
@@ -381,9 +384,10 @@ end
 function DrawGui()
 	local MineRest = string.format("%03d", g.MineRestNum)
 	local GameTime = string.format("%03d秒", g.GameTime)
+	local score = string.format("%03d秒", g.Player.score[g.GameLevel])
 
 	mine.DrawRect(56, 24, 80, 24, 0xF0F0F0)
-	mine.DrawText(58, 30, g.Player)
+	mine.DrawText(58, 30, g.Player.name)
 
 	mine.DrawRect(180, 16, 44, 20, 0xF0F0F0)
 	mine.DrawText(190, 20, LEVEL_NAME[g.GameLevel])
@@ -392,7 +396,7 @@ function DrawGui()
 	mine.DrawText(146, 44, "成绩")
 
 	mine.DrawRect(180, 40, 60, 20, 0xF0F0F0)
-	mine.DrawText(194, 44, "999秒")
+	mine.DrawText(194, 44, score)
 
 	mine.DrawRect(262, 40, 40, 20, 0xFF0000)
 	mine.DrawText(272, 44, MineRest)
