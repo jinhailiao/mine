@@ -113,6 +113,7 @@ function OnButtonPlayer()
 end
 
 function OnButtonGrade()
+	mine.MouseState() -- 清理消息
 	g.GameLevel = g.GameLevel + 1
 	if g.GameLevel > 3 then
 		g.GameLevel = 1
@@ -124,6 +125,7 @@ function OnButtonHero()
 end
 
 function OnButtonReset()
+	mine.MouseState() -- 清理消息
 	DataInit()
 end
 
@@ -204,11 +206,11 @@ end
 
 function CountMine(val)
 	g.MineRestNum = g.MineRestNum + val
-	if g.MineRestNum < 0 then
-		g.MineRestNum = 0
-	elseif g.MineRestNum > MINE_NUM[g.GameLevel] then
-		g.MineRestNum = MINE_NUM[g.GameLevel]
-	end
+--	if g.MineRestNum < 0 then
+--		g.MineRestNum = 0
+--	elseif g.MineRestNum > MINE_NUM[g.GameLevel] then
+--		g.MineRestNum = MINE_NUM[g.GameLevel]
+--	end
 end
 
 -- 检查游戏是否结束
@@ -382,9 +384,16 @@ end
 --[[ 绘图函数集合
 --]]
 function DrawGui()
-	local MineRest = string.format("%03d", g.MineRestNum)
-	local GameTime = string.format("%03d秒", g.GameTime)
-	local score = string.format("%03d秒", g.Player.score[g.GameLevel])
+	local iMineRestNum = g.MineRestNum
+	if g.MineRestNum < 0 then
+		iMineRestNum = 0
+	elseif g.MineRestNum > MINE_NUM[g.GameLevel] then
+		iMineRestNum = MINE_NUM[g.GameLevel]
+	end
+
+	local strMineRest = string.format("%03d", iMineRestNum)
+	local strGameTime = string.format("%03d秒", g.GameTime)
+	local strScore = string.format("%03d秒", g.Player.score[g.GameLevel])
 
 	mine.DrawRect(56, 24, 80, 24, 0xF0F0F0)
 	mine.DrawText(58, 30, g.Player.name)
@@ -396,13 +405,13 @@ function DrawGui()
 	mine.DrawText(146, 44, "成绩")
 
 	mine.DrawRect(180, 40, 60, 20, 0xF0F0F0)
-	mine.DrawText(194, 44, score)
+	mine.DrawText(194, 44, strScore)
 
 	mine.DrawRect(262, 40, 40, 20, 0xFF0000)
-	mine.DrawText(272, 44, MineRest)
+	mine.DrawText(272, 44, strMineRest)
 
 	mine.DrawRect(318, 40, 40, 20, 0xFF0000)
-	mine.DrawText(324, 44, GameTime)
+	mine.DrawText(324, 44, strGameTime)
 end
 
 function DrawGrid(x, y, GridCnt)
