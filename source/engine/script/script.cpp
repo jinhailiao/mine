@@ -10,6 +10,7 @@
 #include "hguidc.h"
 #include "input.h"
 #include "luactrl.h"
+#include "hguidlog.h"
 
 /****************Lua API ******************/
 static int lua_DrawBoxUp(lua_State *L)
@@ -136,6 +137,17 @@ static int lua_MouseState(lua_State *L)
 	return 3;
 }
 
+static int lua_MsgBox(lua_State *L)
+{
+	int ok = 0;
+	const char *ptitle = lua_tostring(L, 1);
+	const char *ptext = lua_tostring(L, 2);
+	if (ptitle != NULL && ptext != NULL)
+		ok = HGui_MsgBox(ptitle, ptext, MB_BTN_OK|MB_TEXT_CENTER);
+	lua_pushnumber(L, ok);
+	return 1;
+}
+
 static int lua_debug(lua_State *L)
 {
 	string strInfo;
@@ -209,6 +221,7 @@ int C_LuaScript::RegisterAPI(void)
 		{"DrawRect", lua_DrawRect},
 		{"CreateButton", lua_CreateButton},
 		{"MouseState", lua_MouseState},
+		{"MsgBox", lua_MsgBox},
 
 		{"log", lua_debug},
 		{"quit", lua_quit},

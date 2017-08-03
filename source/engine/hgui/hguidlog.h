@@ -13,6 +13,7 @@
 #ifndef __HGUI_DLOG_H__
 #define __HGUI_DLOG_H__
 #include "hguiwnd.h"
+#include "hstrings.h"
 
 #define EVT_TIME_INTERVAL_MS		1000
 
@@ -71,6 +72,7 @@ protected:
 	virtual int DefWndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam);
 
 protected:
+	int HandleTextData(S_WORD &TextW, S_WORD &TextH);
 	int DrawTitle(C_HGUIDC *pdc);
 	int DrawText(C_HGUIDC *pdc);
 	int CreateButton(void);
@@ -78,6 +80,7 @@ protected:
 	
 protected:
 	string m_Title;
+	strings m_TextData;
 	S_DWORD m_DelayMS;
 	static const S_WORD Btn_OK_ID = 1;
 	static const S_WORD Btn_Cancel_ID = 2;

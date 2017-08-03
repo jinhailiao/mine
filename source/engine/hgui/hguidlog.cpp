@@ -94,15 +94,24 @@ int C_MSGBOX::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 {
 	switch (msg)
 	{
-	case EVT_CREATE:
-		m_WndRect.x = 20;
-		m_WndRect.w = 120;
-		if ((GetWndLong()&MB_BTN_MASK) == MB_BTN_NULL)
-			m_WndRect.y = 60, m_WndRect.h = 60;
-		else
-			m_WndRect.y = 50, m_WndRect.h = 80;
+	case EVT_CREATE:{
+		S_WORD TextW = 0, TextH = 0;
+ 		HandleTextData(TextW, TextH);
+		m_WndRect.h = TextH + 40;
+		m_WndRect.w = TextW + 20;
+
+		if ((GetWndLong()&MB_BTN_MASK) != MB_BTN_NULL)
+			m_WndRect.h += 20;
+
+		if (m_WndRect.h > (HGUI_LCD_HEIGHT*2/3))
+			m_WndRect.h = HGUI_LCD_HEIGHT*2/3;
+		if (m_WndRect.w > (HGUI_LCD_WIDTH*2/3))
+			m_WndRect.w = HGUI_LCD_WIDTH*2/3;
+
+		m_WndRect.x = (HGUI_LCD_WIDTH - m_WndRect.w) / 2;
+		m_WndRect.y = (HGUI_LCD_WIDTH - m_WndRect.h) / 2;
 		CreateButton();
-		break;
+		}break;
 	case EVT_PAINT:{
 		C_HGUIDC *pdc = BeginPaint();
 		S_RECT WndRect = {0, 0, m_WndRect.w, m_WndRect.h};
@@ -161,6 +170,29 @@ int C_MSGBOX::DefWndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 	return C_HGUIDLG::DefWndProcess(evt, wParam, lParam);
 }
 
+int C_MSGBOX::HandleTextData(S_WORD &TextW, S_WORD &TextH)
+{
+	TextW = 0, TextH = 0;
+	if (m_WndText.empty() == true)
+		return 0;
+
+	m_TextData.split(m_WndText, '\n');
+
+	C_HGUIDC dc(NULL);
+	for (size_t i = 0; i < m_TextData.size(); i++)
+	{
+		string &strText = m_TextData[i];
+		if (*(strText.end()-1) == '\r') 	// 清除 \r
+			strText.erase(strText.end()-1);
+	
+		TextH += dc.GetFontHeight(' ') + 2;
+		int w = dc.GetStringExtent(strText.c_str());
+		if (w > TextW) TextW = w;
+	}
+
+	return (int)m_TextData.size();
+}
+
 int C_MSGBOX::DrawTitle(C_HGUIDC *pdc)
 {
 	int TitleX = 2;
@@ -174,13 +206,20 @@ int C_MSGBOX::DrawTitle(C_HGUIDC *pdc)
 
 int C_MSGBOX::DrawText(C_HGUIDC *pdc)
 {
-	int TextX = 2;
-	if ((GetWndLong()&MB_TEXT_MASK) == MB_TEXT_CENTER)
+	S_WORD TextY = 30;
+	for (size_t i = 0; i < m_TextData.size(); i++)
 	{
-		int TextW = pdc->GetStringExtent(m_WndText.c_str());
-		if (TextW < m_WndRect.w) TextX = (m_WndRect.w - TextW) / 2;
+		S_WORD TextX = 2;
+		string &strText = m_TextData[i];
+		if ((GetWndLong()&MB_TEXT_MASK) == MB_TEXT_CENTER)
+		{
+			int TextW = pdc->GetStringExtent(strText.c_str());
+			if (TextW < m_WndRect.w) TextX = (m_WndRect.w - TextW) / 2;
+		}
+		pdc->DrawString(TextX, TextY, strText.c_str());
+		TextY += pdc->GetFontHeight(' ') + 2;
 	}
-	return pdc->DrawString(TextX, 30, m_WndText.c_str());
+	return 0;
 }
 
 int C_MSGBOX::CreateButton(void)
@@ -191,7 +230,7 @@ int C_MSGBOX::CreateButton(void)
 		S_RECT rect;
 		rect.w = 32; rect.h = 16;
 		rect.x = (m_WndRect.w - rect.w) / 2;
-		rect.y = 60;
+		rect.y = m_WndRect.h - 24;
 		pbtnOK->Create("确定", 0x00, rect, this, Btn_OK_ID);
 		SetFocusCtrl(pbtnOK);
 	}
@@ -202,7 +241,7 @@ int C_MSGBOX::CreateButton(void)
 		S_RECT rect;
 		rect.w = 32; rect.h = 16;
 		rect.x = (m_WndRect.w - (rect.w + rect.w + 10)) / 2;
-		rect.y = 60;
+		rect.y = m_WndRect.h - 24;
 		pbtnOK->Create("确定", 0x00, rect, this, Btn_OK_ID);
 		rect.x += rect.w + 10;
 		pbtnCancel->Create("取消", 0x00, rect, this, Btn_Cancel_ID);
