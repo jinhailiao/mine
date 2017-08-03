@@ -110,6 +110,7 @@ function GuiInit()
 end
 
 function OnButtonPlayer()
+	mine.MouseState() -- 清理消息
 end
 
 function OnButtonGrade()
@@ -122,6 +123,8 @@ function OnButtonGrade()
 end
 
 function OnButtonHero()
+	mine.MsgBox("英雄榜", "级别   姓名    成绩\n初级   unknow   999秒\n中级   unknow   999秒\n高级   unknow   999秒")
+	mine.MouseState() -- 清理消息
 end
 
 function OnButtonReset()
@@ -130,6 +133,8 @@ function OnButtonReset()
 end
 
 function OnButtonAbout()
+	mine.MsgBox("关于","探险 v1.0                     \nCopyright(c)2017 Haisoft工作室\nAll rights reserved.          \nE-Mail:jinhailiao@163.com     ")
+	mine.MouseState() -- 清理消息
 end
 
 -- 初始化为level级别的数据
