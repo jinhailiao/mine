@@ -559,42 +559,40 @@ int C_TEXTEDIT::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 	switch (evt)
 	{
 	case EVT_CREATE:{
-		C_HGUIDC *pdc = new C_HGUIDC(this);
+		C_HGUIDC dc(this);
 		m_CaretIdx = 0;
-		CreateCaret(pdc->GetFontWidth('0'), 1);
-		SetCaretPos(m_SideW+m_CaretIdx*pdc->GetFontWidth('0'), m_SideH+pdc->GetFontHeight('0'));
+		m_FontWidth = dc.GetFontWidth('0');
+		m_FontHeight = dc.GetFontHeight('0');
+
+		CreateCaret(m_FontWidth, 1);
+		SetCaretPos(m_SideW+m_CaretIdx*m_FontWidth, m_SideH+m_FontHeight);
 		ShowCaret();
-		delete pdc;
 		}
 		break;
 	case EVT_PAINT:{
-		C_HGUIDC *pdc = new C_HGUIDC(this);
+		C_HGUIDC dc(this);
+		dc.SetBkMode(HGUI_BKM_OPAQUE);
 		S_RECT WndRect = {0, 0, m_WndRect.w, m_WndRect.h};
-		pdc->DrawRect(WndRect);
-		pdc->DrawString(m_SideW, m_SideH, m_WndText.c_str());
-		delete pdc;
+		dc.DrawRect(WndRect);
+		dc.DrawString(m_SideW, m_SideH, m_WndText.c_str());
 		}
 		break;
 	case EVT_KEYUP:
 		if (wParam == VK_LEFT)
 		{
-			C_HGUIDC *pdc = new C_HGUIDC(this);
 			if (m_CaretIdx != 0)
 			{
 				m_CaretIdx -= 1;
-				SetCaretPos(m_SideW+m_CaretIdx*pdc->GetFontWidth('0'), m_SideH+pdc->GetFontHeight('0'));
+				SetCaretPos(m_SideW+m_CaretIdx*m_FontWidth, m_SideH+m_FontHeight);
 			}
-			delete pdc;
 		}
 		else if (wParam == VK_RIGHT)
 		{
-			C_HGUIDC *pdc = new C_HGUIDC(this);
 			if (m_CaretIdx < (int)m_WndText.size())
 			{
 				m_CaretIdx += 1;
-				SetCaretPos(m_SideW+m_CaretIdx*pdc->GetFontWidth('0'), m_SideH+pdc->GetFontHeight('0'));
+				SetCaretPos(m_SideW+m_CaretIdx*m_FontWidth, m_SideH+m_FontHeight);
 			}
-			delete pdc;
 		}
 		else
 		{
@@ -604,19 +602,17 @@ int C_TEXTEDIT::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 	case EVT_CHAR:
 		if (wParam == VK_BACK)
 		{
-			C_HGUIDC *pdc = new C_HGUIDC(this);
 			if (m_CaretIdx != 0)
 			{
 				size_t i = m_CaretIdx - 1;
 				for (; i < m_WndText.size()-1; i++)
 					m_WndText[i] = m_WndText[i+1];
 				m_WndText[i] = ' ';
-				pdc->DrawString(m_SideW, m_SideH, m_WndText.c_str());
+				SendWndEvt(EVT_PAINT, 0, 0);
 				m_CaretIdx -= 1;
-				SetCaretPos(m_SideW+m_CaretIdx*pdc->GetFontWidth('0'), m_SideH+pdc->GetFontHeight('0'));
+				SetCaretPos(m_SideW+m_CaretIdx*m_FontWidth, m_SideH+m_FontHeight);
 				m_pParent->SendWndEvt(EVT_COMMAND, (S_WORD)m_ID, HGUI_EVT_CMD_CTRL_UPDATE);
 			}
-			delete pdc;
 		}
 		else if (wParam == VK_RETURN || wParam == VK_ESCAPE || wParam == VK_F1)
 		{
@@ -625,16 +621,14 @@ int C_TEXTEDIT::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		else
 		{
 			if (wParam == VK_TAB) wParam = ' ';
-			C_HGUIDC *pdc = new C_HGUIDC(this);
 			if (m_CaretIdx < (int)m_WndText.size() )
 			{
 				m_WndText[m_CaretIdx] = (S_CHAR)wParam;
-				pdc->DrawString(m_SideW, m_SideH, m_WndText.c_str());
+				SendWndEvt(EVT_PAINT, 0, 0);
 				m_CaretIdx += 1;
-				SetCaretPos(m_SideW+m_CaretIdx*pdc->GetFontWidth('0'), m_SideH+pdc->GetFontHeight('0'));
+				SetCaretPos(m_SideW+m_CaretIdx*m_FontWidth, m_SideH+m_FontHeight);
 				m_pParent->SendWndEvt(EVT_COMMAND, (S_WORD)m_ID, HGUI_EVT_CMD_CTRL_UPDATE);
 			}
-			delete pdc;
 		}
 		break;
 	default:

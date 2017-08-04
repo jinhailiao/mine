@@ -210,7 +210,8 @@ protected:
 
 protected:
 	int m_CaretIdx;
-	
+	S_WORD m_FontWidth;
+	S_WORD m_FontHeight;
 protected:
 	static const char m_SideW = 2;
 	static const char m_SideH = 1;
