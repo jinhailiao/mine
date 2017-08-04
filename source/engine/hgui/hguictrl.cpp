@@ -726,7 +726,7 @@ int C_BUTTON::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		m_state = HGUI_BS_PUSHBTN_DN;
 		m_pParent->SetCapture(this);
 		m_pParent->SendWndEvt(EVT_CTRLFOCUS, m_ID, 0);
-		m_pParent->SendWndEvt(EVT_COMMAND, m_ID, m_state);
+		ok = m_pParent->SendWndEvt(EVT_COMMAND, m_ID, m_state);
 		break;
 	case EVT_MOUSEUP:{
 		S_WORD x = HAI_GETLOWORD(lParam);
@@ -735,7 +735,7 @@ int C_BUTTON::WndProcess(S_WORD evt, S_WORD wParam, S_DWORD lParam)
 		m_state = HGUI_BS_PUSHBTN_UP;
 		m_pParent->SetCapture(NULL);
 		if (Rect.PointInRect(x, y) == true)
-			m_pParent->SendWndEvt(EVT_COMMAND, m_ID, m_state);
+			ok = m_pParent->SendWndEvt(EVT_COMMAND, m_ID, m_state);
 		}break;
 	case EVT_MOUSEDB:
 		m_pParent->SetCapture(NULL);
