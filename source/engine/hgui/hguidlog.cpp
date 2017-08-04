@@ -267,6 +267,106 @@ int C_MSGBOX::DestroyButton(void)
 	return 0;
 }
 
+C_EditBoxEx::C_EditBoxEx(const S_CHAR *ptitle, const S_CHAR *pDefault, S_CHAR *pStringData)
+:C_MSGBOX(ptitle, pDefault, MB_BTN_OKCANCEL|MB_TITLE_CENTER)	
+{
+	m_pStringData = pStringData;
+}
+
+C_EditBoxEx::~C_EditBoxEx()
+{
+}
+
+#define EDIT_BOX_CHAR_MAX		20
+int C_EditBoxEx::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
+{
+	switch (msg)
+	{
+	case EVT_CREATE:{
+		S_WORD TextW = EDIT_BOX_CHAR_MAX*6+20, TextH = 16;
+		m_WndRect.h = TextH + 40;
+		m_WndRect.w = TextW + 20;
+
+		if ((GetWndLong()&MB_BTN_MASK) != MB_BTN_NULL)
+			m_WndRect.h += 20;
+
+		if (m_WndRect.h > (HGUI_LCD_HEIGHT*2/3))
+			m_WndRect.h = HGUI_LCD_HEIGHT*2/3;
+		if (m_WndRect.w > (HGUI_LCD_WIDTH*2/3))
+			m_WndRect.w = HGUI_LCD_WIDTH*2/3;
+
+		m_WndRect.x = (HGUI_LCD_WIDTH - m_WndRect.w) / 2;
+		m_WndRect.y = (HGUI_LCD_WIDTH - m_WndRect.h) / 2;
+		CreateButton();
+		CreateEditBox();
+		}break;
+	case EVT_PAINT:{
+		C_HGUIDC *pdc = BeginPaint();
+		S_RECT WndRect = {0, 0, m_WndRect.w, m_WndRect.h};
+		pdc->DrawRect(WndRect);
+		pdc->DrawHLine(1, 16, m_WndRect.w-2);
+		DrawTitle(pdc);
+		EndPaint(pdc);
+		}	
+		break;
+	case EVT_KEYUP:
+		if ((GetWndLong()&MB_BTN_MASK) == MB_BTN_OKCANCEL)
+		{
+			if (wParam == VK_LEFT)
+				SetFocusCtrl(GetWndCtrl(Btn_OK_ID));
+			else if (wParam == VK_RIGHT)
+				SetFocusCtrl(GetWndCtrl(Btn_Cancel_ID));
+		}
+		break;
+	case EVT_COMMAND:
+		if (wParam == Btn_OK_ID && lParam == HGUI_EVT_CMD_BTN_PUSHED)//OK
+		{
+			C_HGUICTRL *pCtrl = GetWndCtrl(Edit_Box_ID);
+			string strName = pCtrl->GetWndText();
+			replace(strName.begin(), strName.end(), ' ', '\0');
+			strcpy(m_pStringData, strName.c_str());
+
+			EndDlg();
+			return MB_RTN_YESOK;
+		}
+		else if (wParam == Btn_Cancel_ID && lParam == HGUI_EVT_CMD_BTN_PUSHED)//Cancel
+		{
+			EndDlg();
+			return MB_RTN_CANCEL;
+		}
+		break;
+	case EVT_DESTROY:
+		DestroyButton();
+		DestroyEditBox();
+		break;
+	default:
+		return DefWndProcess(msg, wParam, lParam);
+	}
+	return 0;
+}
+
+int C_EditBoxEx::CreateEditBox(void)
+{
+	string strInfo(m_WndText);
+	S_RECT RectEd = {10, 24, 140, 16};
+
+	if (strInfo.size() > EDIT_BOX_CHAR_MAX)
+		strInfo.erase(strInfo.begin()+EDIT_BOX_CHAR_MAX, strInfo.end());
+	if (strInfo.size() < EDIT_BOX_CHAR_MAX)
+		strInfo.append((size_t)(EDIT_BOX_CHAR_MAX-strInfo.size()), (char)' ');
+
+	C_TEXTEDIT *pEdit = C_TEXTEDIT::NewCtrl();
+	pEdit->Create(strInfo.c_str(), 0x00, RectEd, this, Edit_Box_ID);
+	SetFocusCtrl(pEdit);
+	return 0;
+}
+
+int C_EditBoxEx::DestroyEditBox(void)
+{
+	delete (RemoveControl(Edit_Box_ID));
+	return 0;
+}
+
 
 int HGui_MsgBox(const S_CHAR *ptitle, const S_CHAR *ptext, S_DWORD dwFlag)
 {
@@ -274,5 +374,10 @@ int HGui_MsgBox(const S_CHAR *ptitle, const S_CHAR *ptext, S_DWORD dwFlag)
 	return MsgBox.DoModel();
 }
 
+int HGui_EditBox(const S_CHAR *ptitle, const S_CHAR *pDefault, S_CHAR *pStringData)
+{
+	C_EditBoxEx EditBox(ptitle, pDefault, pStringData);
+	return EditBox.DoModel();
+}
 
 

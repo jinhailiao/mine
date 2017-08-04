@@ -86,7 +86,25 @@ protected:
 	static const S_WORD Btn_Cancel_ID = 2;
 };
 
+class C_EditBoxEx:public C_MSGBOX
+{
+public:
+	C_EditBoxEx(const S_CHAR *ptitle, const S_CHAR *pDefault, S_CHAR *pStringData);
+	virtual ~C_EditBoxEx();
+
+protected:
+	virtual int WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam);
+
+	int CreateEditBox(void);
+	int DestroyEditBox(void);
+
+protected:
+	S_CHAR *m_pStringData;
+	static const S_WORD Edit_Box_ID = 3;
+};
+
 int HGui_MsgBox(const S_CHAR *ptitle, const S_CHAR *ptext, S_DWORD dwFlag);
+int HGui_EditBox(const S_CHAR *ptitle, const S_CHAR *pDefault, S_CHAR *pStringData);
 
 
 #endif //__HGUI_DLOG_H__

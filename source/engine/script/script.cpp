@@ -148,6 +148,22 @@ static int lua_MsgBox(lua_State *L)
 	return 1;
 }
 
+static int lua_EditBox(lua_State *L)
+{
+	char strData[128] = {'\0'};
+	int ok = MB_RTN_CANCEL;
+	const char *ptitle = lua_tostring(L, 1);
+	const char *pDefault = lua_tostring(L, 2);
+
+	if (ptitle != NULL && pDefault != NULL)
+		ok = HGui_EditBox(ptitle, pDefault, strData);
+	if (ok != MB_RTN_YESOK)
+		strcpy(strData, pDefault);
+
+	lua_pushstring(L, strData);
+	return 1;
+}
+
 static int lua_debug(lua_State *L)
 {
 	string strInfo;
@@ -222,6 +238,7 @@ int C_LuaScript::RegisterAPI(void)
 		{"CreateButton", lua_CreateButton},
 		{"MouseState", lua_MouseState},
 		{"MsgBox", lua_MsgBox},
+		{"EditBox", lua_EditBox},
 
 		{"log", lua_debug},
 		{"quit", lua_quit},
