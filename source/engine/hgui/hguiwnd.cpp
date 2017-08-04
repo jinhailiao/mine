@@ -367,6 +367,14 @@ int C_HGUIWND::InvalidateRect(const S_RECT *pRect)
 	return 0;
 }
 
+S_WORD C_HGUIWND::GetFocusCtrlID(void)
+{
+	C_HGUICTRL *pCtrl = GetFocusCtrl();
+	if (pCtrl != NULL)
+		return pCtrl->GetCtrlID();
+	return 0;
+}
+
 C_HGUICTRL *C_HGUIWND::GetFocusCtrl(void)
 {
 	if (m_CtrlQ.empty())

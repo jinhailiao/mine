@@ -115,6 +115,7 @@ public:
 	void SetFatherWndData(void *pFatherWndData);
 
 	int InvalidateRect(const S_RECT *pRect);
+	S_WORD GetFocusCtrlID(void);
 	C_HGUICTRL *GetFocusCtrl(void);
 	C_HGUICTRL *SetFocusCtrl(C_HGUICTRL *pFocusCtrl);
 	C_HGUICTRL *GetWndCtrl(int nID);
