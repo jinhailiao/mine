@@ -310,13 +310,18 @@ int C_EditBoxEx::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		}	
 		break;
 	case EVT_KEYUP:
-		if ((GetWndLong()&MB_BTN_MASK) == MB_BTN_OKCANCEL)
-		{
-			if (wParam == VK_LEFT)
-				SetFocusCtrl(GetWndCtrl(Btn_OK_ID));
-			else if (wParam == VK_RIGHT)
-				SetFocusCtrl(GetWndCtrl(Btn_Cancel_ID));
-		}
+		if (wParam == VK_RETURN)
+			PostWndEvt(EVT_COMMAND, Btn_OK_ID, HGUI_EVT_CMD_BTN_PUSHED);
+		else if (wParam == VK_ESCAPE)
+			PostWndEvt(EVT_COMMAND, Btn_Cancel_ID, HGUI_EVT_CMD_BTN_PUSHED);
+		else if (wParam == VK_UP)
+			SetFocusCtrl(GetWndCtrl(Edit_Box_ID));
+		else if (wParam == VK_DOWN)
+			SetFocusCtrl(GetWndCtrl(Btn_OK_ID));
+		else if (wParam == VK_LEFT)
+			SetFocusCtrl(GetWndCtrl(Btn_OK_ID));
+		else if (wParam == VK_RIGHT)
+			SetFocusCtrl(GetWndCtrl(Btn_Cancel_ID));
 		break;
 	case EVT_COMMAND:
 		if (wParam == Btn_OK_ID && lParam == HGUI_EVT_CMD_BTN_PUSHED)//OK
