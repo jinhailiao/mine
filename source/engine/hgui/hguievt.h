@@ -183,5 +183,14 @@ public:
 	S_GUIEVT(void){pWnd=NULL, Evt=EVT_NULL, wParam=0x00, lParam=0x00;}
 };
 
+struct S_KbState
+{
+	bool m_CapsLock;
+	bool m_ShiftLock;
+
+public:
+	S_KbState(void){m_CapsLock=false,m_ShiftLock=false;}
+};
+
 #endif // __HGUI_EVENT_H__
 

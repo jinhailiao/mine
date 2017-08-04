@@ -181,6 +181,7 @@ int C_HGUIAPP::PostGuiEvt(S_GUIEVT GuiEvt)
 	return 0;
 }
 
+static const S_WORD Hgui_NumShift[] = {')', '!', '@', '#', '$', '%', '^', '&', '*', '('};
 int C_HGUIAPP::TranslateEvt(S_GUIEVT &evt)
 {
 	switch(evt.Evt)
@@ -208,6 +209,37 @@ int C_HGUIAPP::TranslateEvt(S_GUIEVT &evt)
 		else
 			evt.pWnd = pWnd;
 		}break;
+	case EVT_KEYDN:
+		if (evt.wParam == VK_CAPITAL)
+			m_KbState.m_CapsLock = !m_KbState.m_CapsLock;
+		if (evt.wParam == VK_SHIFT)
+			m_KbState.m_ShiftLock = true;
+		if (evt.wParam >= 'A' && evt.wParam <= 'Z' || evt.wParam >= '0' && evt.wParam <= '9')
+		{
+			S_GUIEVT CharEvt = evt;
+			CharEvt.Evt = EVT_CHAR;
+			if (CharEvt.wParam >= 'A' && CharEvt.wParam <= 'Z' && m_KbState.m_CapsLock == false)
+				CharEvt.wParam += ('a' - 'A');
+			if (m_KbState.m_ShiftLock == true)
+			{
+				if (CharEvt.wParam >= '0' && CharEvt.wParam <= '9')
+					CharEvt.wParam = Hgui_NumShift[CharEvt.wParam-'0'];
+				else if (CharEvt.wParam >= 'a' && CharEvt.wParam <= 'z')
+					CharEvt.wParam -= ('a' - 'A');
+				else if (CharEvt.wParam >= 'A' && CharEvt.wParam <= 'Z')
+					CharEvt.wParam += ('a' - 'A');
+				m_KbState.m_ShiftLock = false;
+			}
+			PostGuiEvt(CharEvt);
+		}
+		else if (evt.wParam == VK_SPACE || evt.wParam == VK_BACK
+			 || evt.wParam == VK_RETURN || evt.wParam == VK_ESCAPE || evt.wParam == VK_TAB)
+		{
+			S_GUIEVT CharEvt = evt;
+			CharEvt.Evt = EVT_CHAR;
+			PostGuiEvt(CharEvt);
+		}
+		break;
 	default:
 		break;
 	}

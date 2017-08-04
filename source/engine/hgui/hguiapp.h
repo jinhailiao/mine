@@ -71,6 +71,7 @@ protected:
 	C_HGUIWND *m_pCurDlg;
 	C_HGUIWND *m_pCurWnd;
 	C_WNDSTACK m_WndStack;
+	S_KbState m_KbState;
 	C_EVTQ m_EvtQ;
 };
 
