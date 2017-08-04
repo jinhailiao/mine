@@ -123,7 +123,10 @@ function OnButtonGrade()
 end
 
 function OnButtonHero()
-	mine.MsgBox("英雄榜", "级别   姓名    成绩\n初级   unknow   999秒\n中级   unknow   999秒\n高级   unknow   999秒")
+	local Hero = {{name="unknow",score=999}, {name="unknow",score=999}, {name="unknow",score=999}}
+	GetHeroInfo(Hero)
+
+	mine.MsgBox("英雄榜", PrintHeroInfo(Hero))
 	mine.MouseState() -- 清理消息
 end
 
@@ -542,5 +545,39 @@ end
 
 function Player(tabPlayer)
 	table.insert(g.Players, tabPlayer)
+end
+
+function GetHeroInfo(Hero)
+	for k = 1,table.getn(g.Players) do
+		if g.Players[k].score[1] < Hero[1].score then
+			Hero[1].name = g.Players[k].name
+			Hero[1].score = g.Players[k].score[1]
+		end
+		if g.Players[k].score[2] < Hero[2].score then
+			Hero[2].name = g.Players[k].name
+			Hero[2].score = g.Players[k].score[2]
+		end
+		if g.Players[k].score[3] < Hero[3].score then
+			Hero[3].name = g.Players[k].name
+			Hero[3].score = g.Players[k].score[3]
+		end
+	end
+end
+
+function PrintHeroInfo(Hero)
+	local item = "级别       姓名       成绩\n"
+	local Hero1 = string.format("%s   %s   %03d秒\n", LEVEL_NAME[1], TrimString(Hero[1].name, 12), Hero[1].score)
+	local Hero2 = string.format("%s   %s   %03d秒\n", LEVEL_NAME[2], TrimString(Hero[2].name, 12), Hero[2].score)
+	local Hero3 = string.format("%s   %s   %03d秒\n", LEVEL_NAME[3], TrimString(Hero[3].name, 12), Hero[3].score)
+	return item .. Hero1 .. Hero2 .. Hero3
+end
+
+function TrimString(str,size)
+	if string.len(str) >= size then
+		return string.sub(str, 1, size)
+	end
+
+	local strFill = string.rep(" ", size - string.len(str))
+	return str .. strFill
 end
 
