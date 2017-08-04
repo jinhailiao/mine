@@ -98,6 +98,7 @@ end
 --]]
 function OnButtonPlayer()
 	local NewName = mine.EditBox(" ‰»Î–’√˚", g.Player.name)
+	NewName = string.sub(NewName, 1, 12)
 	if NewName ~= g.Player.name then
 		g.Player = {name = NewName, score = {999,999,999}}
 		local n = SearchPlayer()
