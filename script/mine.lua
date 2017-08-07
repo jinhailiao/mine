@@ -494,7 +494,13 @@ end
 --]]
 GAME_PLAYER_BANK="../../script/player.lua"
 function PlayerInit()
---	dofile(GAME_PLAYER_BANK)
+	local file,err = io.open(GAME_PLAYER_BANK, "r")
+	if file == nil then
+		return -- 判断文件是否存在
+	end
+	file:close()
+
+	dofile(GAME_PLAYER_BANK)
 end
 
 function RecordScore()
@@ -537,13 +543,24 @@ function AddPlayerAndSort()
 end
 
 function PlayerInfoSave()
---	local strData = "Player{name=jin, score={34,56,78}}\nPlayer{name=hai,score={100,200,300}}\n"
---	local f = assert(io.open(GAME_PLAYER_BANK, "w"))
---	f:write(strData)
---	f:close()
+	local strData = ""
+
+	for k = 1,table.getn(g.Players) do
+		local strPlayer = string.format("AddPlayer{name=\"%s\", score={%d,%d,%d}}\n",g.Players[k].name,g.Players[k].score[1],g.Players[k].score[2],g.Players[k].score[3])
+		strData = strData .. strPlayer
+	end
+
+
+	if string.len(strData) <= 0 then
+		return
+	end
+
+	local f = assert(io.open(GAME_PLAYER_BANK, "w"))
+	f:write(strData)
+	f:close()
 end
 
-function Player(tabPlayer)
+function AddPlayer(tabPlayer)
 	table.insert(g.Players, tabPlayer)
 end
 
