@@ -10,7 +10,7 @@
 
 #define LCD_WIDTH HGUI_LCD_WIDTH
 #define LCD_HEIGHT HGUI_LCD_HEIGHT
-#define APP_RESOURCE_PATH "..\\..\\resource\\bmp\\"
+#define APP_BMP_PATH APP_RESOURCE_PATH"bmp\\"
 
 C_DEMOAPP::C_DEMOAPP(void)
 {
@@ -58,7 +58,7 @@ int C_DESKTOP::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 			Rect.x = 100+(i%4)*70, Rect.w = 48;
 			Rect.y = 30+(i/4)*90, Rect.h = 64;
 			C_ButtonEx *pButton = C_ButtonEx::NewCtrl();
-			pButton->Create(ShortCutName[i], HGUI_BS_PUSHBTN|HGUI_CS_TEXT_BUTTOM, Rect, this, APP_RESOURCE_PATH"tubiao.bmp", APP_RESOURCE_PATH"tubiao2.bmp", APP_RESOURCE_PATH"tubiao2.bmp", i+1);
+			pButton->Create(ShortCutName[i], HGUI_BS_PUSHBTN|HGUI_CS_TEXT_BUTTOM, Rect, this, APP_BMP_PATH"tubiao.bmp", APP_BMP_PATH"tubiao2.bmp", APP_BMP_PATH"tubiao2.bmp", i+1);
 		}
 //		C_ButtonEx *pStart = C_ButtonEx::NewCtrl();
 //		pStart->Create("¿ªÊ¼", HGUI_BS_PUSHBTN, Rect, this, NULL, NULL, NULL, 10);
@@ -204,7 +204,7 @@ int C_DEMOLOGO::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		C_HGUIBMP Bitmap;
 
 		C_HGUIDC *pDC = BeginPaint();
-		Bitmap.LoadBitmap(APP_RESOURCE_PATH"hailogo.bmp");
+		Bitmap.LoadBitmap(APP_BMP_PATH"hailogo.bmp");
 		DCmem.CreateCompatibleDC(pDC);
 		DCmem.SelectObject(&Bitmap);
 		pDC->BitBlt(0, 0, LCD_WIDTH, LCD_HEIGHT, NULL, 0, 0, HGUI_WHITENESS);

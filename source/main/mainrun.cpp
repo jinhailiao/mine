@@ -27,7 +27,7 @@ C_MINELOGO theStartWnd;
 int InitEngine(void)
 {
 	C_HGUIAPP::SetCurApp(&theStartApp);
-	theStartApp.SysInit("..\\..\\resource\\");
+	theStartApp.SysInit(APP_RESOURCE_PATH);
 	theStartApp.SetDesktopWnd(&theStartWnd);
 	return 0;
 }

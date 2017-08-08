@@ -46,6 +46,9 @@ MS_BOMB = 5
 MS_SHOW = 6
 MS_ERROR = 7
 
+-- 游戏玩家文件
+GAME_PLAYER_BANK="player.lua"
+
 ---------------------------[[ global define ]]----------------------------
 g =
 {
@@ -65,9 +68,14 @@ g =
 	Players = {},
 
 	MineRestNum = 0,               -- 剩余雷的数目
+	LuaPath = ".\\"  -- 脚本路径
 }
 
 function GameInit()
+	if LuaPath ~= nil then
+		g.LuaPath = LuaPath
+	end
+
 	GuiInit()
 	DataInit()
 	PlayerInit()
@@ -492,15 +500,15 @@ end
 
 --[[ 游戏玩家信息处理
 --]]
-GAME_PLAYER_BANK="../../script/player.lua"
 function PlayerInit()
-	local file,err = io.open(GAME_PLAYER_BANK, "r")
+	local PlayerFile = g.LuaPath .. GAME_PLAYER_BANK
+	local file,err = io.open(PlayerFile, "r")
 	if file == nil then
 		return -- 判断文件是否存在
 	end
 	file:close()
 
-	dofile(GAME_PLAYER_BANK)
+	dofile(PlayerFile)
 end
 
 function RecordScore()
@@ -555,7 +563,8 @@ function PlayerInfoSave()
 		return
 	end
 
-	local f = assert(io.open(GAME_PLAYER_BANK, "w"))
+	local PlayerFile = g.LuaPath .. GAME_PLAYER_BANK
+	local f = assert(io.open(PlayerFile, "w"))
 	f:write(strData)
 	f:close()
 end

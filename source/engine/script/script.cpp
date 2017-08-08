@@ -279,4 +279,17 @@ int C_LuaScript::call(const char* pFunctionName)
 	return -1;
 }
 
+int C_LuaScript::SetResourcePath(const char *pstrName, const char *pstrPath)
+{
+	if (m_L == NULL)
+		return -1;
+	if (pstrName == NULL || pstrPath == NULL)
+		return -1;
+
+	lua_pushstring(m_L, pstrPath);
+	lua_setglobal(m_L, pstrName);
+	return 0;
+}
+
+
 

@@ -16,8 +16,7 @@
 #ifndef  __HGUI_CONFIG_H__
 #define  __HGUI_CONFIG_H__
 
-/**@note LCD显示行的字节数必需是4的倍数，
- * 否则模拟器会显示有问题，目前原因未知
+/**@note LCD显示行的字节数必需是4的倍数
  */
  
 //#define HGUI_DEMO_APP
@@ -48,6 +47,14 @@
 
 #endif
 
+#define HGUI_SIMULATOR_DEBUG
+#ifdef HGUI_SIMULATOR_DEBUG
+#define APP_SCRIPT_PATH "..\\..\\script\\"
+#define APP_RESOURCE_PATH "..\\..\\resource\\"
+#else
+#define APP_SCRIPT_PATH ".\\script\\"
+#define APP_RESOURCE_PATH ".\\resource\\"
+#endif
 
 #endif // __HGUI_CONFIG_H__
 

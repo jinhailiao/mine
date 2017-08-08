@@ -13,7 +13,7 @@
 
 #define LCD_WIDTH HGUI_LCD_WIDTH
 #define LCD_HEIGHT HGUI_LCD_HEIGHT
-#define APP_RESOURCE_PATH "..\\..\\resource\\bmp\\"
+#define APP_BMP_PATH APP_RESOURCE_PATH"bmp\\"
 
 C_MINEAPP::C_MINEAPP(void)
 {
@@ -45,7 +45,8 @@ int C_MINEWND::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 	case EVT_CREATE:{
 		C_LuaScript &LuaScript = C_LuaScript::GetInstance();
 		LuaScript.Init();
-		LuaScript.loadScritp("..\\..\\script\\mine.lua");
+		LuaScript.SetResourcePath("LuaPath", APP_SCRIPT_PATH);
+		LuaScript.loadScritp(APP_SCRIPT_PATH"mine.lua");
 		LuaScript.call("GameInit");
 		C_LuaCtrl &LuaCtrl = C_LuaCtrl::GetInstance();
 		LuaCtrl.CreateCtrl(this);
@@ -97,7 +98,7 @@ int C_MINELOGO::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		C_HGUIBMP Bitmap;
 
 		C_HGUIDC *pDC = BeginPaint();
-		Bitmap.LoadBitmap(APP_RESOURCE_PATH"hailogo.bmp");
+		Bitmap.LoadBitmap(APP_BMP_PATH"hailogo.bmp");
 		DCmem.CreateCompatibleDC(pDC);
 		DCmem.SelectObject(&Bitmap);
 		pDC->BitBlt(0, 0, LCD_WIDTH, LCD_HEIGHT, NULL, 0, 0, HGUI_WHITENESS);

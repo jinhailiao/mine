@@ -20,6 +20,7 @@ public:
 	int RegisterAPI(void);
 	int loadScritp(const char *pLuaScritp);
 	int call(const char* pFunctionName);
+	int SetResourcePath(const char *pstrName, const char *pstrPath);
 
 protected:
 	C_LuaScript(void);
