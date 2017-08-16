@@ -1,10 +1,10 @@
 --[[
 ***************************************************************************
-* Copyright (C) 2016, Haisoft有限公司
+* Copyright (C) 2016, Haisoft工作室
 * All rights reserved.
 
 * 文件名称: mine.lua
-* 摘    要：仿WINDOWS中的扫雷的游戏
+* 摘    要：仿WINDOWS的扫雷游戏
 
 * 当前版本: 2.0
 * 作    者: jinhailiao@163.com,QQ6033653
