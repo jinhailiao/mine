@@ -34,6 +34,8 @@ extern void HGui_MouseISR(unsigned short Evt, unsigned short x, unsigned short y
 extern int InitEngine(void);
 extern int RunEngine(void);
 extern void MainEngine(void *pData);
+extern int StopEngine(void);
+extern bool FinishedEngine(void);
 
 
 // 此代码模块中包含的函数的前向声明:
@@ -285,6 +287,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_DESTROY:
 		KillTimer(hWnd, ID_TIMER_PAINT_SCREEN);
+		StopEngine();
+		while(FinishedEngine()==false);
 		PostQuitMessage(0);
 		break;
 	default:

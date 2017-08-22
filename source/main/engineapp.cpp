@@ -26,7 +26,11 @@ C_MINEAPP::~C_MINEAPP()
 #define EVT_GAME_UPDATE (EVT_USER + 1)
 int C_MINEAPP::GuiAppRun(void)
 {
+	int ok = 0;
 	S_GUIEVT aEvt = PeekGuiEvt();
+	if (aEvt.Evt == EVT_QUIT)
+		ok = -1;
+
 	if (aEvt.Evt == EVT_NULL)
 	{
 		aEvt.pWnd = m_pCurWnd;
@@ -35,7 +39,7 @@ int C_MINEAPP::GuiAppRun(void)
 	TranslateEvt(aEvt);
 	DispatchGuiEvt(aEvt);
 
-	return 0;
+	return ok;
 }
 
 int C_MINEWND::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
@@ -80,6 +84,12 @@ int C_MINEWND::WndProcess(S_WORD msg, S_WORD wParam, S_DWORD lParam)
 		string strFunction = LuaCtrl.GetFunctionWithID(wParam);
 		if (strFunction.empty() == false)
 			LuaScript.call(strFunction.c_str());
+		}break;
+	case EVT_DESTROY:{
+		C_LuaScript &LuaScript = C_LuaScript::GetInstance();
+		C_LuaCtrl &LuaCtrl = C_LuaCtrl::GetInstance();
+		LuaScript.Release();
+		LuaCtrl.Release();
 		}break;
 	default:
 		return DefWndProcess(msg, wParam, lParam);

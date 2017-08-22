@@ -16,6 +16,7 @@ public:
 	static C_LuaScript &GetInstance(void);
 
 	int Init(void);
+	int Release(void);
 	int LuaError(const char *pErrorInfo);
 	int RegisterAPI(void);
 	int loadScritp(const char *pLuaScritp);

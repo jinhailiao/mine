@@ -18,12 +18,19 @@ C_LuaCtrl::C_LuaCtrl(void)
 
 C_LuaCtrl::~C_LuaCtrl()
 {
+	Release();
 }
 
 C_LuaCtrl &C_LuaCtrl::GetInstance(void)
 {
 	static C_LuaCtrl s_MyLuaCtrl;
 	return s_MyLuaCtrl;
+}
+
+int C_LuaCtrl::Release(void)
+{
+	m_ButtonInfos.clear();
+	return 0;
 }
 
 int C_LuaCtrl::PushButton(const string &strTitle, S_WORD x, S_WORD y, S_WORD w, S_WORD h, const string &strFunction)

@@ -31,6 +31,7 @@ public:
 	virtual ~C_LuaCtrl();
 	static C_LuaCtrl &GetInstance(void);
 
+	int Release(void);
 	int PushButton(const string &strTitle, S_WORD x, S_WORD y, S_WORD w, S_WORD h, const string &strFunction);
 
 	int CreateCtrl(C_HGUIWND* pParentWnd);

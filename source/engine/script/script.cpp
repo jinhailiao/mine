@@ -193,9 +193,7 @@ C_LuaScript::C_LuaScript(void)
 
 C_LuaScript::~C_LuaScript()
 {
-	if (m_L != NULL)
-		lua_close(m_L);
-	m_L = NULL;
+	Release();
 }
 
 C_LuaScript &C_LuaScript::GetInstance(void)
@@ -206,12 +204,23 @@ C_LuaScript &C_LuaScript::GetInstance(void)
 
 int C_LuaScript::Init(void)
 {
+	if (m_L != NULL)
+		Release();
+
 	m_L = lua_open();
 	if (m_L == NULL)
 		return -1;
 
 	luaL_openlibs(m_L); // ´ò¿ªLUAÄÚÖÃ¿â
 	RegisterAPI();
+	return 0;
+}
+
+int C_LuaScript::Release(void)
+{
+	if (m_L != NULL)
+		lua_close(m_L);
+	m_L = NULL;
 	return 0;
 }
 
