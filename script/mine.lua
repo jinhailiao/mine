@@ -18,6 +18,7 @@ GRIDWIDTH = 17
 --ÓÎÏ·×´Ì¬
 GAMESTART=1
 GAMEOVER=2
+
 --Êó±ê×´Ì¬
 MOUSE_STATE_CLICK=1
 MOUSE_STATE_DBCLICK=2
@@ -483,7 +484,7 @@ function ShowMine(i, j)
 		mine.DrawFlag(boardX+4+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), GRIDWIDTH-7);
 	elseif status == MS_DOUBT then
 		mine.DrawBoxUp(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
-		mine.DrawFlag(boardX+4+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), GRIDWIDTH-7);
+--		mine.DrawFlag(boardX+4+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), GRIDWIDTH-7);
 		mine.DrawText(boardX+8+i*(GRIDWIDTH+1), boardY+4+j*(GRIDWIDTH+1), "?");
 	elseif status == MS_SHOW then
 		mine.DrawBoxDn(boardX+2+i*(GRIDWIDTH+1), boardY+2+j*(GRIDWIDTH+1), GRIDWIDTH, GRIDWIDTH);
